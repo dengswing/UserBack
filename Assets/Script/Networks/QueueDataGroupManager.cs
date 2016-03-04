@@ -274,15 +274,15 @@ namespace Networks
         {
             string sValue = string.Format("[{0}]", sParams);
             int sHalt = Random.Range(1, 1000);
-
             StringBuilder sbValue = new StringBuilder("*=");
             sbValue.Append(BaseBytes.EscapeDataString(sValue));
             string halt = "&halt={0}";
             sbValue.Append(string.Format(halt, sHalt));
 
             string parms = BaseBytes.ToBase64StringData(BaseBytes.HashHmac(sbValue.ToString(), _hmacKey, true), true);
+            parms = BaseBytes.EscapeDataString(parms);
 
-            string sign = string.Format("*={0}&sign={1}&halt={2}", sValue, parms, sHalt);
+            string sign = string.Format("*={0}&halt={1}&sign={2}", sValue, sHalt, parms);
 
             return string.Format(requestURL, sign); 
         }

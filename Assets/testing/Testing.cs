@@ -38,7 +38,7 @@ class Testing : MonoBehaviour
         httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
         httpNetwork.Post("package.index", ResponseHandler);
         httpNetwork.Post("cityOrder.list", ResponseHandler);
-        httpNetwork.Post("package.upgradeLv", ResponseHandler);
+       // httpNetwork.Post("package.upgradeLv", ResponseHandler);
 
         //测试单一的请求
         //  httpNetwork.PostOneToOne("game.login");
@@ -54,6 +54,7 @@ class Testing : MonoBehaviour
 
         a.userId = 100;
         Debug.Log(a);
+
 
         string txt = "*=[[\"item.buy\",[1900,0,0,10030004,1,1]]]&halt=6";
         string txt1 = BaseBytes.EscapeUriString(txt);
