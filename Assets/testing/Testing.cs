@@ -26,7 +26,7 @@ class Testing : MonoBehaviour
         httpNetwork.RegisterResponse("game.login", ResponseHandler);  //单个接口的侦听
         httpNetwork.serverErrorResponse = ServerErrorHandler;
         httpNetwork.netTimeOut = NetTimeOutHandler;  //网络超时
-        httpNetwork.hamcKey = "key345"; //必须传
+        //httpNetwork.hamcKey = "key345"; //不传的话就默认不做api签名
 
         httpNetwork.RegisterNetworkDataParse(new NetworkDataParser()); //注入解析类，不注入会报错
 

@@ -172,7 +172,7 @@ namespace Networks
         /// <summary>
         /// 完成了单次请求
         /// </summary>
-        public void FinishPost() 
+        public void FinishPost()
         {
             _currentPostData = null;
         }
@@ -272,6 +272,12 @@ namespace Networks
         /// <returns></returns>
         string URLPackage(string url, string sParams)
         {
+            if (string.IsNullOrEmpty(_hmacKey))
+            {//不加api 签名
+                string sData = string.Format("*=[{0}]", sParams);
+                return string.Format(requestURL, sData);
+            }
+
             string sValue = string.Format("[{0}]", sParams);
             int sHalt = Random.Range(1, 1000);
             StringBuilder sbValue = new StringBuilder("*=");
@@ -284,7 +290,7 @@ namespace Networks
 
             string sign = string.Format("*={0}&halt={1}&sign={2}", sValue, sHalt, parms);
 
-            return string.Format(requestURL, sign); 
+            return string.Format(requestURL, sign);
         }
     }
 }
