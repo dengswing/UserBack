@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Networks.interfaces;
 using Networks.parser;
 using Networks.data;
+using Networks.tool;
+using System.Text;
 
 namespace Networks
 {
@@ -30,6 +32,8 @@ namespace Networks
         /// </summary>
         string requestParams = "[\"{0}\",[{1}]]";
 
+        //hmac约定的key
+        string _hmacKey;
 
         PostData _currentPostData;
         Queue groupData;
@@ -37,6 +41,14 @@ namespace Networks
         public QueueDataGroupManager()
         {
             groupData = new Queue();
+        }
+
+        /// <summary>
+        /// hmac约定的key
+        /// </summary>
+        public string hmacKey
+        {
+            set { _hmacKey = value; }
         }
 
         /// <summary>
@@ -90,7 +102,8 @@ namespace Networks
             _currentPostData.commandId = new List<string>();
             _currentPostData.resultBack = new List<HttpNetResultDelegate>();
             string urlParams = PostParamGroup(_currentPostData, time, userID, requestParams);
-            _currentPostData.url = string.Format(requestURL, urlParams); //url组装
+
+            _currentPostData.url = URLPackage(requestURL, urlParams);
             return _currentPostData as IPostData;
         }
 
@@ -104,7 +117,7 @@ namespace Networks
         public string OneToOnePostDataPack(string commandId, List<object> args, long time)
         {
             string urlParams = ParamtersPack(commandId, args, time, userID, requestParams);
-            return string.Format(requestURL, urlParams); //url组装
+            return URLPackage(requestURL, urlParams);
         }
 
         /// <summary>
@@ -118,7 +131,7 @@ namespace Networks
         public string OneToOnePostDataPack(string commandId, List<object> args, long time, string url)
         {
             string urlParams = ParamtersPack(commandId, args, time, userID, requestParams);
-            return string.Format(url, urlParams); //url组装
+            return URLPackage(url, urlParams);
         }
 
         /// <summary>
@@ -132,7 +145,7 @@ namespace Networks
             string urlParams = PostParamGroup(null, time, userID, requestParams, true);
             if (urlParams == null) return null;
 
-            return string.Format(requestURL, urlParams); //url组装
+            return URLPackage(requestURL, requestParams);
         }
 
         /// <summary>
@@ -174,14 +187,14 @@ namespace Networks
         /// <returns></returns>
         string PostParamGroup(IPostData data, long time, string userId, string param, bool isAll = false)
         {
-            string urlValue = "";
+            StringBuilder urlValue = new StringBuilder();
             int count = (isAll ? groupData.Count : (int)Mathf.Min((float)requestGroupMax, (float)groupData.Count));
             for (int i = 0; i < count; i += 1)
             {
                 ArrayList tmpData = groupData.Dequeue() as ArrayList; //拉取一个
                 List<object> args = tmpData[1] as List<object>;
                 string commandId = tmpData[0] as string;
-                urlValue += ParamtersPack(commandId, args, time, userId, param);  //参数组装
+                urlValue.Append(ParamtersPack(commandId, args, time, userId, param));  //参数组装
 
                 if (null != data && !data.commandId.Contains(commandId))
                 {
@@ -191,11 +204,11 @@ namespace Networks
 
                 if (i != count - 1)
                 {
-                    urlValue += ",";
+                    urlValue.Append(",");
                 }
             }
 
-            return urlValue;
+            return urlValue.ToString();
         }
 
         /// <summary>
@@ -212,7 +225,6 @@ namespace Networks
             args.Insert(0, time);
             args.Insert(0, 0);
             args.Insert(0, userId);
-
             string value = MakeParamters(args.ToArray());
             return string.Format(param, commandId, value);
         }
@@ -250,6 +262,29 @@ namespace Networks
                 }
             }
             return str;
+        }
+
+        /// <summary>
+        /// url组装
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="sParams"></param>
+        /// <returns></returns>
+        string URLPackage(string url, string sParams)
+        {
+            string sValue = string.Format("[{0}]", sParams);
+            int sHalt = Random.Range(1, 1000);
+
+            StringBuilder sbValue = new StringBuilder("*=");
+            sbValue.Append(BaseBytes.EscapeDataString(sValue));
+            string halt = "&halt={0}";
+            sbValue.Append(string.Format(halt, sHalt));
+
+            string parms = BaseBytes.ToBase64StringData(BaseBytes.HashHmac(sbValue.ToString(), _hmacKey, true), true);
+
+            string sign = string.Format("*={0}&sign={1}&halt={2}", sValue, parms, sHalt);
+
+            return string.Format(requestURL, sign); 
         }
     }
 }

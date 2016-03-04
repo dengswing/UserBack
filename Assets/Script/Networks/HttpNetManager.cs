@@ -107,7 +107,7 @@ namespace Networks
         /// <summary>
         /// 请求地址
         /// </summary>
-        string _requestURL = "http://dev-soul.shinezoneapp.com/?dev=jinfeifei&*=[{0}]";
+        string _requestURL = "http://dev-soul.shinezoneapp.com/?dev=xiuyun&{0}";
 
         /// <summary>
         /// 发送request最大组合接口包
@@ -197,6 +197,17 @@ namespace Networks
             {
                 _resetSendMax = value;
                 if (null != netTimer) netTimer.resetSendMax = resetSendMax;
+            }
+        }
+
+        /// <summary>
+        /// hamc和php约定的key值
+        /// </summary>
+        public string hamcKey
+        {
+            set 
+            {
+                if (null != queueDataGroup) queueDataGroup.hmacKey = value;
             }
         }
 

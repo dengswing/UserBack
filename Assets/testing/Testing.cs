@@ -26,6 +26,7 @@ class Testing : MonoBehaviour
         httpNetwork.RegisterResponse("game.login", ResponseHandler);  //单个接口的侦听
         httpNetwork.serverErrorResponse = ServerErrorHandler;
         httpNetwork.netTimeOut = NetTimeOutHandler;  //网络超时
+        httpNetwork.hamcKey = "key345"; //必须传
 
         httpNetwork.RegisterNetworkDataParse(new NetworkDataParser()); //注入解析类，不注入会报错
 
@@ -35,9 +36,9 @@ class Testing : MonoBehaviour
 
         // httpNetwork.Post("game.reset", ResponseHandler);
         httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
-        httpNetwork.Post("game.login", ResponseHandler);
+        httpNetwork.Post("package.index", ResponseHandler);
         httpNetwork.Post("cityOrder.list", ResponseHandler);
-        httpNetwork.Post("game.login", ResponseHandler);
+        httpNetwork.Post("package.upgradeLv", ResponseHandler);
 
         //测试单一的请求
         //  httpNetwork.PostOneToOne("game.login");
