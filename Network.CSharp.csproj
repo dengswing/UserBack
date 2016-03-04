@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.2.2f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -431,7 +433,7 @@
     <Compile Include="Assets\Script\ThirdParty\JsonDotNet\Source\WinRT\Utilities\RT_ThreadSafeStore.cs" />
     <Compile Include="Assets\Script\ThirdParty\JsonDotNet\Source\WinRT\Utilities\RT_TypeExtensions.cs" />
     <Compile Include="Assets\Script\ThirdParty\JsonDotNet\Source\WinRT\Utilities\RT_ValidationUtils.cs" />
-    <Compile Include="Assets\testing\BaseBytes.cs" />
+    <Compile Include="Assets\Script\Networks\tool\BaseBytes.cs" />
     <Compile Include="Assets\testing\CabinetInfo.cs" />
     <Compile Include="Assets\testing\CityOrder.cs" />
     <Compile Include="Assets\testing\ItemMakeCDInfoQueue.cs" />
@@ -449,5 +451,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2012\UnityVS.CSharp.targets" />
 </Project>

@@ -9,6 +9,7 @@ using System.IO;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Networks.tool;
 
 
 class Testing : MonoBehaviour
@@ -65,7 +66,6 @@ class Testing : MonoBehaviour
 
         string txt4 = BaseBytes.ToBase64StringData(BaseBytes.HashHmac(txt1, "key345", true), true);
         Debug.Log(txt4);
-
 
         ReadTxtToLst(Application.dataPath + "/Resources/test.md");
     }
