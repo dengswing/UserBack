@@ -31,6 +31,10 @@ namespace Networks.parser
                 _tableDataStruct = value;
                 _tableDataStruct.RegisterBindingTableStrcut();
             }
+            get 
+            {
+                return _tableDataStruct;
+            }
         }
 
         /// <summary>
@@ -73,8 +77,9 @@ namespace Networks.parser
         {
             if (dataTableList.ContainsKey(tableName))
             {
-                List<object> dataList = GetTableDataList<object>(tableName);
-                dataList.Add(data);
+              //  List<object> dataList = GetTableDataList<object>(tableName);
+               // dataList.Add(data);
+                dataTableList.Remove(tableName); //移除缓存list
             }
         }
 
@@ -149,7 +154,7 @@ namespace Networks.parser
                 return default(Dictionary<string, T>);
             }
         }
-
+        
         /// <summary>
         /// 获取表格数据
         /// </summary>
