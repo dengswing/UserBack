@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Networks.tool;
 using Newtonsoft.Json;
+using System.Reflection;
 
 
 class Testing : MonoBehaviour
@@ -48,6 +49,8 @@ class Testing : MonoBehaviour
         // httpNetwork.PostOneToOne("game.login", "Http://test.com/&*={0}", PostOneToOneHandler);      
 
         TableDataManager.Instance.AddListenerDataTable("ModuleProfile", UpdateHandler); //注册侦听更改  new
+        TableDataManager.Instance.AddListenerDataTable("List", UpdateHandler); //注册侦听更改  new
+
 
         string text = "{  \"userId\": 799,  \"grids\": {    \"1\": 10,    \"2\": 20,    \"3\": null,    \"4\": null,    \"5\": null,    \"6\": null,    \"7\": null,    \"8\": null  },  \"devices\": null,  \"decorations\": null}";
 
@@ -56,6 +59,11 @@ class Testing : MonoBehaviour
         Debug.Log(a);
 
         ReadTxtToLst(Application.dataPath + "/Resources/test.md");
+
+            var list = new ItemMakeCDInfoQueue();
+            var listDict = new Dictionary<string,object>();
+            listDict.Add("55", list);
+            TableDataManager.Instance.AddTableData("List",listDict);
     }
 
     private void ReadTxtToLst(string spath) //listbox 读取txt文件

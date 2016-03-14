@@ -140,19 +140,7 @@ namespace Networks.parser
                 if (isUpdateData)
                 {
                     tableData = tableListData[key];
-
-                    Newtonsoft.Json.Linq.JObject jsonValue = Newtonsoft.Json.Linq.JObject.Parse(dataValue);
-                    object updateTableData = Newtonsoft.Json.JsonConvert.DeserializeObject(dataValue, classStruct);
-
-                    foreach (var data in jsonValue)
-                    { //每个字段赋值
-                        Type inst_type = tableData.GetType();
-                        FieldInfo fieldInfo = inst_type.GetField(data.Key);
-                        Type update_type = updateTableData.GetType();
-                        FieldInfo upFieldInfo = update_type.GetField(data.Key);
-                        object newData = upFieldInfo.GetValue(updateTableData);
-                        fieldInfo.SetValue(tableData, newData);
-                    }
+                    UpdateFieldValue(dataValue, classStruct, tableData);
                 }
                 else
                 {
@@ -174,6 +162,33 @@ namespace Networks.parser
             }
 
             return tableListData;
+        }
+
+        void UpdateFieldValue(string dataValue, Type classStruct, object tableData)
+        {
+            Newtonsoft.Json.Linq.JObject jsonValue = Newtonsoft.Json.Linq.JObject.Parse(dataValue);
+            object updateTableData = Newtonsoft.Json.JsonConvert.DeserializeObject(dataValue, classStruct);
+
+            foreach (var data in jsonValue)
+            { //每个字段赋值
+                Type inst_type = tableData.GetType();
+                FieldInfo fieldInfo = inst_type.GetField(data.Key);
+                PropertyInfo propertyInfo = inst_type.GetProperty(data.Key);
+                Type update_type = updateTableData.GetType();
+                FieldInfo upFieldInfo = update_type.GetField(data.Key);
+                PropertyInfo upPropertyInfo = update_type.GetProperty(data.Key);
+
+                object newData = null;
+                if (upFieldInfo != null)
+                    newData = upFieldInfo.GetValue(updateTableData);
+                else if (upPropertyInfo != null)
+                    newData = upPropertyInfo.GetValue(updateTableData, null);
+
+                if (fieldInfo != null)
+                    fieldInfo.SetValue(tableData, newData);
+                else if (propertyInfo != null)
+                    propertyInfo.SetValue(tableData, newData, null);
+            }
         }
 
         /// <summary>

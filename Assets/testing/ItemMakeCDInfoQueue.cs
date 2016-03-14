@@ -41,5 +41,5 @@ public class FinalGetItemVo
 public class ItemMakeCDInfoQueue
 {
     public int type;
-    public List<ItemMakeCDInfo> listInfo;
+    public List<ItemMakeCDInfo> listInfo{get;private set;}
 }

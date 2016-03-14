@@ -180,6 +180,8 @@ namespace Networks.parser
 
             List<T> tableData = (List<T>)dataTableList[tableName];
 
+            if (tableData == null) return false;
+
             if (cond == null)
             {
                 tableData.Clear();
@@ -405,6 +407,8 @@ namespace Networks.parser
                 return false;
 
             Dictionary<string, T> tableData = (Dictionary<string, T>)dataTableDict[tableName];
+
+            if (tableData == null) return false;
 
             if (cond == null)
             {
