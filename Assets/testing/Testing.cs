@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Networks.tool;
+using Newtonsoft.Json;
 
 
 class Testing : MonoBehaviour
@@ -48,11 +49,11 @@ class Testing : MonoBehaviour
 
         TableDataManager.Instance.AddListenerDataTable("ModuleProfile", UpdateHandler); //注册侦听更改  new
 
-        string text = "{  \"userId\": 799,  \"grids\": {    \"1\": null,    \"2\": null,    \"3\": null,    \"4\": null,    \"5\": null,    \"6\": null,    \"7\": null,    \"8\": null  },  \"devices\": null,  \"decorations\": null}";
+        string text = "{  \"userId\": 799,  \"grids\": {    \"1\": 10,    \"2\": 20,    \"3\": null,    \"4\": null,    \"5\": null,    \"6\": null,    \"7\": null,    \"8\": null  },  \"devices\": null,  \"decorations\": null}";
 
         CabinetInfo a = Newtonsoft.Json.JsonConvert.DeserializeObject(text, typeof(CabinetInfo)) as CabinetInfo;
 
-        a.userId = 100;
+       // a.userId = 100;
         Debug.Log(a);
 
 

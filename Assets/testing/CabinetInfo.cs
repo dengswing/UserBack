@@ -2,24 +2,12 @@
 
 public class CabinetInfo
 {
-    private int _userId;
+    public int userId { get; private set; }
 
-    internal int userId
-    {
-        set { _userId = value; }
-    }
+    public Dictionary<string, string> grids{get;private set;}
 
-    public int UserId
-    {
-        get { return _userId; }
-    }
-
-    public Dictionary<string, string> grids;
     public Dictionary<int, int> devices;
 
-
     public string _decorations;
-
 }
-
 

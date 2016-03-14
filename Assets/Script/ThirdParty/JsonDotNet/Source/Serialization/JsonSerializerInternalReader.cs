@@ -538,11 +538,11 @@ namespace Newtonsoft.Json.Serialization
 					  && !property.PropertyType.IsValueType);
 			}
 
-			if (!property.Writable && !useExistingValue)
-			{
-				reader.Skip();
-				return;
-			}
+            //if (!property.Writable && !useExistingValue)
+            //{
+            //    reader.Skip();
+            //    return;
+            //}
 
 			// test tokentype here because null might not be convertable to some types, e.g. ignoring null when applied to DateTime
 			if (property.NullValueHandling.GetValueOrDefault(Serializer.NullValueHandling) == NullValueHandling.Ignore && reader.TokenType == JsonToken.Null)
@@ -590,8 +590,8 @@ namespace Newtonsoft.Json.Serialization
 			  && MiscellaneousUtils.ValueEquals(value, property.DefaultValue))
 				return false;
 
-			if (!property.Writable)
-				return false;
+            //if (!property.Writable)
+            //    return false;
 
 			return true;
 		}
