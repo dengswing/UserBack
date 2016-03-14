@@ -27,7 +27,7 @@ class Testing : MonoBehaviour
         httpNetwork.RegisterResponse("game.login", ResponseHandler);  //单个接口的侦听
         httpNetwork.serverErrorResponse = ServerErrorHandler;
         httpNetwork.netTimeOut = NetTimeOutHandler;  //网络超时
-        //httpNetwork.hamcKey = "key345"; //不传的话就默认不做api签名
+        httpNetwork.hamcKey = "key345"; //不传的话就默认不做api签名
 
         httpNetwork.RegisterNetworkDataParse(new NetworkDataParser()); //注入解析类，不注入会报错
 
@@ -53,22 +53,7 @@ class Testing : MonoBehaviour
 
         CabinetInfo a = Newtonsoft.Json.JsonConvert.DeserializeObject(text, typeof(CabinetInfo)) as CabinetInfo;
 
-       // a.userId = 100;
         Debug.Log(a);
-
-
-        string txt = "*=[[\"item.buy\",[1900,0,0,10030004,1,1]]]&halt=6";
-        string txt1 = BaseBytes.EscapeUriString(txt);
-        Debug.Log(txt1);
-        string txt2 = BaseBytes.EscapeDataString(txt);
-        Debug.Log(txt2);
-        txt = "*=%5B%5B%22item.buy%22%2C%5B1900%2C0%2C0%2C10030004%2C1%2C1%5D%5D%5D&halt=6";
-
-        string txt3 = BaseBytes.ToBase64StringData(BaseBytes.HashHmac(txt2, "key345", true), true);
-        Debug.Log(txt3);
-
-        string txt4 = BaseBytes.ToBase64StringData(BaseBytes.HashHmac(txt1, "key345", true), true);
-        Debug.Log(txt4);
 
         ReadTxtToLst(Application.dataPath + "/Resources/test.md");
     }
@@ -96,7 +81,14 @@ class Testing : MonoBehaviour
     {
         Debug.Log(data);
 
+
         CabinetInfo cabinet = TableDataManager.Instance.GetTableData<CabinetInfo>("CabinetInfo");
+
+        Dictionary<string, CityOrder> dictCabinet = TableDataManager.Instance.GetTableDataDictionary<CityOrder>("CityOrder");
+
+        TableDataManager.Instance.RemoveTableData<CityOrder>("CityOrder", x => x.cityOrderDefId == 50000001);
+
+        Dictionary<string, CityOrder> dictCabinet2 = TableDataManager.Instance.GetTableDataDictionary<CityOrder>("CityOrder");
 
         List<ItemMakeCDInfoQueue> list = TableDataManager.Instance.GetTableDataList<ItemMakeCDInfoQueue>("List");
 

@@ -20,6 +20,7 @@ namespace Networks.parser
         Dictionary<string, object> dataTableAll = new Dictionary<string, object>(); //所有的数据表数据
         AbsTableDataStruct _tableDataStruct;  //表结构数据
         Dictionary<string, object> dataTableList = new Dictionary<string, object>();  //表格数据数组缓存,（只存被获取过一次的缓存数据）
+        Dictionary<string, object> dataTableDict = new Dictionary<string, object>();  //表格数据字典缓存,（只存被获取过一次的缓存数据）
 
         /// <summary>
         /// 设置表结构
@@ -212,6 +213,7 @@ namespace Networks.parser
             Dictionary<string, object> tableData = (Dictionary<string, object>)dataTableAll[tableName];
 
             RemoveTableList<T>(tableName, cond);
+            RemoveTableDictionary<T>(tableName, cond);
 
             if (cond == null)
             {
@@ -236,7 +238,7 @@ namespace Networks.parser
             if (tableData.Count <= 0) dataTableAll.Remove(tableName);
 
             return true;
-        }
+        }       
 
         /// <summary>
         /// 消息通知
@@ -280,7 +282,7 @@ namespace Networks.parser
                 dataTableListener[tableName] -= updateBack;
         }
 
-        private T GetTableDataDispose<T>(string tableName, Predicate<T> cond = null)
+        T GetTableDataDispose<T>(string tableName, Predicate<T> cond = null)
         {
             T data = default(T);
             if (dataTableAll.ContainsKey(tableName))
@@ -307,7 +309,7 @@ namespace Networks.parser
             return data;
         }
 
-        private List<T> GetTableDataListDispose<T>(string tableName, Predicate<T> cond = null)
+        List<T> GetTableDataListDispose<T>(string tableName, Predicate<T> cond = null)
         {
             List<T> data = default(List<T>);
             if (dataTableAll.ContainsKey(tableName))
@@ -338,8 +340,7 @@ namespace Networks.parser
                         if (listObj.Count > 0)
                         {
                             data = new List<T>();
-                            listObj.ForEach(x => data.Add((T)x));
-                            if (!dataTableList.ContainsKey(tableName)) dataTableList.Add(tableName, data);
+                            listObj.ForEach(x => data.Add((T)x));                            
                         }
 
                         listObj = null;
@@ -348,14 +349,22 @@ namespace Networks.parser
                 }
                 obj = null;
             }
+
+            if (cond == null && !dataTableList.ContainsKey(tableName)) dataTableList.Add(tableName, data);
             return data;
         }
 
-        private Dictionary<string, T> GetTableDataDictionaryDispose<T>(string tableName, Predicate<T> cond = null)
+        Dictionary<string, T> GetTableDataDictionaryDispose<T>(string tableName, Predicate<T> cond = null)
         {
             Dictionary<string, T> data = default(Dictionary<string, T>);
             if (dataTableAll.ContainsKey(tableName))
             {
+                if (cond == null && dataTableDict.ContainsKey(tableName))
+                {
+                    data = (Dictionary<string, T>)dataTableDict[tableName]; //直接取已经缓存的 
+                    return data;
+                }
+
                 object obj;
                 if (dataTableAll.TryGetValue(tableName, out obj))
                 {
@@ -363,6 +372,7 @@ namespace Networks.parser
                     {
                         data = new Dictionary<string, T>();
                         Dictionary<string, object> tableData = (Dictionary<string, object>)obj;
+
                         foreach (var j in tableData)
                         {
                             if (cond != null && !cond.Invoke((T)j.Value))
@@ -377,7 +387,48 @@ namespace Networks.parser
                 }
                 obj = null;
             }
+
+            if (cond == null && !dataTableDict.ContainsKey(tableName)) dataTableDict.Add(tableName, data);
             return data;
+        }
+
+        /// <summary>
+        /// 移除缓存的表格字典
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="cond"></param>
+        /// <returns></returns>
+        bool RemoveTableDictionary<T>(string tableName, Predicate<T> cond = null)
+        {
+            if (!dataTableDict.ContainsKey(tableName))
+                return false;
+
+            Dictionary<string, T> tableData = (Dictionary<string, T>)dataTableDict[tableName];
+
+            if (cond == null)
+            {
+                tableData.Clear();
+            }
+            else
+            {
+                List<string> listObj = new List<string>();
+                foreach (var kv in tableData)
+                {
+                    if (cond.Invoke((T)kv.Value))
+                        listObj.Add(kv.Key);
+                }
+
+                while (listObj.Count > 0)
+                {
+                    tableData.Remove(listObj[0]);
+                    listObj.RemoveAt(0);
+                }
+            }
+
+            if (tableData.Count <= 0) dataTableDict.Remove(tableName);
+
+            return true;
         }
     }
 }
