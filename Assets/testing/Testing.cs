@@ -60,27 +60,11 @@ class Testing : MonoBehaviour
         CabinetInfo a = Newtonsoft.Json.JsonConvert.DeserializeObject(text, typeof(CabinetInfo)) as CabinetInfo;
 
         Debug.Log(a);
-
-        ReadTxtToLst(Application.dataPath + "/Resources/test.md");
-
+        
         var list = new ItemMakeCDInfoQueue();
         var listDict = new Dictionary<string, object>();
         listDict.Add("55", list);
         TableDataManager.Instance.AddTableData("List", listDict);
-    }
-
-    private void ReadTxtToLst(string spath) //listbox 读取txt文件
-    {
-        var _rstream = new StreamReader(spath, System.Text.Encoding.UTF8);
-        string line;
-
-        string way = _rstream.ReadToEnd();
-
-        while ((line = _rstream.ReadLine()) != null)
-        {
-            Debug.Log(line);
-        }
-        _rstream.Close();
     }
 
     void TableChange(string tableName, object data)

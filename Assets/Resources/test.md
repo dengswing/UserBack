@@ -95,6 +95,13 @@ proficiency | int | - | - | 模块熟练度
 unlockSkill | json | - | - | 已解锁的技能 e.g:2.1.c4
 
 <code>
+2.1.c1
+
+	[
+        {entityId:1}
+    ]
+
+<code>
 2.1.c4
 
 	[1,2,3]
