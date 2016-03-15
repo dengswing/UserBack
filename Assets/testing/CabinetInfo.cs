@@ -2,7 +2,15 @@
 
 public class CabinetInfo
 {
-    public int userId { get; private set; }
+    string _userId;
+    public string userId
+    {
+        get {return _userId ;}
+        private set 
+        {
+            _userId = value; 
+        }
+    }
 
     public Dictionary<string, string> grids{get;private set;}
 

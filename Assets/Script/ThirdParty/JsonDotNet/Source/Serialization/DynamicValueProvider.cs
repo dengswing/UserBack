@@ -67,6 +67,12 @@ namespace Newtonsoft.Json.Serialization
         if (_setter == null)
           _setter = DynamicReflectionDelegateFactory.Instance.CreateSet<object>(_memberInfo);
 
+        if (value != null && ReflectionUtils.GetMemberUnderlyingType(_memberInfo).IsAssignableFrom(typeof(string)) &&
+                            !ReflectionUtils.GetMemberUnderlyingType(_memberInfo).IsAssignableFrom(value.GetType()))
+        { //change string
+            value = JsonConvert.SerializeObject(value);
+        }
+
 #if DEBUG
         // dynamic method doesn't check whether the type is 'legal' to set
         // add this check for unit tests

@@ -215,6 +215,11 @@ namespace Newtonsoft.Json.Serialization
 			if (contract is JsonLinqContract)
 				return CreateJToken(reader, contract);
 
+            if (member != null && member.PropertyType == typeof(string) && (reader.TokenType == JsonToken.StartArray || reader.TokenType == JsonToken.StartObject))
+            {//change srting
+                 objectType = typeof(object);
+            }
+
 			do
 			{
 				switch (reader.TokenType)

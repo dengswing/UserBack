@@ -22,8 +22,9 @@ class Testing : MonoBehaviour
     void Start()
     {
         httpNetwork = HttpNetManager.Instance;
-        httpNetwork.userID = "799"; //用户id
+        httpNetwork.userID = "79"; //用户id
         httpNetwork.statusType = statusType;
+        httpNetwork.requestURL = "http://dev-soul.shinezoneapp.com/?&{0}";
 
         httpNetwork.RegisterResponse("game.login", ResponseHandler);  //单个接口的侦听
         httpNetwork.serverErrorResponse = ServerErrorHandler;
@@ -38,9 +39,9 @@ class Testing : MonoBehaviour
 
         // httpNetwork.Post("game.reset", ResponseHandler);
         httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
-        httpNetwork.Post("package.index", ResponseHandler);
-        httpNetwork.Post("cityOrder.list", ResponseHandler);
-       // httpNetwork.Post("package.upgradeLv", ResponseHandler);
+       // httpNetwork.Post("package.index", ResponseHandler);
+       // httpNetwork.Post("cityOrder.list", ResponseHandler);
+        // httpNetwork.Post("package.upgradeLv", ResponseHandler);
 
         //测试单一的请求
         //  httpNetwork.PostOneToOne("game.login");
@@ -52,7 +53,9 @@ class Testing : MonoBehaviour
         TableDataManager.Instance.AddListenerDataTable("List", UpdateHandler); //注册侦听更改  new
 
 
-        string text = "{  \"userId\": 799,  \"grids\": {    \"1\": 10,    \"2\": 20,    \"3\": null,    \"4\": null,    \"5\": null,    \"6\": null,    \"7\": null,    \"8\": null  },  \"devices\": null,  \"decorations\": null}";
+         string text = "{  \"userId\": 799,  \"grids\": {    \"1\": 10,    \"2\": 20,    \"3\": null,    \"4\": null,    \"5\": null,    \"6\": null,    \"7\": null,    \"8\": null  },  \"devices\": null,  \"decorations\": null}";
+       // string text = "{  \"userId\": [01,23]}";
+        //string text = "{  \"userId\": 799}";
 
         CabinetInfo a = Newtonsoft.Json.JsonConvert.DeserializeObject(text, typeof(CabinetInfo)) as CabinetInfo;
 
@@ -60,10 +63,10 @@ class Testing : MonoBehaviour
 
         ReadTxtToLst(Application.dataPath + "/Resources/test.md");
 
-            var list = new ItemMakeCDInfoQueue();
-            var listDict = new Dictionary<string,object>();
-            listDict.Add("55", list);
-            TableDataManager.Instance.AddTableData("List",listDict);
+        var list = new ItemMakeCDInfoQueue();
+        var listDict = new Dictionary<string, object>();
+        listDict.Add("55", list);
+        TableDataManager.Instance.AddTableData("List", listDict);
     }
 
     private void ReadTxtToLst(string spath) //listbox 读取txt文件
@@ -92,7 +95,7 @@ class Testing : MonoBehaviour
 
         CabinetInfo cabinet = TableDataManager.Instance.GetTableData<CabinetInfo>("CabinetInfo");
 
-        Dictionary<string, CityOrder> dictCabinet = TableDataManager.Instance.GetTableDataDictionary<CityOrder>("CityOrder");
+        Dictionary<string, ModuleProfileInfo> dictModuleProfileInfo = TableDataManager.Instance.GetTableDataDictionary<ModuleProfileInfo>("ModuleProfileInfo");
 
         TableDataManager.Instance.RemoveTableData<CityOrder>("CityOrder", x => x.cityOrderDefId == 50000001);
 
