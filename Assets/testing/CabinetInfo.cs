@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class CabinetInfo
 {
@@ -12,10 +13,12 @@ public class CabinetInfo
         }
     }
 
-    public Dictionary<string, string> grids{get;private set;}
+   // public Dictionary<string, string> grids{get;private set;}
 
-    public Dictionary<int, int> devices;
+    //public Dictionary<int, int> devices;
 
-    public string _decorations;
+    //public string _decorations { get; }
+
+    public Vector2 vb;
 }
 

@@ -646,7 +646,7 @@ namespace Newtonsoft.Json.Utilities
             return false;
           if (nonPublic)
             return true;
-          return (propertyInfo.GetSetMethod(nonPublic) != null);
+          return (propertyInfo.GetSetMethod(nonPublic) != null || propertyInfo.CanWrite);
         default:
           return false;
       }

@@ -36,7 +36,7 @@ class Testing : MonoBehaviour
         httpNetwork.RegisterTableDataStruct(TestTableDataStruct.Instance);  //注入数据结构 new
         TestTableDataStruct.Instance.TableNotice += TableChange;
 
-
+        
         // httpNetwork.Post("game.reset", ResponseHandler);
         httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
        // httpNetwork.Post("package.index", ResponseHandler);
@@ -53,7 +53,7 @@ class Testing : MonoBehaviour
         TableDataManager.Instance.AddListenerDataTable("List", UpdateHandler); //注册侦听更改  new
 
 
-         string text = "{  \"userId\": 799,  \"grids\": {    \"1\": 10,    \"2\": 20,    \"3\": null,    \"4\": null,    \"5\": null,    \"6\": null,    \"7\": null,    \"8\": null  },  \"devices\": null,  \"decorations\": null}";
+         string text = "{ \"vb\":{\"x\":100,\"y\":200,\"magnitude\":10},\"userId\": 799,  \"grids\": {    \"1\": 10,    \"2\": 20,    \"3\": null,    \"4\": null,    \"5\": null,    \"6\": null,    \"7\": null,    \"8\": null  },  \"devices\": null,  \"decorations\": 567}";
        // string text = "{  \"userId\": [01,23]}";
         //string text = "{  \"userId\": 799}";
 
