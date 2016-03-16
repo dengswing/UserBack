@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using StructGenerate;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -13,18 +14,27 @@ public class TestingToMd : MonoBehaviour
         string sMdPath = Path.Combine(Application.dataPath, "ClassStructGenerate/test.md");
         string sPhpPath = Path.Combine(Application.dataPath, "ClassStructGenerate/orm.config.php");
 
+        var localTime = DateTime.Now;
         var myReaderPhp = new ReaderPhp();
         var tableName = myReaderPhp.ReadPhpToStructTable(sPhpPath);
-        Debug.Log(tableName.Count);
 
+        TimeSpan tSpan = DateTime.Now.Subtract(localTime);
+        Debug.Log(tableName.Count + " readPhp=>time=" + tSpan.Milliseconds);
+
+
+        localTime = DateTime.Now;
         var myReadMD = new ReaderMD();
         var structTable = myReadMD.ReadMdToStructTable(sMdPath);
 
-        Debug.Log(structTable.Count);
+        tSpan = DateTime.Now.Subtract(localTime);
+        Debug.Log(structTable.Count + " readMd=>time=" + tSpan.Milliseconds);
         ChangeStructToJson(structTable, tableName);
 
+        localTime = DateTime.Now;
         var myGenerateStruct = new GenerateStruct();
         myGenerateStruct.GenerateTypeStruct(sFilePath, structTable);
+        tSpan = DateTime.Now.Subtract(localTime);
+        Debug.Log("GenerateClass=>time=" + tSpan.Milliseconds);
     }
 
     void ChangeStructToJson(List<StructTable> tableData, Dictionary<string, string> tableName)
