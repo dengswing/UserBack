@@ -1,4 +1,7 @@
-﻿using System;
+﻿using LitJson;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -17,13 +20,14 @@ namespace StructGenerate
         public const string fieldJson = "json";
         public const string LineCode = "<code>";
         public const string LineNewLine = "\n";
+        public const string LineTabs = "\t";
     }
 
     class StructTable
     {
         public string tableName;
-
-        public List<Dictionary<string, object>> tableField;
+        public Dictionary<string, object> tableField;
+        public string jsonTableData;
     }
 
     /// <summary>
@@ -62,7 +66,7 @@ namespace StructGenerate
             StringReader reader = new StringReader(sValue);
             string readText = reader.ReadLine();
             var table = new StructTable();
-            table.tableField = new List<Dictionary<string, object>>();
+            table.tableField = new Dictionary<string, object>();
 
             while (readText != null)
             {
@@ -98,7 +102,11 @@ namespace StructGenerate
                 else if (FindValue.IndexOfFieldNumber(readText))
                 { //有|分割符的表字段
                     var tableField = ReaderTableField(readText);
-                    if (tableField != null && tableField.Count > 0) table.tableField.Add(tableField);
+
+                    foreach (var field in tableField)
+                    {
+                        table.tableField.Add(field.Key, field.Value);
+                    }
                 }
                 else
                 { //查找json具体内容
@@ -107,42 +115,6 @@ namespace StructGenerate
             }
 
             return table;
-        }
-
-        void WriteTableFieldValue(string sValue, List<Dictionary<string, object>> tableField, StringReader reader)
-        {
-            string sJson = "";
-            foreach (var i in tableField)
-            {
-                foreach (var j in i)
-                {
-                    var oTmp = j.Value;
-                    string sTmp;
-                    if (oTmp is string)
-                    {
-                        sTmp = (string)oTmp;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                    if (sTmp.Trim().ToLower() == sValue.Trim().ToLower())
-                    {
-                        reader.ReadLine(); //换一行
-
-                        string sFiledValue = reader.ReadLine();
-                        while (sFiledValue != ReadConst.LineNewLine && !String.IsNullOrEmpty(sFiledValue))
-                        {
-                            sJson += sFiledValue;
-                            sFiledValue = reader.ReadLine();
-                        }
-
-                        i[j.Key] = sJson; //赋值
-                        break;
-                    }
-                }
-            }
         }
 
         Dictionary<string, object> ReaderTableField(string sData)
@@ -177,6 +149,46 @@ namespace StructGenerate
 
             return field;
         }
+
+        void WriteTableFieldValue(string sValue, Dictionary<string, object> tableField, StringReader reader)
+        {
+            string sJson = "";
+            foreach (var field in tableField)
+            {
+                var oTmp = field.Value;
+                string sTmp;
+                if (oTmp is string)
+                    sTmp = (string)oTmp;
+                else
+                    continue;
+
+                if (sTmp.Trim().ToLower() == sValue.Trim().ToLower())
+                {
+                    reader.ReadLine(); //换一行
+
+                    string sFiledValue = reader.ReadLine();
+                    while (sFiledValue != ReadConst.LineNewLine && !String.IsNullOrEmpty(sFiledValue))
+                    {
+                        sJson += sFiledValue;
+                        sFiledValue = reader.ReadLine();
+                    }
+
+                    tableField[field.Key] = ChangeJsonObject(sJson); //赋值
+                    break;
+                }
+            }
+        }
+
+        object ChangeJsonObject(string sJson)
+        {
+            if (String.IsNullOrEmpty(sJson))
+                return null;
+
+            sJson = sJson.Replace(ReadConst.LineTabs, "").Replace(" ", "");
+
+            var oJson = JsonConvert.DeserializeObject(sJson);
+            return oJson;
+        }
     }
 
     class FindValue
@@ -192,7 +204,6 @@ namespace StructGenerate
 
                 throw e;
             }
-
         }
 
         public static bool IndexOfFieldConlon(string sValue)

@@ -94,6 +94,8 @@
     </Compile>
     <Compile Include="Assets\JsonStruct\JsonStructWindowInfo.cs" />
     <Compile Include="Assets\JsonStruct\util\UtilString.cs" />
+    <Compile Include="Assets\Runtime\Vo\sg_robot_info.cs" />
+    <Compile Include="Assets\Runtime\Vo\sg_robot_skill.cs" />
     <Compile Include="Assets\Script\Networks\HttpNetManager.cs" />
     <Compile Include="Assets\Script\Networks\MessageDelegates.cs" />
     <Compile Include="Assets\Script\Networks\NetTimerManager.cs" />
@@ -110,6 +112,8 @@
     <Compile Include="Assets\Script\Networks\parser\interfaces\INetworkDataParse.cs" />
     <Compile Include="Assets\Script\Networks\parser\interfaces\IServerResponseData.cs" />
     <Compile Include="Assets\Script\Networks\tool\BaseBytes.cs" />
+    <Compile Include="Assets\Script\StructGenerate\ReaderMD.cs" />
+    <Compile Include="Assets\Script\StructGenerate\data\StructJson.cs" />
     <Compile Include="Assets\Script\ThirdParty\JsonDotNet\Examples\Serialization\1-BasicSerialization\JNSimpleObjectSample.cs" />
     <Compile Include="Assets\Script\ThirdParty\JsonDotNet\Examples\Serialization\2-Polymorphism\JNPolymorphismSample.cs" />
     <Compile Include="Assets\Script\ThirdParty\JsonDotNet\Examples\Serialization\3-BSON\JNBsonSample.cs" />
