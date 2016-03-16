@@ -8,17 +8,20 @@ using UnityEditor;
 
 public class TestingToMd : MonoBehaviour
 {
-    ReaderMD myReadMD;
-    string VO_FILE_PATH;
 
     void Start()
     {
-        VO_FILE_PATH = Path.Combine(Application.dataPath, "Runtime/Vo/");
-        myReadMD = new ReaderMD();
-        var structTable = myReadMD.ReadMdToStructTable(Application.dataPath + "/Resources/test.md");
+        string sFilePath = Path.Combine(Application.dataPath, "Runtime/Vo/");
+        string sMdPath = Path.Combine(Application.dataPath, "Resources/test.md");
+
+        var myReadMD = new ReaderMD();
+        var structTable = myReadMD.ReadMdToStructTable(sMdPath);
 
         //Debug.Log(structTable);
         ChangeStructToJson(structTable);
+
+        var myGenerateStruct = new GenerateStruct();
+        myGenerateStruct.GenerateTypeStruct(sFilePath, structTable);
     }
 
     void ChangeStructToJson(List<StructTable> tableData) 
@@ -27,37 +30,5 @@ public class TestingToMd : MonoBehaviour
         {
            table.jsonTableData = JsonConvert.SerializeObject(table.tableField);
         }
-
-        //Debug.Log(tableData);
-
-        foreach (var table in tableData)
-        {
-            GenModuleStruct(table);
-        }
-
-        AssetDatabase.Refresh();
-    }
-
-    void GenModuleStruct(StructTable tableData)
-    {     
-        var gen = new JsonClassGenerator();
-        // json text 
-        gen.Example = tableData.jsonTableData;
-        // class name
-        gen.MainClass = tableData.tableName;
-        //// name space
-        //gen.Namespace = NAMESPACE;
-
-        var sw = new StringWriter();
-        gen.OutputStream = sw;
-        gen.GenerateClasses();
-        sw.Flush();
-        var csharp = sw.ToString();
-        csharp = csharp.Replace("IList", "List");
-
-        StreamWriter file = new StreamWriter(VO_FILE_PATH + gen.MainClass + ".cs");
-        file.Write(csharp);
-        file.Close();
-       // Debug.Log(csharp);
     }
 }
