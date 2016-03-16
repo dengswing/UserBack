@@ -53,7 +53,6 @@ namespace StructGenerate
             foreach (var i in allValue)
             {
                 if (String.IsNullOrEmpty(i) || !FindValue.IndexOfTableName(i)) continue;
-                Debug.Log("===============nice===============");
                 var tableData = ReaderLineValue(i); //解析带表名的数据
                 tableList.Add(tableData);
             }
@@ -74,7 +73,6 @@ namespace StructGenerate
 
                 if (String.IsNullOrEmpty(readText) || readText == ReadConst.LineCode || readText == ReadConst.LineNewLine) continue; //code标识跳过、\n分割符
 
-                Debug.Log("===>" + readText);
                 if (FindValue.IndexOfTableName(readText))
                 { //查找表名
                     var index = readText.IndexOf(ReadConst.tableName_CN);
