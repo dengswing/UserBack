@@ -161,6 +161,8 @@ namespace Networks.parser
                 }
             }
 
+            if (isUpdate && tableObj == null) dataTableManager.AddTableData(tableName, tableListData);
+
             return tableListData;
         }
 
