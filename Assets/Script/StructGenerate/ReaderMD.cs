@@ -1,6 +1,4 @@
-﻿using LitJson;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,6 +19,11 @@ namespace StructGenerate
         public const string LineCode = "<code>";
         public const string LineNewLine = "\n";
         public const string LineTabs = "\t";
+        public const string LineSpace = " ";
+        public const string LineBlank = "";
+
+        public const string splitTable = "'table'=>";
+        public const string singleQuotes = "'";
     }
 
     class StructTable
@@ -50,10 +53,13 @@ namespace StructGenerate
 
             var tableList = new List<StructTable>();
 
-            foreach (var i in allValue)
+            foreach (var readText in allValue)
             {
-                if (String.IsNullOrEmpty(i) || !FindValue.IndexOfTableName(i)) continue;
-                var tableData = ReaderLineValue(i); //解析带表名的数据
+                if (String.IsNullOrEmpty(readText)) continue;
+                var index = FindValue.IndexOfTableName(readText);
+                if (index == -1) continue;
+
+                var tableData = ReaderLineValue(readText); //解析带表名的数据
                 tableList.Add(tableData);
             }
 
@@ -73,18 +79,10 @@ namespace StructGenerate
 
                 if (String.IsNullOrEmpty(readText) || readText == ReadConst.LineCode || readText == ReadConst.LineNewLine) continue; //code标识跳过、\n分割符
 
-                if (FindValue.IndexOfTableName(readText))
+                var index = FindValue.IndexOfTableName(readText);
+                if (index != -1)
                 { //查找表名
-                    var index = readText.IndexOf(ReadConst.tableName_CN);
-                    if (index != -1)
-                    {
-                        table.tableName = readText.Substring(index + 3);
-                    }
-                    else
-                    {
-                        index = readText.IndexOf(ReadConst.tableName_EN);
-                        if (index != -1) table.tableName = readText.Substring(index + 3);
-                    }
+                    table.tableName = readText.Substring(index + ReadConst.tableName_EN.Length);
 
                     if (table.tableName == null)
                     {
@@ -126,10 +124,10 @@ namespace StructGenerate
             switch (sType)
             {
                 case ReadConst.fieldInt:
-                    field.Add(sValue, 123);
+                    field.Add(sValue, 1);
                     break;
                 case ReadConst.fieldString:
-                    field.Add(sValue, "123");
+                    field.Add(sValue, "1");
                     break;
                 case ReadConst.fieldJson:
                     string sJson = aValue[aValue.Length - 1];
@@ -150,7 +148,7 @@ namespace StructGenerate
 
         void WriteTableFieldValue(string sValue, Dictionary<string, object> tableField, StringReader reader)
         {
-            string sJson = "";
+            string sJson = ReadConst.LineBlank;
             foreach (var field in tableField)
             {
                 var oTmp = field.Value;
@@ -182,7 +180,7 @@ namespace StructGenerate
             if (String.IsNullOrEmpty(sJson))
                 return null;
 
-            sJson = sJson.Replace(ReadConst.LineTabs, "").Replace(" ", "");
+            sJson = sJson.Replace(ReadConst.LineTabs, ReadConst.LineBlank).Replace(ReadConst.LineSpace, ReadConst.LineBlank);
 
             var oJson = JsonConvert.DeserializeObject(sJson);
             return oJson;
@@ -191,17 +189,11 @@ namespace StructGenerate
 
     class FindValue
     {
-        public static bool IndexOfTableName(string sValue)
+        public static int IndexOfTableName(string sValue)
         {
-            try
-            {
-                return (sValue.IndexOf(ReadConst.tableName_CN) != -1 || sValue.IndexOf(ReadConst.tableName_EN) != -1);
-            }
-            catch (Exception e)
-            {
-
-                throw e;
-            }
+            var index = sValue.IndexOf(ReadConst.tableName_CN);
+            if (index == -1) index = sValue.IndexOf(ReadConst.tableName_EN);
+            return index;
         }
 
         public static bool IndexOfFieldConlon(string sValue)

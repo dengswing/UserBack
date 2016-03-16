@@ -1,5 +1,5 @@
 //According to the Json file automatically generated structures 
-//Date : 3/16/2016 3:32:12 PM
+//Date : 3/16/2016 6:17:03 PM
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Collections.Generic;
         public List<Item> item;
     }
 
-    public class sg_robot_info
+    public class RobotInfo
     {
         public int? userId;
         public int? moduleId;
