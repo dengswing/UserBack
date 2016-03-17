@@ -133,8 +133,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\JsonStruct\Editor\JsonStructWindow.cs" />
+    <Compile Include="Assets\Script\StructGenerate\Editor\ClassStructWindow.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\ClassStructGenerate\Vo\old\List.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\ProductComposeHistory.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\RobotInfo.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\RobotSkill.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\WorktableStatus.txt" />
     <None Include="Assets\Script\ThirdParty\JsonDotNet\ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2012\UnityVS.CSharp.targets" />

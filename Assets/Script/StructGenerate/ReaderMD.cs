@@ -89,7 +89,7 @@ namespace StructGenerate
 
                     if (table.tableName == null)
                     {
-                        Debug.LogFormat("{0}.md file [{1}] table data error]", sMdName, readText);
+                        ErrorLog.ShowLogError("{0}.md file [{1}] table data error]",true, sMdName, readText);
                     }
                     else
                     { //跳过多余表头
@@ -142,7 +142,7 @@ namespace StructGenerate
 
                     if (string.IsNullOrEmpty(sJson))
                     {
-                        Debug.LogFormat("{0}.md file [{1}] table [{2}] field data error [{3}]", sMdName, sTableName, sValue, aValue[aValue.Length - 1]);
+                        ErrorLog.ShowLogError("{0}.md file [{1}] table [{2}] field data error [{3}]",true, sMdName, sTableName, sValue, aValue[aValue.Length - 1]);
                     }
                     field.Add(sValue, sJson);
                     break;
@@ -197,7 +197,7 @@ namespace StructGenerate
             }
             catch (Exception)
             {
-                Debug.LogFormat("{0}.md file [{1}] table [{2}] field json data error [{3}]", sMdName, sTableName, sField, sJson);
+                ErrorLog.ShowLogError("{0}.md file [{1}] table [{2}] field json data error [{3}]",true, sMdName, sTableName, sField, sJson);
                 return "Error";
             }
         }

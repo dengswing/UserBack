@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using Xamasoft.JsonClassGenerator;
+using System.Linq;
 
 namespace StructGenerate
 {
@@ -10,25 +12,27 @@ namespace StructGenerate
     /// </summary>
     internal class GenerateStruct
     {
-        public void GenerateTypeStruct(string sPath,List<StructTable> tableList)
+        public void GenerateTypeStruct(string sPath, List<StructTable> tableList, string sNamespace)
         {
             foreach (var table in tableList)
             {
-                GenModuleStruct(table, sPath);
+                GenModuleStruct(table, sPath, sNamespace);
             }
 
             AssetDatabase.Refresh();
         }
 
-        void GenModuleStruct(StructTable tableData, string sPath)
+        void GenModuleStruct(StructTable tableData, string sPath, string sNamespace)
         {
             var gen = new JsonClassGenerator();
+
             // json text 
             gen.Example = tableData.jsonTableData;
             // class name
             gen.MainClass = tableData.tableName;
             //// name space
-            //gen.Namespace = NAMESPACE;
+            if (!string.IsNullOrEmpty(sNamespace))
+                gen.Namespace = sNamespace;
 
             var sw = new StringWriter();
             gen.OutputStream = sw;
@@ -37,11 +41,38 @@ namespace StructGenerate
             var csharp = sw.ToString();
             csharp = csharp.Replace("IList", "List");
 
-            StreamWriter file = new StreamWriter(sPath + gen.MainClass + ".cs");
+            if (!Directory.Exists(sPath))
+            {
+                Directory.CreateDirectory(sPath);
+            }
+
+            var sOld = sPath + "/old/";
+            if (!Directory.Exists(sOld))
+            {
+                Directory.CreateDirectory(sOld);
+            }
+
+            sPath = sPath + gen.MainClass + ".cs";
+            if (File.Exists(sPath))
+            {
+                var fileName = System.IO.Path.GetFileNameWithoutExtension(sPath);
+                var fileDel = sOld + fileName + ".txt";
+                if (File.Exists(fileDel))
+                {
+                    FileInfo fi = new FileInfo(fileDel);
+                    if (fi.Attributes.ToString().IndexOf("ReadOnly") != -1)
+                        fi.Attributes = FileAttributes.Normal;
+                    File.Delete(fileDel);
+                }
+
+                File.Copy(sPath, fileDel);
+            }
+
+            StreamWriter file = new StreamWriter(sPath);
             file.Write(csharp);
             file.Close();
-            // Debug.Log(csharp);
         }
+
     }
 
 }

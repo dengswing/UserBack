@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
-using StructGenerate;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Text;
 using UnityEngine;
 
 namespace StructGenerate
@@ -10,18 +9,33 @@ namespace StructGenerate
     /// <summary>
     /// 生成类管理
     /// </summary>
-    internal class GenerateManager
+    public class GenerateManager
     {
-        public void MdClassGenerate(List<string> sMdPath, string sFilePath, string sPhpPath)
+        DateTime iTotal;
+        ReaderPhp myReaderPhp;
+        ReaderMD myReadMD;
+        GenerateStruct myGenerateStruct;
+
+        public GenerateManager()
         {
+            myReaderPhp = new ReaderPhp();
+            myReadMD = new ReaderMD();
+            myGenerateStruct = new GenerateStruct();
+        }
+
+        public void MdClassGenerate(List<string> sMdPath, string sFilePath, string sPhpPath, string sNamesapce = null)
+        {
+            ErrorLog.ShowLogError("\n================={0}=================\n", true, DateTime.Now.ToString());
+            ErrorLog.ShowLogError("Error\n", true);
+
             if (sMdPath == null || sMdPath.Count <= 0)
             {
                 Debug.LogError("md file does not exist");
                 return;
             }
-            else 
+            else
             {
-                Debug.Log("md file count=" + sMdPath.Count);
+                ErrorLog.ShowLogError("md file count={0}", false, sMdPath.Count);
             }
 
             if (string.IsNullOrEmpty(sPhpPath))
@@ -31,7 +45,7 @@ namespace StructGenerate
             }
             else
             {
-                Debug.Log("php file path=" + sPhpPath);
+                ErrorLog.ShowLogError("php file path={0}", false, sPhpPath);
             }
 
             if (string.IsNullOrEmpty(sFilePath))
@@ -39,19 +53,20 @@ namespace StructGenerate
                 Debug.LogError("generate path does not exist");
                 return;
             }
-            else 
+            else
             {
-                Debug.Log("generate file path=" + sFilePath);
+                ErrorLog.ShowLogError("generate file path={0}", false, sFilePath);
             }
-            
+
             var localTime = DateTime.Now;
+            iTotal = localTime;
 
             //解析php文件
             Dictionary<string, string> tableNameDic;
             if (!ReaderPhp(sPhpPath, out tableNameDic)) return;
 
             TimeSpan tSpan = DateTime.Now.Subtract(localTime);
-            Debug.Log(tableNameDic.Count + " readPhp=>time=" + tSpan.Milliseconds);
+            ErrorLog.ShowLogError("readPhp=>count={1} time= {0} milliseconds", false, tSpan.Milliseconds, tableNameDic.Count);
             localTime = DateTime.Now;
 
             //解析md文件
@@ -59,7 +74,7 @@ namespace StructGenerate
             if (!ReaderMd(sMdPath, out structTableList)) return;
 
             tSpan = DateTime.Now.Subtract(localTime);
-            Debug.Log(structTableList.Count + " readMd=>time=" + tSpan.Milliseconds);
+            ErrorLog.ShowLogError("readMd=>count={1} time= {0} milliseconds", false, tSpan.Milliseconds, structTableList.Count);
             localTime = DateTime.Now;
 
             //转换json数据及表名获取
@@ -67,21 +82,30 @@ namespace StructGenerate
             if (!ChangeStructToJson(structTableList, tableNameDic, out tableGenerateList)) return;
 
             tSpan = DateTime.Now.Subtract(localTime);
-            Debug.Log(tableGenerateList.Count + " changeJsonAndTableName=>time=" + tSpan.Milliseconds);
+            ErrorLog.ShowLogError("changeJsonAndTableName=>count={1} time= {0} milliseconds", false, tSpan.Milliseconds, tableGenerateList.Count);
             localTime = DateTime.Now;
 
-            //生成class
-            var myGenerateStruct = new GenerateStruct();
-            myGenerateStruct.GenerateTypeStruct(sFilePath, tableGenerateList);
+            //生成class           
+            myGenerateStruct.GenerateTypeStruct(sFilePath, tableGenerateList, sNamesapce);
 
             tSpan = DateTime.Now.Subtract(localTime);
-            Debug.Log("GenerateClass=>time=" + tSpan.Milliseconds);
+            ErrorLog.ShowLogError("GenerateClass=>time= {0} milliseconds", false, tSpan.Milliseconds);
+
+            tSpan = DateTime.Now.Subtract(iTotal);
+
+            ErrorLog.ShowLogError(null, true);
+            ErrorLog.ShowLogError(null, true);
+            ErrorLog.ShowLogError(null, true);
+            ErrorLog.ShowLogError("Finish Generate class count {1} ,total of time consuming {0} milliseconds", true, tSpan.Milliseconds, tableGenerateList.Count);
+        }
+
+        void LogShow()
+        {
+
         }
 
         bool ReaderMd(List<string> pathList, out List<StructTable> sturctTableList)
         {
-            var myReadMD = new ReaderMD();
-
             sturctTableList = new List<StructTable>();
             foreach (var item in pathList)
             {
@@ -90,7 +114,7 @@ namespace StructGenerate
                 if (structTable.Count <= 0)
                 {
                     var fileName = System.IO.Path.GetFileNameWithoutExtension(item);
-                    Debug.LogFormat("{0}.md file is not found in table", fileName);
+                    ErrorLog.ShowLogError("{0}.md file is not found in table", true, fileName);
                     continue;
                 }
 
@@ -108,7 +132,6 @@ namespace StructGenerate
 
         bool ReaderPhp(string sPath, out Dictionary<string, string> tableName)
         {
-            var myReaderPhp = new ReaderPhp();
             tableName = myReaderPhp.ReadPhpToStructTable(sPath);
 
             if (tableName == null || tableName.Count <= 0)
@@ -133,7 +156,7 @@ namespace StructGenerate
                     }
                     catch (Exception e)
                     {
-                        Debug.LogFormat("{0} serialize json error", table.tableName);
+                        ErrorLog.ShowLogError("{0} serialize json error", true, table.tableName);
                         continue;
                     }
 
@@ -141,7 +164,7 @@ namespace StructGenerate
                 }
                 else
                 {
-                    Debug.LogFormat("{0} Table does not exist", table.tableName);
+                    ErrorLog.ShowLogError("{0} Table does not exist", true, table.tableName);
                     continue;
                 }
 
@@ -155,6 +178,35 @@ namespace StructGenerate
             }
 
             return true;
+        }
+    }
+
+    public class ErrorLog
+    {
+        static StringBuilder errLog = new StringBuilder();
+        public static void Clear()
+        {
+            errLog.Remove(0, errLog.Length);
+        }
+
+        public static void ShowLogError(string msg, bool isError, params object[] args)
+        {
+            if (!string.IsNullOrEmpty(msg))
+            {
+                var info = string.Format(msg, args);
+                Debug.Log(info);
+                if (isError) errLog.Append(info);
+            }
+
+            if (isError) errLog.AppendLine();
+        }
+
+        public static string logInfo
+        {
+            get
+            {
+                return errLog.ToString();
+            }
         }
     }
 

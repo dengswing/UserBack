@@ -81,11 +81,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\ClassStructGenerate\Runtime\Vo\List.cs" />
-    <Compile Include="Assets\ClassStructGenerate\Runtime\Vo\ProductComposeHistory.cs" />
-    <Compile Include="Assets\ClassStructGenerate\Runtime\Vo\RobotInfo.cs" />
-    <Compile Include="Assets\ClassStructGenerate\Runtime\Vo\RobotSkill.cs" />
-    <Compile Include="Assets\ClassStructGenerate\Runtime\Vo\WorktableStatus.cs" />
+    <Compile Include="Assets\ClassStructGenerate\Vo\List.cs" />
+    <Compile Include="Assets\ClassStructGenerate\Vo\ProductComposeHistory.cs" />
+    <Compile Include="Assets\ClassStructGenerate\Vo\RobotInfo.cs" />
+    <Compile Include="Assets\ClassStructGenerate\Vo\RobotSkill.cs" />
+    <Compile Include="Assets\ClassStructGenerate\Vo\WorktableStatus.cs" />
     <Compile Include="Assets\JsonStruct\JsonCSharpClassGeneratorLib\CodeWriters\CSharpCodeWriter.cs" />
     <Compile Include="Assets\JsonStruct\JsonCSharpClassGeneratorLib\CodeWriters\JavaCodeWriter.cs" />
     <Compile Include="Assets\JsonStruct\JsonCSharpClassGeneratorLib\CodeWriters\TypeScriptCodeWriter.cs" />
@@ -457,9 +457,13 @@
     <Compile Include="Assets\testing\TestJsonToC.cs" />
     <Compile Include="Assets\testing\TestTableDataStruct.cs" />
     <Compile Include="Assets\testing\Testing.cs" />
-    <Compile Include="Assets\testing\TestingToMd.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\ClassStructGenerate\Vo\old\List.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\ProductComposeHistory.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\RobotInfo.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\RobotSkill.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\WorktableStatus.txt" />
     <None Include="Assets\Script\ThirdParty\JsonDotNet\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
