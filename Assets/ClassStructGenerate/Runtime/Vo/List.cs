@@ -3,10 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-    public class RobotSkill
+    public class List
     {
         public int? userId;
-        public int? skillId;
-        public string progress;
+        public int? type;
+        public string listInfo;
     }
 

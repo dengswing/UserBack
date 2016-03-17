@@ -3,10 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-    public class RobotSkill
+    public class ProductComposeHistory
     {
         public int? userId;
-        public int? skillId;
-        public string progress;
+        public int? productDefId;
+        public int? count;
+        public int? updateTime;
     }
 

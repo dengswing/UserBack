@@ -38,6 +38,7 @@ namespace StructGenerate
     /// </summary>
     internal class ReaderMD
     {
+        string sMdName;
         public List<StructTable> ReadMdToStructTable(string sPath)
         {
             return ReadAndParseMd(sPath);
@@ -45,6 +46,8 @@ namespace StructGenerate
 
         List<StructTable> ReadAndParseMd(string sPath)
         {
+            sMdName = System.IO.Path.GetFileNameWithoutExtension(sPath).Trim();
+
             var _rstream = new StreamReader(sPath, System.Text.Encoding.UTF8);
             string allContent = _rstream.ReadToEnd();
             _rstream.Close();
@@ -82,11 +85,11 @@ namespace StructGenerate
                 var index = FindValue.IndexOfTableName(readText);
                 if (index != -1)
                 { //查找表名
-                    table.tableName = readText.Substring(index + ReadConst.tableName_EN.Length);
+                    table.tableName = readText.Substring(index + ReadConst.tableName_EN.Length).Trim();
 
                     if (table.tableName == null)
                     {
-                        Debug.LogWarning("Table name is null =>" + readText);
+                        Debug.LogFormat("{0}.md file [{1}] table data error]", sMdName, readText);
                     }
                     else
                     { //跳过多余表头
@@ -97,7 +100,7 @@ namespace StructGenerate
                 }
                 else if (FindValue.IndexOfFieldNumber(readText))
                 { //有|分割符的表字段
-                    var tableField = ReaderTableField(readText);
+                    var tableField = ReaderTableField(readText, table.tableName);
 
                     foreach (var field in tableField)
                     {
@@ -106,14 +109,14 @@ namespace StructGenerate
                 }
                 else
                 { //查找json具体内容
-                    WriteTableFieldValue(readText, table.tableField, reader);
+                    WriteTableFieldValue(readText, table, reader);
                 }
             }
 
             return table;
         }
 
-        Dictionary<string, object> ReaderTableField(string sData)
+        Dictionary<string, object> ReaderTableField(string sData, string sTableName)
         {
             string[] aValue = sData.Split(new char[1] { ReadConst.numberKey });
             if (aValue.Length < 2) return null;
@@ -137,6 +140,10 @@ namespace StructGenerate
                     else
                         sJson = null;
 
+                    if (string.IsNullOrEmpty(sJson))
+                    {
+                        Debug.LogFormat("{0}.md file [{1}] table [{2}] field data error [{3}]", sMdName, sTableName, sValue, aValue[aValue.Length - 1]);
+                    }
                     field.Add(sValue, sJson);
                     break;
                 default:
@@ -146,8 +153,9 @@ namespace StructGenerate
             return field;
         }
 
-        void WriteTableFieldValue(string sValue, Dictionary<string, object> tableField, StringReader reader)
+        void WriteTableFieldValue(string sValue, StructTable table, StringReader reader)
         {
+            Dictionary<string, object> tableField = table.tableField;
             string sJson = ReadConst.LineBlank;
             foreach (var field in tableField)
             {
@@ -169,21 +177,29 @@ namespace StructGenerate
                         sFiledValue = reader.ReadLine();
                     }
 
-                    tableField[field.Key] = ChangeJsonObject(sJson); //赋值
+                    tableField[field.Key] = ChangeJsonObject(sJson, table.tableName, field.Key); //赋值
                     break;
                 }
             }
         }
 
-        object ChangeJsonObject(string sJson)
+        object ChangeJsonObject(string sJson, string sTableName, string sField)
         {
             if (String.IsNullOrEmpty(sJson))
                 return null;
 
             sJson = sJson.Replace(ReadConst.LineTabs, ReadConst.LineBlank).Replace(ReadConst.LineSpace, ReadConst.LineBlank);
 
-            var oJson = JsonConvert.DeserializeObject(sJson);
-            return oJson;
+            try
+            {
+                var oJson = JsonConvert.DeserializeObject(sJson);
+                return oJson;
+            }
+            catch (Exception)
+            {
+                Debug.LogFormat("{0}.md file [{1}] table [{2}] field json data error [{3}]", sMdName, sTableName, sField, sJson);
+                return "Error";
+            }
         }
     }
 

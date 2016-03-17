@@ -3,10 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-    public class RobotSkill
+    public class WorktableStatus
     {
         public int? userId;
-        public int? skillId;
-        public string progress;
+        public int? typeId;
+        public int? status;
+        public string itemRtime;
     }
 

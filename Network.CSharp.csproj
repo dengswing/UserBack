@@ -81,8 +81,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ClassStructGenerate\Runtime\Vo\List.cs" />
+    <Compile Include="Assets\ClassStructGenerate\Runtime\Vo\ProductComposeHistory.cs" />
     <Compile Include="Assets\ClassStructGenerate\Runtime\Vo\RobotInfo.cs" />
     <Compile Include="Assets\ClassStructGenerate\Runtime\Vo\RobotSkill.cs" />
+    <Compile Include="Assets\ClassStructGenerate\Runtime\Vo\WorktableStatus.cs" />
     <Compile Include="Assets\JsonStruct\JsonCSharpClassGeneratorLib\CodeWriters\CSharpCodeWriter.cs" />
     <Compile Include="Assets\JsonStruct\JsonCSharpClassGeneratorLib\CodeWriters\JavaCodeWriter.cs" />
     <Compile Include="Assets\JsonStruct\JsonCSharpClassGeneratorLib\CodeWriters\TypeScriptCodeWriter.cs" />
@@ -118,6 +121,7 @@
     <Compile Include="Assets\Script\Networks\parser\interfaces\INetworkDataParse.cs" />
     <Compile Include="Assets\Script\Networks\parser\interfaces\IServerResponseData.cs" />
     <Compile Include="Assets\Script\Networks\tool\BaseBytes.cs" />
+    <Compile Include="Assets\Script\StructGenerate\GenerateManager.cs" />
     <Compile Include="Assets\Script\StructGenerate\GenerateStruct.cs" />
     <Compile Include="Assets\Script\StructGenerate\ReaderMD.cs" />
     <Compile Include="Assets\Script\StructGenerate\ReaderPhp.cs" />
