@@ -64,10 +64,9 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
         {
             if (config.UseNamespaces)
             {
-                foreach (var line in JsonClassGenerator.FileHeader)
-                {
-                    sw.WriteLine("// " + line);
-                }
+                sw.WriteLine("//According to the Json file automatically generated structures ");
+                sw.WriteLine("//Date : " + DateTime.Now.ToString());
+
                 sw.WriteLine();
                 sw.WriteLine("using System;");
                 sw.WriteLine("using System.Collections.Generic;");
@@ -209,7 +208,7 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
 
                 if (config.UseProperties)
                 {
-                    sw.WriteLine(prefix + "public {0} {1} {{ get; set; }}", field.Type.GetTypeName(), field.MemberName);
+                    sw.WriteLine(prefix + "public {0} {1} {{ get; private set; }}", field.Type.GetTypeName(), field.MemberName);
                 }
                 else
                 {

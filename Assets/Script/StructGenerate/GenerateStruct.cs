@@ -33,6 +33,7 @@ namespace StructGenerate
             //// name space
             if (!string.IsNullOrEmpty(sNamespace))
                 gen.Namespace = sNamespace;
+            gen.UseProperties = true;
 
             var sw = new StringWriter();
             gen.OutputStream = sw;

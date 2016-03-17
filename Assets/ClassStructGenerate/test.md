@@ -97,14 +97,12 @@ unlockSkill | json | - | - | 已解锁的技能 e.g:2.1.c4
 <code>
 2.1.c1
 
-	{
-        "item":[
-            {"itemDefId":"8位id", "count":1},
-            {"itemDefId":"8位id", "count":1}
-        ]
-    }
+	
+      [
+        {"item":{s: 2},"k":{"s":"d"}}
+      ]
 
-
+    
 <code>
 2.1.c4
 

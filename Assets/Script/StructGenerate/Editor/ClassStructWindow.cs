@@ -28,8 +28,8 @@ public class ClassStructWindow : EditorWindow
     void OnGUI()
     {
         GUILayout.BeginArea(new Rect(10, 10, 500, 280));
-        GUILayout.BeginHorizontal("", GUILayout.Width(120));
-        GUILayout.BeginVertical("", GUILayout.Width(230));
+        GUILayout.BeginHorizontal();
+        GUILayout.BeginVertical();
 
         try
         {

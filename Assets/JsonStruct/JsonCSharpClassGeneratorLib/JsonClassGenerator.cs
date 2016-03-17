@@ -145,7 +145,7 @@ namespace Xamasoft.JsonClassGenerator
             var jsonFields = new Dictionary<string, JsonType>();
             var fieldExamples = new Dictionary<string, IList<object>>();
 
-            var first = false;
+            var first = true;
 
             foreach (var obj in examples)
             {
