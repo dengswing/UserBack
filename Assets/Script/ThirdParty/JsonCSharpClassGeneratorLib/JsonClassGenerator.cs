@@ -226,16 +226,12 @@ namespace Xamasoft.JsonClassGenerator
                         JToken value;
                         if (obj.TryGetValue(field.Key, out value))
                         {
-                            if (value.Type == JTokenType.Array || value.Type == JTokenType.Object)
+                            if (value.Type == JTokenType.Array)
                             {
                                 foreach (var item in (JArray)value)
                                 {
                                     if (!(item is JObject)) throw new NotSupportedException("Arrays of non-objects are not supported yet.");
                                     subexamples.Add((JObject)item);
-
-                                   // JProperty firstValue = (JProperty)item.First;
-                                    //subexamples.Add((JObject)firstValue.Value);
-                                    //continue;
                                 }
                             }
                             else if (value.Type == JTokenType.Object)

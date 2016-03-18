@@ -30,9 +30,7 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
             switch (type.Type)
             {
                 case JsonTypeEnum.Anything: return "object";
-                case JsonTypeEnum.Array:
-                    var sValue = arraysAsLists ? "IList<" + GetTypeName(type.InternalType, config) + ">" : GetTypeName(type.InternalType, config) + "[]";
-                    return sValue;
+                case JsonTypeEnum.Array: return arraysAsLists ? "IList<" + GetTypeName(type.InternalType, config) + ">" : GetTypeName(type.InternalType, config) + "[]";
                 case JsonTypeEnum.Dictionary: return "Dictionary<string, " + GetTypeName(type.InternalType, config) + ">";
                 case JsonTypeEnum.Boolean: return "bool";
                 case JsonTypeEnum.Float: return "double";
@@ -58,10 +56,16 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
             { //取第一个进行判断
                 var sField = type.Fields[0].MemberName;
                 int n_int32;
+                long n_int64;
                 if (Int32.TryParse(sField, out n_int32))
                 {
                     type.AssignName("int");
                     return "Dictionary<int, int>";
+                }
+                else  if (Int64.TryParse(sField, out n_int64))
+                {
+                    type.AssignName("int");
+                    return "Dictionary<int, long>";
                 }
                 else
                 {
