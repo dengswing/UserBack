@@ -305,6 +305,10 @@ namespace Networks.parser
                         }
                         tableData = null;
                     }
+                    else
+                    {
+                        data = (T)obj;
+                    }
                 }
                 obj = null;
             }

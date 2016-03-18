@@ -160,9 +160,9 @@ namespace Networks.parser
                     tableListData.Add(key, tableData);
                 }
             }
-
-            if (isUpdate && tableObj == null) dataTableManager.AddTableData(tableName, tableListData);
-
+			
+			if (isUpdate && tableObj == null) dataTableManager.AddTableData(tableName, tableListData);		
+			
             return tableListData;
         }
 
@@ -282,19 +282,20 @@ namespace Networks.parser
         {
             if (value.IndexOf("{") >= 0 || value.IndexOf("[") >= 0)
             {
-                object retObj = null;
-                try
-                {
-                    if (null == valueType)
-                        retObj = JsonConvert.DeserializeObject(value);
-                    else
-                        retObj = JsonConvert.DeserializeObject(value, valueType);
-                }
-                catch (Exception e)
-                {
-                    UnityEngine.Debug.LogWarning(e.Message);
-                }
-                return retObj;
+                return value;
+                //object retObj = null;
+                //try
+                //{
+                //    if (null == valueType)
+                //        retObj = JsonConvert.DeserializeObject(value);
+                //    else
+                //        retObj = JsonConvert.DeserializeObject(value, valueType);
+                //}
+                //catch (Exception e)
+                //{
+                //    UnityEngine.Debug.LogWarning(e.Message);
+                //}
+                //return retObj;
             }
 
             if (value.IndexOf('.') != -1 ||
@@ -333,7 +334,7 @@ namespace Networks.parser
                 return n_bool;
             }
 
-            return null;
+            return value;
         }
 
     }
