@@ -1,5 +1,5 @@
 //According to the Json file automatically generated structures 
-//Date : 3/18/2016 1:25:14 PM
+//Date : 3/18/2016 1:30:03 PM
 
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
 ﻿
-=================3/18/2016 1:25:11 PM=================
+=================3/18/2016 1:30:02 PM=================
 
 Error
 
@@ -7,7 +7,7 @@ Error
 
 
 
-Finish Generate class count 5 ,total of time consuming 503 milliseconds
+Finish Generate class count 5 ,total of time consuming 603 milliseconds
 
 =================3/18/2016 1:25:14 PM=================
 

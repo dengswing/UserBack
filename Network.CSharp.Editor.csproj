@@ -119,10 +119,10 @@
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
     </Reference>
     <Reference Include="LitJson">
-      <HintPath>Assets\JsonStruct\Plugins\LitJson.dll</HintPath>
+      <HintPath>Assets\Script\ThirdParty\Plugins\LitJson.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.Entity.Design.PluralizationServices">
-      <HintPath>Assets\JsonStruct\Plugins\System.Data.Entity.Design.PluralizationServices.dll</HintPath>
+      <HintPath>Assets\Script\ThirdParty\Plugins\System.Data.Entity.Design.PluralizationServices.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
