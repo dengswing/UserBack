@@ -289,6 +289,13 @@ namespace Networks.parser
             T data = default(T);
             if (dataTableAll.ContainsKey(tableName))
             {
+                if (dataTableList.ContainsKey(tableName))
+                {
+                    var dataList = (List<T>)dataTableList[tableName]; //直接取已经缓存的
+                    if (cond != null) return dataList.Find(cond);
+                    return dataList[0]; //默认第一个
+                }
+
                 object obj;
                 if (dataTableAll.TryGetValue(tableName, out obj))
                 {
@@ -320,9 +327,11 @@ namespace Networks.parser
             List<T> data = default(List<T>);
             if (dataTableAll.ContainsKey(tableName))
             {
-                if (cond == null && dataTableList.ContainsKey(tableName))
+                if (dataTableList.ContainsKey(tableName))
                 {
                     data = (List<T>)dataTableList[tableName]; //直接取已经缓存的 
+
+                    if (cond != null) return data.FindAll(cond);
                     return data;
                 }
 

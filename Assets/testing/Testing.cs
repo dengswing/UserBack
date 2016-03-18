@@ -24,18 +24,18 @@ class Testing : MonoBehaviour
         httpNetwork = HttpNetManager.Instance;
         httpNetwork.userID = "79"; //用户id
         httpNetwork.statusType = statusType;
-       // httpNetwork.requestURL = "http://dev-soul.shinezoneapp.com/?&{0}";
+        httpNetwork.requestURL = "http://dev-soul.shinezoneapp.com/?&{0}";
 
 
+        
        // http://dev-mi-facebook.shinezone.com/index.php?*=[["game.login",["1",0,0,1,"3","4"]]]&halt=711&sign=6YjG2QUodzBRd9RDQweiig2s3MQ%3D
-
-        httpNetwork.requestURL = "http://dev-mi-facebook.shinezone.com/index.php?{0}";
+      //  httpNetwork.requestURL = "http://dev-mi-facebook.shinezone.com/index.php?{0}";
 
         httpNetwork.RegisterResponse("game.login", ResponseHandler);  //单个接口的侦听
         httpNetwork.serverErrorResponse = ServerErrorHandler;
         httpNetwork.netTimeOut = NetTimeOutHandler;  //网络超时
-        //httpNetwork.hamcKey = "key345"; //不传的话就默认不做api签名
-        httpNetwork.hamcKey = "key001";
+        httpNetwork.hamcKey = "key345"; //不传的话就默认不做api签名
+        // httpNetwork.hamcKey = "key001";
 
         httpNetwork.RegisterNetworkDataParse(new NetworkDataParser()); //注入解析类，不注入会报错
 
@@ -44,9 +44,10 @@ class Testing : MonoBehaviour
 
         
         // httpNetwork.Post("game.reset", ResponseHandler);
-        httpNetwork.Post("game.login", ResponseHandler, 1, "3", "4");  //单一侦听,报了系统级别错误不会有回调
+       // httpNetwork.Post("game.login", ResponseHandler, 1, "3", "4");  //单一侦听,报了系统级别错误不会有回调
+        httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
        // httpNetwork.Post("package.index", ResponseHandler);
-       // httpNetwork.Post("cityOrder.list", ResponseHandler);
+        httpNetwork.Post("cityOrder.list", ResponseHandler);
         // httpNetwork.Post("package.upgradeLv", ResponseHandler);
 
         //测试单一的请求
@@ -96,8 +97,14 @@ class Testing : MonoBehaviour
         Dictionary<string, ItemMakeCDInfoQueue> dict = TableDataManager.Instance.GetTableDataDictionary<ItemMakeCDInfoQueue>("List");
 
         ModuleProfile info = TableDataManager.Instance.GetTableData<ModuleProfile>("ModuleProfile");
+
         List<CityOrder> cityInfo = TableDataManager.Instance.GetTableDataList<CityOrder>("CityOrder");
-        List<CityOrder> cityInfo2 = TableDataManager.Instance.GetTableDataList<CityOrder>("CityOrder");
+
+        CityOrder cityInfo5 = TableDataManager.Instance.GetTableData<CityOrder>("CityOrder");
+        CityOrder cityInfo6 = TableDataManager.Instance.GetTableData<CityOrder>("CityOrder", x => x.cityOrderDefId == 50000006);
+
+
+        List<CityOrder> cityInfo2 = TableDataManager.Instance.GetTableDataList<CityOrder>("CityOrder", x => x.cityOrderDefId == 50000006);
 
         TableDataManager.Instance.RemoveTableList<CityOrder>("CityOrder");
 
