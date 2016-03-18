@@ -1,5 +1,5 @@
 //According to the Json file automatically generated structures 
-//Date : 3/17/2016 8:36:05 PM
+//Date : 3/18/2016 1:25:11 PM
 
 using System;
 using System.Collections.Generic;
@@ -10,8 +10,10 @@ namespace Vo
 
     public class Progress
     {
-        public int item { get; private set; }
-        public string k { get; private set; }
+        public int itemDefId { get; private set; }
+        public int cd { get; private set; }
+        public int completeTime { get; private set; }
+        public List<Dictionary<int, int>> material { get; private set; }
     }
 
     public class RobotInfo

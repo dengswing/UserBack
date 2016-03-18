@@ -30,7 +30,9 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
             switch (type.Type)
             {
                 case JsonTypeEnum.Anything: return "object";
-                case JsonTypeEnum.Array: return arraysAsLists ? "IList<" + GetTypeName(type.InternalType, config) + ">" : GetTypeName(type.InternalType, config) + "[]";
+                case JsonTypeEnum.Array:
+                    var sValue = arraysAsLists ? "IList<" + GetTypeName(type.InternalType, config) + ">" : GetTypeName(type.InternalType, config) + "[]";
+                    return sValue;
                 case JsonTypeEnum.Dictionary: return "Dictionary<string, " + GetTypeName(type.InternalType, config) + ">";
                 case JsonTypeEnum.Boolean: return "bool";
                 case JsonTypeEnum.Float: return "double";
@@ -44,11 +46,33 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
                 case JsonTypeEnum.NullableLong: return "long?";
                 case JsonTypeEnum.NullableDate: return "DateTime?";
                 case JsonTypeEnum.NullableSomething: return "object";
-                case JsonTypeEnum.Object: return type.AssignedName;
+                case JsonTypeEnum.Object:return checkIsDictionary(type);
                 case JsonTypeEnum.String: return "string";
                 default: throw new System.NotSupportedException("Unsupported json type");
             }
         }
+
+        private string checkIsDictionary(JsonType type)
+        {
+            if (type.Fields != null && type.Fields.Count > 0)
+            { //取第一个进行判断
+                var sField = type.Fields[0].MemberName;
+                int n_int32;
+                if (Int32.TryParse(sField, out n_int32))
+                {
+                    type.AssignName("int");
+                    return "Dictionary<int, int>";
+                }
+                else
+                {
+                    return type.AssignedName;
+                }
+            }
+            else
+            {
+                return type.AssignedName;
+            } 
+        }  
 
 
         private bool ShouldApplyNoRenamingAttribute(IJsonClassGeneratorConfig config)
@@ -122,6 +146,9 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
 
         public void WriteClass(IJsonClassGeneratorConfig config, TextWriter sw, JsonType type)
         {
+            GetTypeName(type, config);
+            if (type.AssignedName == "int") return; 
+
             var visibility = config.InternalVisibility ? "internal" : "public";
 
 

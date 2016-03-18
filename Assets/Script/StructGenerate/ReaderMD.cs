@@ -10,9 +10,13 @@ namespace StructGenerate
     {
         public const string tableName_CN = "表名：";
         public const string tableName_EN = "表名:";
+
         public const char poundKey = '#';
         public const char numberKey = '|';
         public const char colonKey = ':';
+        public const char braceKey = '{';
+        public const char bracketKey = '[';
+
         public const string fieldInt = "int";
         public const string fieldString = "string";
         public const string fieldJson = "json";
@@ -89,7 +93,7 @@ namespace StructGenerate
 
                     if (table.tableName == null)
                     {
-                        ErrorLog.ShowLogError("{0}.md file [{1}] table data error]",true, sMdName, readText);
+                        ErrorLog.ShowLogError("{0}.md file [{1}] table data error]", true, sMdName, readText);
                     }
                     else
                     { //跳过多余表头
@@ -134,17 +138,37 @@ namespace StructGenerate
                     break;
                 case ReadConst.fieldJson:
                     string sJson = aValue[aValue.Length - 1];
-                    var index = sJson.IndexOf(ReadConst.colonKey);
-                    if (index != -1)
-                        sJson = sJson.Substring(index + 1);
-                    else
-                        sJson = null;
 
-                    if (string.IsNullOrEmpty(sJson))
+                    var index = sJson.IndexOf(ReadConst.braceKey);
+                    if (index == -1) index = sJson.IndexOf(ReadConst.bracketKey);
+                    if (index != -1)
                     {
-                        ErrorLog.ShowLogError("{0}.md file [{1}] table [{2}] field data error [{3}]",true, sMdName, sTableName, sValue, aValue[aValue.Length - 1]);
+                        sJson = sJson.Substring(index);
+                        if (string.IsNullOrEmpty(sJson))
+                        {
+                            ErrorLog.ShowLogError("{0}.md file [{1}] table [{2}] field data error [{3}]", true, sMdName, sTableName, sValue, aValue[aValue.Length - 1]);
+                        }
+                        else
+                        {
+                            var oJson = ChangeJsonObject(sJson, sTableName, sValue); //赋值
+                            field.Add(sValue, oJson);
+                        }
                     }
-                    field.Add(sValue, sJson);
+                    else
+                    {
+                        index = sJson.IndexOf(ReadConst.colonKey);
+                        if (index != -1)
+                            sJson = sJson.Substring(index + 1);
+                        else
+                            sJson = null;
+
+                        if (string.IsNullOrEmpty(sJson))
+                        {
+                            ErrorLog.ShowLogError("{0}.md file [{1}] table [{2}] field data error [{3}]", true, sMdName, sTableName, sValue, aValue[aValue.Length - 1]);
+                        }
+
+                        field.Add(sValue, sJson);
+                    }
                     break;
                 default:
                     break;
@@ -197,7 +221,7 @@ namespace StructGenerate
             }
             catch (Exception)
             {
-                ErrorLog.ShowLogError("{0}.md file [{1}] table [{2}] field json data error [{3}]",true, sMdName, sTableName, sField, sJson);
+                ErrorLog.ShowLogError("{0}.md file [{1}] table [{2}] field json data error [{3}]", true, sMdName, sTableName, sField, sJson);
                 return "Error";
             }
         }

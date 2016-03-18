@@ -18,8 +18,6 @@ namespace StructGenerate
             {
                 GenModuleStruct(table, sPath, sNamespace);
             }
-
-            AssetDatabase.Refresh();
         }
 
         void GenModuleStruct(StructTable tableData, string sPath, string sNamespace)

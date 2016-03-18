@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ public class ClassStructWindow : EditorWindow
     string sMdPath = "ClassStructGenerate";
     string sFilePath = "ClassStructGenerate/Vo/";
     string sPhpPath = "ClassStructGenerate/orm.config.php";
+    string sLog = "ClassStructGenerate/Vo/genLog.txt";
 
     List<string> mdList;
     int index = 0;
@@ -24,6 +26,18 @@ public class ClassStructWindow : EditorWindow
     {
         EditorWindow.GetWindow(typeof(ClassStructWindow));
     }
+
+    public ClassStructWindow() 
+    {
+        generateManager = new GenerateManager();
+
+        var assetPath = Application.dataPath;
+        sMdPath = Path.Combine(assetPath, sMdPath);
+        sFilePath = Path.Combine(assetPath, sFilePath);
+        sPhpPath = Path.Combine(assetPath, sPhpPath);
+        sLog = Path.Combine(assetPath, sLog);
+    }
+
 
     void OnGUI()
     {
@@ -58,7 +72,14 @@ public class ClassStructWindow : EditorWindow
             csharp = "";
         }
 
+        if (GUILayout.Button("Open Log"))
+        {
+            if (File.Exists(sLog)) System.Diagnostics.Process.Start(sLog);
+        }
+
         GUILayout.EndHorizontal();
+
+        GUILayout.Space(5);
 
         GUILayout.TextField(csharp, GUILayout.Width(500), GUILayout.Height(250));
 
@@ -67,13 +88,6 @@ public class ClassStructWindow : EditorWindow
 
     void Awake()
     {
-        generateManager = new GenerateManager(); 
-
-        var assetPath = Application.dataPath;
-        sMdPath = Path.Combine(assetPath, sMdPath);
-        sFilePath = Path.Combine(assetPath, sFilePath);
-        sPhpPath = Path.Combine(assetPath, sPhpPath);
-
         // get md files
         mdList = Directory.GetFiles(sMdPath, "*.*", SearchOption.TopDirectoryOnly)
             .Where(file => file.ToLower().EndsWith(".md"))
@@ -88,16 +102,41 @@ public class ClassStructWindow : EditorWindow
 
     void GenAllStruct()
     {
+        //if (generateManager== null) generateManager = new GenerateManager(); 
         generateManager.MdClassGenerate(mdList, sFilePath, sPhpPath, sNamesapce);
         csharp = ErrorLog.logInfo;
+
+        AssetDatabase.Refresh();
+
+        LogSave();
     }
 
     void GenSingleStruct()
     {
         var singleList = new List<string>();
         singleList.Add(mdList[index]);
+
+        // if (generateManager == null) generateManager = new GenerateManager(); 
         generateManager.MdClassGenerate(singleList, sFilePath, sPhpPath, sNamesapce);
 
         csharp = ErrorLog.logInfo;
+
+        LogSave();
+    }
+
+    void LogSave()
+    {
+        FileStream fs = new FileStream(sLog, FileMode.OpenOrCreate);
+        StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+        //开始写入
+        sw.Write(csharp);
+        //清空缓冲区
+        sw.Flush();
+        //关闭流
+        sw.Close();
+        fs.Close();
+
+
+        AssetDatabase.Refresh();
     }
 }

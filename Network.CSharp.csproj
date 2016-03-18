@@ -459,6 +459,7 @@
     <Compile Include="Assets\testing\Testing.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\ClassStructGenerate\Vo\genLog.txt" />
     <None Include="Assets\ClassStructGenerate\Vo\old\List.txt" />
     <None Include="Assets\ClassStructGenerate\Vo\old\ProductComposeHistory.txt" />
     <None Include="Assets\ClassStructGenerate\Vo\old\RobotInfo.txt" />
