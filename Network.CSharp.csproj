@@ -86,8 +86,6 @@
     <Compile Include="Assets\ClassStructGenerate\Vo\RobotInfo.cs" />
     <Compile Include="Assets\ClassStructGenerate\Vo\RobotSkill.cs" />
     <Compile Include="Assets\ClassStructGenerate\Vo\WorktableStatus.cs" />
-    <Compile Include="Assets\JsonStruct\JsonStructWindowInfo.cs" />
-    <Compile Include="Assets\JsonStruct\util\UtilString.cs" />
     <Compile Include="Assets\Script\Networks\HttpNetManager.cs" />
     <Compile Include="Assets\Script\Networks\MessageDelegates.cs" />
     <Compile Include="Assets\Script\Networks\NetTimerManager.cs" />

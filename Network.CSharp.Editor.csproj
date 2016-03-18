@@ -132,7 +132,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\JsonStruct\Editor\JsonStructWindow.cs" />
     <Compile Include="Assets\Script\StructGenerate\Editor\ClassStructWindow.cs" />
   </ItemGroup>
   <ItemGroup>

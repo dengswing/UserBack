@@ -93,7 +93,7 @@ namespace StructGenerate
 
                     if (table.tableName == null)
                     {
-                        ErrorLog.ShowLogError("{0}.md file [{1}] table data error]", true, sMdName, readText);
+                        ErrorLog.ShowLogError("{0}.md file [{1}] table data error", true, sMdName, readText);
                     }
                     else
                     { //跳过多余表头

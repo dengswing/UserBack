@@ -47,8 +47,6 @@ namespace StructGenerate
                 string sTableName = sPrev.Substring(index + 1, length - index - 1 - end);
 
                 sTableName = sTableName.Trim();
-
-               // UnityEngine.Debug.Log(sDataBase + "=|=" + sTableName);
                 tableList.Add(sDataBase, sTableName);
             }
 

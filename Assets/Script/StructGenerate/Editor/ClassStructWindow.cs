@@ -126,16 +126,12 @@ public class ClassStructWindow : EditorWindow
 
     void LogSave()
     {
-        FileStream fs = new FileStream(sLog, FileMode.OpenOrCreate);
-        StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-        //开始写入
+        //FileStream fs = new FileStream(sLog, FileMode.OpenOrCreate);
+        StreamWriter sw = new StreamWriter(sLog, false, Encoding.UTF8);   
         sw.Write(csharp);
-        //清空缓冲区
         sw.Flush();
-        //关闭流
         sw.Close();
-        fs.Close();
-
+        //fs.Close();
 
         AssetDatabase.Refresh();
     }

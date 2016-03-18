@@ -25,8 +25,8 @@ namespace StructGenerate
 
         public void MdClassGenerate(List<string> sMdPath, string sFilePath, string sPhpPath, string sNamesapce = null)
         {
-            ErrorLog.ShowLogError("\n================={0}=================\n", true, DateTime.Now.ToString());
-            ErrorLog.ShowLogError("Error\n", true);
+            ErrorLog.ClearLogGroup();
+            ErrorLog.ShowLogError("================={0}=================", true, DateTime.Now.ToString());
 
             if (sMdPath == null || sMdPath.Count <= 0)
             {
@@ -95,8 +95,7 @@ namespace StructGenerate
 
             ErrorLog.ShowLogError(null, true);
             ErrorLog.ShowLogError(null, true);
-            ErrorLog.ShowLogError(null, true);
-            ErrorLog.ShowLogError("Finish Generate class count {1} ,total of time consuming {0} milliseconds", true, tSpan.Milliseconds, tableGenerateList.Count);
+            ErrorLog.ShowLogError("Finish Generate class count [{1}] ,total of time consuming [{0}] milliseconds", true, tSpan.Milliseconds, tableGenerateList.Count);
         }
 
         void LogShow()
@@ -156,7 +155,7 @@ namespace StructGenerate
                     }
                     catch (Exception e)
                     {
-                        ErrorLog.ShowLogError("{0} serialize json error", true, table.tableName);
+                        ErrorLog.ShowLogError("[{0}] serialize json error", true, table.tableName);
                         continue;
                     }
 
@@ -164,7 +163,7 @@ namespace StructGenerate
                 }
                 else
                 {
-                    ErrorLog.ShowLogError("{0} Table does not exist", true, table.tableName);
+                    ErrorLog.ShowLogError("[{0}] Table does not exist", true, table.tableName);
                     continue;
                 }
 
@@ -184,6 +183,13 @@ namespace StructGenerate
     public class ErrorLog
     {
         static StringBuilder errLog = new StringBuilder();
+        static List<string> logList = new List<string>();
+
+        public static void ClearLogGroup()
+        {
+            logList.Clear();
+        }
+
         public static void Clear()
         {
             errLog.Remove(0, errLog.Length);
@@ -192,19 +198,38 @@ namespace StructGenerate
         public static void ShowLogError(string msg, bool isError, params object[] args)
         {
             if (!string.IsNullOrEmpty(msg))
-            {
-                var info = string.Format(msg, args);
-                Debug.Log(info);
-                if (isError) errLog.Append(info);
-            }
+                msg = string.Format(msg, args);
 
-            if (isError) errLog.AppendLine();
+            if (isError) logList.Add(msg);
+            //Debug.Log(msg);            
         }
 
         public static string logInfo
         {
             get
             {
+                if (errLog.Length > 0) errLog.Insert(0, "\n");
+
+                var isError = (logList.Count >= 5);
+                for (var i = logList.Count; i >0 ; i--)
+                {
+                    var item = logList[i - 1];
+
+                    errLog.Insert(0, "\n");
+
+                    if (isError && i == 1)
+                    {
+                        errLog.Insert(0, "\nError\n");
+                        isError = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        errLog.Insert(0, item);
+                    }                
+                }
+
+                ClearLogGroup();
                 return errLog.ToString();
             }
         }
