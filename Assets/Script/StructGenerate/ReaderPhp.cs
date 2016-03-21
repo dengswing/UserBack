@@ -9,11 +9,21 @@ namespace StructGenerate
     /// </summary>
     internal class ReaderPhp
     {
+        /// <summary>
+        /// 读取php文件及解析内容
+        /// </summary>
+        /// <param name="sPath"></param>
+        /// <returns></returns>
         public Dictionary<string, string> ReadPhpToStructTable(string sPath)
         {
             return ReadAndParsePhp(sPath);
         }
 
+        /// <summary>
+        /// 读取及逐行解析php文件
+        /// </summary>
+        /// <param name="sPath"></param>
+        /// <returns></returns>
         Dictionary<string, string> ReadAndParsePhp(string sPath)
         {
             var _rstream = new StreamReader(sPath, System.Text.Encoding.UTF8);
@@ -53,6 +63,11 @@ namespace StructGenerate
             return tableList;
         }
 
+        /// <summary>
+        /// 是否找到空格符
+        /// </summary>
+        /// <param name="sValue"></param>
+        /// <returns></returns>
         bool IndexOfTableName(string sValue)
         {
             return (sValue.IndexOf(ReadConst.splitTable) != -1);

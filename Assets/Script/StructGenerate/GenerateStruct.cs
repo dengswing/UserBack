@@ -12,6 +12,12 @@ namespace StructGenerate
     /// </summary>
     internal class GenerateStruct
     {
+        /// <summary>
+        /// 生成数据结构
+        /// </summary>
+        /// <param name="sPath">生成类路径</param>
+        /// <param name="tableList">表数据</param>
+        /// <param name="sNamespace">类命名空间</param>
         public void GenerateTypeStruct(string sPath, List<StructTable> tableList, string sNamespace)
         {
             foreach (var table in tableList)
@@ -20,6 +26,12 @@ namespace StructGenerate
             }
         }
 
+        /// <summary>
+        /// 生成结构
+        /// </summary>
+        /// <param name="tableData"></param>
+        /// <param name="sPath"></param>
+        /// <param name="sNamespace"></param>
         void GenModuleStruct(StructTable tableData, string sPath, string sNamespace)
         {
             var gen = new JsonClassGenerator();

@@ -16,6 +16,9 @@ namespace StructGenerate
         ReaderMD myReadMD;
         GenerateStruct myGenerateStruct;
 
+        /// <summary>
+        /// 生成类管理
+        /// </summary>
         public GenerateManager()
         {
             myReaderPhp = new ReaderPhp();
@@ -23,6 +26,13 @@ namespace StructGenerate
             myGenerateStruct = new GenerateStruct();
         }
 
+        /// <summary>
+        /// md文件类结构生成
+        /// </summary>
+        /// <param name="sMdPath">所有md文件路径</param>
+        /// <param name="sFilePath">生成类文件夹路径</param>
+        /// <param name="sPhpPath">php文件路径</param>
+        /// <param name="sNamesapce">生成类的命名空间</param>
         public void MdClassGenerate(List<string> sMdPath, string sFilePath, string sPhpPath, string sNamesapce = null)
         {
             ErrorLog.ClearLogGroup();
@@ -98,11 +108,12 @@ namespace StructGenerate
             ErrorLog.ShowLogError("Finish Generate class count [{1}] ,total of time consuming [{0}] milliseconds", true, tSpan.Milliseconds, tableGenerateList.Count);
         }
 
-        void LogShow()
-        {
-
-        }
-
+        /// <summary>
+        /// md文件读取
+        /// </summary>
+        /// <param name="pathList"></param>
+        /// <param name="sturctTableList"></param>
+        /// <returns></returns>
         bool ReaderMd(List<string> pathList, out List<StructTable> sturctTableList)
         {
             sturctTableList = new List<StructTable>();
@@ -129,6 +140,12 @@ namespace StructGenerate
             return true;
         }
 
+        /// <summary>
+        /// php文件读取
+        /// </summary>
+        /// <param name="sPath"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
         bool ReaderPhp(string sPath, out Dictionary<string, string> tableName)
         {
             tableName = myReaderPhp.ReadPhpToStructTable(sPath);
@@ -142,6 +159,13 @@ namespace StructGenerate
             return true;
         }
 
+        /// <summary>
+        /// 查找相应的表名及数据json系列化
+        /// </summary>
+        /// <param name="tableDataList"></param>
+        /// <param name="tableNameDic"></param>
+        /// <param name="tableGenerateList"></param>
+        /// <returns></returns>
         bool ChangeStructToJson(List<StructTable> tableDataList, Dictionary<string, string> tableNameDic, out List<StructTable> tableGenerateList)
         {
             tableGenerateList = new List<StructTable>();
@@ -185,16 +209,28 @@ namespace StructGenerate
         static StringBuilder errLog = new StringBuilder();
         static List<string> logList = new List<string>();
 
+        /// <summary>
+        /// 清空当前log
+        /// </summary>
         public static void ClearLogGroup()
         {
             logList.Clear();
         }
 
+        /// <summary>
+        /// 清空所有log
+        /// </summary>
         public static void Clear()
         {
             errLog.Remove(0, errLog.Length);
         }
 
+        /// <summary>
+        /// 添加log
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="isError"></param>
+        /// <param name="args"></param>
         public static void ShowLogError(string msg, bool isError, params object[] args)
         {
             if (!string.IsNullOrEmpty(msg))
@@ -204,6 +240,9 @@ namespace StructGenerate
             //Debug.Log(msg);            
         }
 
+        /// <summary>
+        /// log信息
+        /// </summary>
         public static string logInfo
         {
             get

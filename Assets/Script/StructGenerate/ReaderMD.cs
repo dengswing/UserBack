@@ -43,11 +43,22 @@ namespace StructGenerate
     internal class ReaderMD
     {
         string sMdName;
+
+        /// <summary>
+        /// 读取及解析md文件
+        /// </summary>
+        /// <param name="sPath"></param>
+        /// <returns></returns>
         public List<StructTable> ReadMdToStructTable(string sPath)
         {
             return ReadAndParseMd(sPath);
         }
 
+        /// <summary>
+        /// 读取及解析md
+        /// </summary>
+        /// <param name="sPath"></param>
+        /// <returns></returns>
         List<StructTable> ReadAndParseMd(string sPath)
         {
             sMdName = System.IO.Path.GetFileNameWithoutExtension(sPath).Trim();
@@ -73,6 +84,11 @@ namespace StructGenerate
             return tableList;
         }
 
+        /// <summary>
+        /// 逐行解析
+        /// </summary>
+        /// <param name="sValue"></param>
+        /// <returns></returns>
         StructTable ReaderLineValue(string sValue)
         {
             StringReader reader = new StringReader(sValue);
@@ -120,6 +136,12 @@ namespace StructGenerate
             return table;
         }
 
+        /// <summary>
+        /// 表字段解析
+        /// </summary>
+        /// <param name="sData"></param>
+        /// <param name="sTableName"></param>
+        /// <returns></returns>
         Dictionary<string, object> ReaderTableField(string sData, string sTableName)
         {
             string[] aValue = sData.Split(new char[1] { ReadConst.numberKey });
@@ -177,6 +199,12 @@ namespace StructGenerate
             return field;
         }
 
+        /// <summary>
+        /// 表格字段赋值
+        /// </summary>
+        /// <param name="sValue"></param>
+        /// <param name="table"></param>
+        /// <param name="reader"></param>
         void WriteTableFieldValue(string sValue, StructTable table, StringReader reader)
         {
             Dictionary<string, object> tableField = table.tableField;
@@ -207,6 +235,13 @@ namespace StructGenerate
             }
         }
 
+        /// <summary>
+        /// 内容json化
+        /// </summary>
+        /// <param name="sJson"></param>
+        /// <param name="sTableName"></param>
+        /// <param name="sField"></param>
+        /// <returns></returns>
         object ChangeJsonObject(string sJson, string sTableName, string sField)
         {
             if (String.IsNullOrEmpty(sJson))

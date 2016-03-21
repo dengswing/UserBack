@@ -6,6 +6,9 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// 类结构生成
+/// </summary>
 public class ClassStructWindow : EditorWindow
 {
     const string sNamesapce = "Vo";
@@ -21,12 +24,16 @@ public class ClassStructWindow : EditorWindow
     string[] mdName = new string[100];
     GenerateManager generateManager;
 
+    
     [MenuItem("Shinezone/ClassStructWindow %#W")]
     public static void ShowStructWindow()
     {
         EditorWindow.GetWindow(typeof(ClassStructWindow));
     }
 
+    /// <summary>
+    /// 类结构生成
+    /// </summary>
     public ClassStructWindow() 
     {
         generateManager = new GenerateManager();
@@ -38,7 +45,9 @@ public class ClassStructWindow : EditorWindow
         sLog = Path.Combine(assetPath, sLog);
     }
 
-
+    /// <summary>
+    /// 界面绘制
+    /// </summary>
     void OnGUI()
     {
         GUILayout.BeginArea(new Rect(10, 10, 500, 280));
@@ -86,6 +95,9 @@ public class ClassStructWindow : EditorWindow
         GUILayout.EndArea();
     }
 
+    /// <summary>
+    /// 读取所有*.md文件
+    /// </summary>
     void Awake()
     {
         // get md files
@@ -100,9 +112,11 @@ public class ClassStructWindow : EditorWindow
         }
     }
 
+    /// <summary>
+    /// 生成所有md文件类结构
+    /// </summary>
     void GenAllStruct()
     {
-        //if (generateManager== null) generateManager = new GenerateManager(); 
         generateManager.MdClassGenerate(mdList, sFilePath, sPhpPath, sNamesapce);
         csharp = ErrorLog.logInfo;
 
@@ -111,12 +125,14 @@ public class ClassStructWindow : EditorWindow
         LogSave();
     }
 
+    /// <summary>
+    ///单个md文件类生成 
+    /// </summary>
     void GenSingleStruct()
     {
         var singleList = new List<string>();
         singleList.Add(mdList[index]);
-
-        // if (generateManager == null) generateManager = new GenerateManager(); 
+ 
         generateManager.MdClassGenerate(singleList, sFilePath, sPhpPath, sNamesapce);
 
         csharp = ErrorLog.logInfo;
@@ -124,14 +140,15 @@ public class ClassStructWindow : EditorWindow
         LogSave();
     }
 
+    /// <summary>
+    /// log文件生成
+    /// </summary>
     void LogSave()
     {
-        //FileStream fs = new FileStream(sLog, FileMode.OpenOrCreate);
         StreamWriter sw = new StreamWriter(sLog, false, Encoding.UTF8);   
         sw.Write(csharp);
         sw.Flush();
         sw.Close();
-        //fs.Close();
 
         AssetDatabase.Refresh();
     }
