@@ -1,0 +1,4 @@
+﻿=================3/21/2016 6:22:22 PM=================
+
+
+Finish Generate class count [2] ,total of time consuming [150] milliseconds
