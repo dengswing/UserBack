@@ -1,7 +1,7 @@
-﻿=================3/21/2016 2:25:59 PM=================
+﻿=================3/21/2016 5:53:42 PM=================
 Error
 
 生产系统设计.md file [sg_list] table [listInfo] field json data error [[["itemDefId":8位产品id,"completeTime":完成时间,如果处于未计时状态则为0,],...]]
 
 
-Finish Generate class count [5] ,total of time consuming [245] milliseconds
+Finish Generate class count [5] ,total of time consuming [160] milliseconds

@@ -12,6 +12,7 @@ using UnityEngine;
 public class ClassStructWindow : EditorWindow
 {
     const string sNamesapce = "Vo";
+    const string sNamesapceTable = "Networks";
 
     string csharp = "generated results and error reminder";
     string sMdPath = "ClassStructGenerate";
@@ -23,6 +24,7 @@ public class ClassStructWindow : EditorWindow
     int index = 0;
     string[] mdName = new string[100];
     GenerateManager generateManager;
+    GenerateTableList generateTableList;
 
     
     [MenuItem("Shinezone/ClassStructWindow %#W")]
@@ -37,6 +39,7 @@ public class ClassStructWindow : EditorWindow
     public ClassStructWindow() 
     {
         generateManager = new GenerateManager();
+        generateTableList = new GenerateTableList();
 
         var assetPath = Application.dataPath;
         sMdPath = Path.Combine(assetPath, sMdPath);
@@ -145,6 +148,8 @@ public class ClassStructWindow : EditorWindow
     /// </summary>
     void LogSave()
     {
+        generateTableList.GenClassesStructFile(sNamesapceTable, sFilePath, sNamesapce);
+
         StreamWriter sw = new StreamWriter(sLog, false, Encoding.UTF8);   
         sw.Write(csharp);
         sw.Flush();

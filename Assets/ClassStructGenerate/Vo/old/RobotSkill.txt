@@ -1,9 +1,8 @@
 //According to the Json file automatically generated structures 
-//Date : 3/18/2016 5:38:21 PM
+//Date : 3/21/2016 5:51:31 PM
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
 
 namespace Vo
 {

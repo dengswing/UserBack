@@ -58,12 +58,22 @@ namespace StructGenerate
             }
 
             var sOld = sPath + "/old/";
+            sPath = sPath + gen.MainClass + ".cs";
+
+            CreateClassToTxt(sPath, sOld);
+
+            StreamWriter file = new StreamWriter(sPath);
+            file.Write(csharp);
+            file.Close();
+        }
+
+        public static void CreateClassToTxt(string sPath, string sOld)
+        {
             if (!Directory.Exists(sOld))
             {
                 Directory.CreateDirectory(sOld);
             }
 
-            sPath = sPath + gen.MainClass + ".cs";
             if (File.Exists(sPath))
             {
                 var fileName = System.IO.Path.GetFileNameWithoutExtension(sPath);
@@ -78,12 +88,9 @@ namespace StructGenerate
 
                 File.Copy(sPath, fileDel);
             }
-
-            StreamWriter file = new StreamWriter(sPath);
-            file.Write(csharp);
-            file.Close();
         }
 
     }
+
 
 }

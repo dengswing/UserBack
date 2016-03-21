@@ -140,6 +140,8 @@
     <None Include="Assets\ClassStructGenerate\Vo\old\ProductComposeHistory.txt" />
     <None Include="Assets\ClassStructGenerate\Vo\old\RobotInfo.txt" />
     <None Include="Assets\ClassStructGenerate\Vo\old\RobotSkill.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\TableDataNames.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\TableDataStruct.txt" />
     <None Include="Assets\ClassStructGenerate\Vo\old\WorktableStatus.txt" />
     <None Include="Assets\Script\ThirdParty\JsonDotNet\ReadMe.txt" />
   </ItemGroup>
