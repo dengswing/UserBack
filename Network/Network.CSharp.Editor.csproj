@@ -118,12 +118,6 @@
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
     </Reference>
-    <Reference Include="LitJson">
-      <HintPath>Assets\Script\ThirdParty\Plugins\LitJson.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.Entity.Design.PluralizationServices">
-      <HintPath>Assets\Script\ThirdParty\Plugins\System.Data.Entity.Design.PluralizationServices.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Network.CSharp.csproj">
