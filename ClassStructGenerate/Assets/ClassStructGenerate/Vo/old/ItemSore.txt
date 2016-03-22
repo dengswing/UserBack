@@ -1,5 +1,4 @@
 //According to the Json file automatically generated structures 
-//Date : 3/22/2016 1:25:08 PM
 
 
 

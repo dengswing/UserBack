@@ -1,5 +1,5 @@
 //According to the Json file automatically generated structures
-//Date : 3/22/2016 2:34:15 PM
+//Date : 3/22/2016 4:52:48 PM
 
 namespace Networks
 {
