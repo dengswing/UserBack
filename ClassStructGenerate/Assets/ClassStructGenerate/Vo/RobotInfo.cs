@@ -15,7 +15,7 @@ namespace Vo
 
     public class RobotInfo
     {
-        public int userId { get; private set; }
+        public float userId { get; private set; }
         public int moduleId { get; private set; }
         public int moduleLv { get; private set; }
         public List<Progress> progress { get; private set; }

@@ -142,7 +142,7 @@ namespace StructGenerate
         public static void WriteFileStart(TextWriter sw)
         {
             sw.WriteLine("//According to the Json file automatically generated structures");
-            sw.WriteLine("//Date : " + DateTime.Now.ToString());
+           // sw.WriteLine("//Date : " + DateTime.Now.ToString());
             sw.WriteLine();
         }
 

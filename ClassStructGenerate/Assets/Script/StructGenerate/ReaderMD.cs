@@ -23,6 +23,9 @@ namespace StructGenerate
         public const string fieldInt = "int";
         public const string fieldString = "string";
         public const string fieldJson = "json";
+        public const string fieldFloat = "float";
+        public const string fieldLong = "long";
+
         public const string LineCode = "<code>";
         public const string LineNewLine = "\n";
         public const string LineTabs = "\t";
@@ -168,6 +171,12 @@ namespace StructGenerate
             string sValue = (string)aValue[0].Trim();
             switch (sType)
             {
+                case  ReadConst.fieldLong:
+                    field.Add(sValue,11111111111);
+                    break;
+                case ReadConst.fieldFloat:
+                    field.Add(sValue, 1.0);
+                    break;
                 case ReadConst.fieldInt:
                     field.Add(sValue, 1);
                     break;

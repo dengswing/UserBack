@@ -33,13 +33,13 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
                 case JsonTypeEnum.Array: return arraysAsLists ? "IList<" + GetTypeName(type.InternalType, config) + ">" : GetTypeName(type.InternalType, config) + "[]";
                 case JsonTypeEnum.Dictionary: return "Dictionary<string, " + GetTypeName(type.InternalType, config) + ">";
                 case JsonTypeEnum.Boolean: return "bool";
-                case JsonTypeEnum.Float: return "double";
+                case JsonTypeEnum.Float: return "float";
                 case JsonTypeEnum.Integer: return "int";
                 case JsonTypeEnum.Long: return "long";
                 case JsonTypeEnum.Date: return "DateTime";
                 case JsonTypeEnum.NonConstrained: return "object";
                 case JsonTypeEnum.NullableBoolean: return "bool?";
-                case JsonTypeEnum.NullableFloat: return "double?";
+                case JsonTypeEnum.NullableFloat: return "float?";
                 case JsonTypeEnum.NullableInteger: return "int?";
                 case JsonTypeEnum.NullableLong: return "long?";
                 case JsonTypeEnum.NullableDate: return "DateTime?";

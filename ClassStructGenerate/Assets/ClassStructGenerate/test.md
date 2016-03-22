@@ -86,8 +86,8 @@ name | string | - | client | - | 技能名
 
 字段名	 | 类型 | 默认值 | 索引 | 备注 
 --- | --- | --- | --- | ---
-userId | int | - | pri | 玩家用户id
-moduleId | int | - | pri | 模块Id
+userId | float | - | pri | 玩家用户id
+moduleId | long | - | pri | 模块Id
 moduleLv | int | - | - | 模块当前等级
 progress | json | - | - | 模块升级进度 e.g:2.1.c1
 isUnlock | int | - | - | 是否模块已解锁 可以则为1，不能则为0
