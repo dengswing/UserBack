@@ -1,12 +1,4 @@
-﻿=================3/22/2016 1:28:59 PM=================
-Error
-
-生产系统设计.md file [sg_list] table [listInfo] field json data error [[["itemDefId":8位产品id,"completeTime":完成时间,如果处于未计时状态则为0,],...]]
-道具模块设计.md file [ItemSore] table [price] field json data error [{"priceId":priceCount,…}，购买该道具时需要用来支付的虚拟货币id和数量]
-[module_payment] Table does not exist
-[module_payment_orders] Table does not exist
-[module_item] Table does not exist
-[module_item_volume] Table does not exist
+﻿=================3/22/2016 2:34:14 PM=================
 
 
-Finish Generate class count [7] ,total of time consuming [179] milliseconds
+Finish Generate class count [2] ,total of time consuming [167] milliseconds
