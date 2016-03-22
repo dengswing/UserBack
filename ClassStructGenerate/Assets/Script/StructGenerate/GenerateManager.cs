@@ -133,7 +133,7 @@ namespace StructGenerate
 
             if (sturctTableList.Count <= 0)
             {
-                Debug.LogError("md file does not exist");
+                ErrorLog.ShowLogError("\nmd file does not exist", true);
                 return false;
             }
 
@@ -152,7 +152,7 @@ namespace StructGenerate
 
             if (tableName == null || tableName.Count <= 0)
             {
-                Debug.LogError("All the tables do not exist");
+                ErrorLog.ShowLogError("\nAll the tables do not exist", true);
                 return false;
             }
 
@@ -171,7 +171,7 @@ namespace StructGenerate
             tableGenerateList = new List<StructTable>();
             foreach (var table in tableDataList)
             {
-                if (tableNameDic.ContainsKey(table.tableName))
+                if (tableNameDic.ContainsKey(table.tableName) || !table.isFindTableName)
                 {
                     try
                     {
@@ -183,7 +183,8 @@ namespace StructGenerate
                         continue;
                     }
 
-                    table.tableName = tableNameDic[table.tableName];
+                    if (tableNameDic.ContainsKey(table.tableName))
+                        table.tableName = tableNameDic[table.tableName];
                 }
                 else
                 {
@@ -196,7 +197,7 @@ namespace StructGenerate
 
             if (tableGenerateList.Count <= 0)
             {
-                Debug.LogError("All md file find tablename error");
+                ErrorLog.ShowLogError("\nAll md file find tablename error", true);
                 return false;
             }
 
@@ -250,7 +251,7 @@ namespace StructGenerate
                 if (errLog.Length > 0) errLog.Insert(0, "\n");
 
                 var isError = (logList.Count >= 5);
-                for (var i = logList.Count; i >0 ; i--)
+                for (var i = logList.Count; i > 0; i--)
                 {
                     var item = logList[i - 1];
 
@@ -265,7 +266,7 @@ namespace StructGenerate
                     if (!string.IsNullOrEmpty(item))
                     {
                         errLog.Insert(0, item);
-                    }                
+                    }
                 }
 
                 ClearLogGroup();

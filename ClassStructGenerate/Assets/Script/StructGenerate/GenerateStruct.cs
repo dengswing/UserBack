@@ -50,7 +50,15 @@ namespace StructGenerate
             gen.GenerateClasses();
             sw.Flush();
             var csharp = sw.ToString();
+
+            if (csharp.IndexOf("IList") == -1 && csharp.IndexOf("Dictionary") == -1)
+            {
+                csharp = csharp.Replace("using System.Collections.Generic;", "");
+            }
+
             csharp = csharp.Replace("IList", "List");
+
+            
 
             if (!Directory.Exists(sPath))
             {

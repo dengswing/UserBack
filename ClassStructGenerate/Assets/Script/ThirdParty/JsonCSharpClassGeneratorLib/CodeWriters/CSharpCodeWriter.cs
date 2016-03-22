@@ -93,16 +93,12 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
             if (config.UseNamespaces)
             {
                 sw.WriteLine("//According to the Json file automatically generated structures ");
-                sw.WriteLine("//Date : " + DateTime.Now.ToString());
-
                 sw.WriteLine();
-                sw.WriteLine("using System;");
                 sw.WriteLine("using System.Collections.Generic;");
                 if (ShouldApplyNoPruneAttribute(config) || ShouldApplyNoRenamingAttribute(config))
                     sw.WriteLine("using System.Reflection;");
                 if (!config.ExplicitDeserialization && config.UsePascalCase)
                     sw.WriteLine("using Newtonsoft.Json;");
-                //sw.WriteLine("using Newtonsoft.Json.Linq;");
                 if (config.ExplicitDeserialization)
                     sw.WriteLine("using JsonCSharpClassGenerator;");
                 if (config.SecondaryNamespace != null && config.HasSecondaryClasses && !config.UseNestedClasses)

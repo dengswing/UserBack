@@ -1,7 +1,5 @@
 //According to the Json file automatically generated structures 
-//Date : 3/21/2016 6:20:41 PM
 
-using System;
 using System.Collections.Generic;
 
 namespace Vo

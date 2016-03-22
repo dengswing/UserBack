@@ -1,12 +1,14 @@
 //According to the Json file automatically generated structures
-//Date : 3/21/2016 6:22:22 PM
+//Date : 3/22/2016 1:29:00 PM
 
 namespace Networks
 {
 
     public class TableDataNames
     {
+        public const string ItemSore = "ItemSore";
         public const string List = "List";
+        public const string Payment = "Payment";
         public const string ProductComposeHistory = "ProductComposeHistory";
         public const string RobotInfo = "RobotInfo";
         public const string RobotSkill = "RobotSkill";

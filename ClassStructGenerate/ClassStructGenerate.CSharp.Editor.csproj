@@ -130,7 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ClassStructGenerate\Vo\genLog.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\ItemSore.txt" />
     <None Include="Assets\ClassStructGenerate\Vo\old\List.txt" />
+    <None Include="Assets\ClassStructGenerate\Vo\old\Payment.txt" />
     <None Include="Assets\ClassStructGenerate\Vo\old\ProductComposeHistory.txt" />
     <None Include="Assets\ClassStructGenerate\Vo\old\RobotInfo.txt" />
     <None Include="Assets\ClassStructGenerate\Vo\old\RobotSkill.txt" />

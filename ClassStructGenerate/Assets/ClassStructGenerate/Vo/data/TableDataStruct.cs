@@ -1,5 +1,5 @@
 //According to the Json file automatically generated structures
-//Date : 3/21/2016 6:22:22 PM
+//Date : 3/22/2016 1:29:00 PM
 
 using Vo;
 using Networks.parser;
@@ -14,7 +14,9 @@ namespace Networks
 
         public override void RegisterBindingTableStrcut()
         {
+            typeDict[TableDataNames.ItemSore] = typeof(ItemSore);
             typeDict[TableDataNames.List] = typeof(List);
+            typeDict[TableDataNames.Payment] = typeof(Payment);
             typeDict[TableDataNames.ProductComposeHistory] = typeof(ProductComposeHistory);
             typeDict[TableDataNames.RobotInfo] = typeof(RobotInfo);
             typeDict[TableDataNames.RobotSkill] = typeof(RobotSkill);

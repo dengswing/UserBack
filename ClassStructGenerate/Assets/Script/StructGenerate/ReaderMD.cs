@@ -11,6 +11,9 @@ namespace StructGenerate
         public const string tableName_CN = "表名：";
         public const string tableName_EN = "表名:";
 
+        public const string tableNameConf_CN = "配置表结构：";
+        public const string tableNameConf_EN = "配置表结构:";
+
         public const char poundKey = '#';
         public const char numberKey = '|';
         public const char colonKey = ':';
@@ -32,6 +35,7 @@ namespace StructGenerate
 
     class StructTable
     {
+        public bool isFindTableName = true;
         public string tableName;
         public Dictionary<string, object> tableField;
         public string jsonTableData;
@@ -75,10 +79,11 @@ namespace StructGenerate
             {
                 if (String.IsNullOrEmpty(readText)) continue;
                 var index = FindValue.IndexOfTableName(readText);
-                if (index == -1) continue;
+                var conIndex = FindValue.IndexOfTableNameConfig(readText);
+                if (index == -1 && conIndex == -1) continue;
 
                 var tableData = ReaderLineValue(readText); //解析带表名的数据
-                tableList.Add(tableData);
+                if (tableData != null) tableList.Add(tableData);
             }
 
             return tableList;
@@ -103,9 +108,20 @@ namespace StructGenerate
                 if (String.IsNullOrEmpty(readText) || readText == ReadConst.LineCode || readText == ReadConst.LineNewLine) continue; //code标识跳过、\n分割符
 
                 var index = FindValue.IndexOfTableName(readText);
-                if (index != -1)
+                var conIndex = (index == -1 ? FindValue.IndexOfTableNameConfig(readText) : -1);
+                if (index != -1 || conIndex != -1)
                 { //查找表名
-                    table.tableName = readText.Substring(index + ReadConst.tableName_EN.Length).Trim();
+                    table.isFindTableName = (index != -1);
+                    if (table.isFindTableName)
+                        table.tableName = readText.Substring(index + ReadConst.tableName_EN.Length).Trim();
+                    else
+                        table.tableName = readText.Substring(conIndex + ReadConst.tableNameConf_EN.Length).Trim();
+
+                    if (!table.isFindTableName && string.IsNullOrEmpty(table.tableName))
+                    { //不需要生成
+                        table = null;
+                        break;
+                    }
 
                     if (table.tableName == null)
                     {
@@ -268,6 +284,13 @@ namespace StructGenerate
         {
             var index = sValue.IndexOf(ReadConst.tableName_CN);
             if (index == -1) index = sValue.IndexOf(ReadConst.tableName_EN);
+            return index;
+        }
+
+        public static int IndexOfTableNameConfig(string sValue)
+        {
+            var index = sValue.IndexOf(ReadConst.tableNameConf_CN);
+            if (index == -1) index = sValue.IndexOf(ReadConst.tableNameConf_EN);
             return index;
         }
 
