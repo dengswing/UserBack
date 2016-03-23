@@ -35,6 +35,9 @@ namespace Networks
         //hmac约定的key
         string _hmacKey;
 
+        //token
+        string _token;
+
         PostData _currentPostData;
         Queue groupData;
 
@@ -49,6 +52,14 @@ namespace Networks
         public string hmacKey
         {
             set { _hmacKey = value; }
+        }
+
+        /// <summary>
+        /// token
+        /// </summary>
+        public string token 
+        {
+            set { _token = value; }
         }
 
         /// <summary>
@@ -289,6 +300,8 @@ namespace Networks
             parms = BaseBytes.EscapeDataString(parms);
 
             string sign = string.Format("*={0}&halt={1}&sign={2}", sValue, sHalt, parms);
+
+            if (!string.IsNullOrEmpty(_token)) sign += string.Format("&token={0}", _token);
 
             return string.Format(requestURL, sign);
         }
