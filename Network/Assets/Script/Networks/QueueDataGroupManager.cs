@@ -255,7 +255,7 @@ namespace Networks
                 {
                     str += "\"" + argv + "\"";
                 }
-                else if (argv is IList && argv.GetType().IsGenericType)
+                else if (argv is IList)
                 {
                     var list = argv as IList;
                     var objs = new object[list.Count];
