@@ -117,21 +117,31 @@ namespace Networks.parser
             foreach (JProperty jMsg in tabel.Children())
             {
                 string tableList = null;
-                foreach (JObject jNode in jMsg.Children()) 
+
+                var sValue = jMsg.Value.ToString();
+                if (sValue == "[]" || sValue == "{}" || string.IsNullOrEmpty(sValue))
+                {
+                    continue;
+                }
+
+                foreach (JObject jNode in jMsg.Children())
                 {
                     JProperty firstChild = (JProperty)jNode.First;
-                   
-                    if (IsSimpleValue(firstChild) || !IsNumberKey(firstChild))
+                    if (firstChild == null)
+                    {
+                        tableList = string.Empty;
+                    }
+                    else if (IsSimpleValue(firstChild) || !IsNumberKey(firstChild))
                     {
                         tableList = jMsg.Value.ToString();
                     }
-                    else 
+                    else
                     {
                         JsonStructToKeyValueNew(jNode, tableStructList);
                     }
                 }
 
-                if (tableList != null) tableStructList.Add(jMsg.Name, tableList);
+                if (!string.IsNullOrEmpty(tableList)) tableStructList.Add(jMsg.Name, tableList);
             }
         }
 

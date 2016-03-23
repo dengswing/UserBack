@@ -17,6 +17,8 @@ public class TestTableDataStruct : AbsTableDataStruct
         typeDict["List"] = typeof(ItemMakeCDInfoQueue);
         typeDict["CabinetInfo"] = typeof(CabinetInfo);
         typeDict["ModuleProfileInfo"] = typeof(ModuleProfileInfo);
+        typeDict["ModuleItem"] = typeof(ModuleItem);
+        
     }
 
     public override void FireNotice(string tableName, object data)
