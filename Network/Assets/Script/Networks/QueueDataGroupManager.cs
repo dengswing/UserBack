@@ -57,7 +57,7 @@ namespace Networks
         /// <summary>
         /// token
         /// </summary>
-        public string token 
+        public string token
         {
             get { return _token; }
             set { _token = value; }
@@ -300,9 +300,11 @@ namespace Networks
             string parms = BaseBytes.ToBase64StringData(BaseBytes.HashHmac(sbValue.ToString(), _hmacKey, true), true);
             parms = BaseBytes.EscapeDataString(parms);
 
-            string sign = string.Format("*={0}&halt={1}&sign={2}", sValue, sHalt, parms);
-
-            if (!string.IsNullOrEmpty(token)) sign += string.Format("&token={0}", token);
+            string sign;
+            if (string.IsNullOrEmpty(token))
+                sign = string.Format("*={0}&halt={1}&sign={2}", sValue, sHalt, parms);
+            else
+                sign = string.Format("*={0}&halt={1}&sign={2}&token={3}", sValue, sHalt, parms, token);
 
             return string.Format(requestURL, sign);
         }
