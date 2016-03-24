@@ -44,7 +44,7 @@ class Testing : MonoBehaviour
 
         
         // httpNetwork.Post("game.reset", ResponseHandler);
-       httpNetwork.Post("game.init", ResponseHandler, 1, "3", "431");  //单一侦听,报了系统级别错误不会有回调
+       httpNetwork.Post("game.init", ResponseHandler, 1, "2", "431");  //单一侦听,报了系统级别错误不会有回调
        // httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
        // httpNetwork.Post("package.index", ResponseHandler);
         //httpNetwork.Post("cityOrder.list", ResponseHandler);

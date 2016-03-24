@@ -99,5 +99,10 @@
         /// <param name="cond"></param>
         /// <returns></returns>
         bool RemoveTableData<T>(string tableName, System.Predicate<T> cond = null);
+
+        /// <summary>
+        /// 清除所有缓存数据
+        /// </summary>
+        void RemoveAllData();
     }
 }

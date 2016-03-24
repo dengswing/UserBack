@@ -149,6 +149,18 @@ namespace Networks
         }
 
         /// <summary>
+        /// 用户id
+        /// </summary>
+        public string token
+        {
+            get { return (null != queueDataGroup ? queueDataGroup.token : string.Empty); }
+            set
+            {
+                if (null != queueDataGroup) queueDataGroup.token = value;
+            }
+        }
+
+        /// <summary>
         /// 通信地址
         /// </summary>
         public string requestURL
@@ -205,7 +217,7 @@ namespace Networks
         /// </summary>
         public string hamcKey
         {
-            set 
+            set
             {
                 if (null != queueDataGroup) queueDataGroup.hmacKey = value;
             }

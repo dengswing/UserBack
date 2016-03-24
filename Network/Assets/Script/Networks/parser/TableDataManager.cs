@@ -284,6 +284,17 @@ namespace Networks.parser
                 dataTableListener[tableName] -= updateBack;
         }
 
+        /// <summary>
+        /// 清除所有缓存数据
+        /// </summary>
+        public void RemoveAllData()
+        {
+            _currentResponseData = null;
+            dataTableAll.Clear();
+            dataTableList.Clear();
+            dataTableDict.Clear();
+        }
+
         T GetTableDataDispose<T>(string tableName, Predicate<T> cond = null)
         {
             T data = default(T);

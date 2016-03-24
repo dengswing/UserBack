@@ -59,6 +59,7 @@ namespace Networks
         /// </summary>
         public string token 
         {
+            get { return _token; }
             set { _token = value; }
         }
 
@@ -301,7 +302,7 @@ namespace Networks
 
             string sign = string.Format("*={0}&halt={1}&sign={2}", sValue, sHalt, parms);
 
-            if (!string.IsNullOrEmpty(_token)) sign += string.Format("&token={0}", _token);
+            if (!string.IsNullOrEmpty(token)) sign += string.Format("&token={0}", token);
 
             return string.Format(requestURL, sign);
         }
