@@ -208,12 +208,27 @@ namespace Networks.parser
         {
             List<Dictionary<string, object>> msgListData = new List<Dictionary<string, object>>();
 
-            foreach (JArray jMsgItem in jPropertyMsgRoot.Children())
+
+            foreach (JContainer jMsgItem in jPropertyMsgRoot.Children())
             {
-                foreach (JObject jMsgObjectRoot in jMsgItem)
+                if (jMsgItem is JArray)
                 {
-                    msgListData.Add(ParseJsonStruct(jMsgObjectRoot));
+                    foreach (JObject jMsgObjectRoot in jMsgItem)
+                    {
+                        msgListData.Add(ParseJsonStruct(jMsgObjectRoot));
+                    }
                 }
+                else if (jMsgItem is JObject)
+                {
+                    foreach (JProperty property in jMsgItem.Children())
+                    {
+                        foreach (JObject jMsgObjectRoot in property.Children())
+                        {
+                            msgListData.Add(ParseJsonStruct(jMsgObjectRoot));
+                        }
+                    }
+                }
+
             }
 
             return msgListData;

@@ -570,6 +570,12 @@ namespace Newtonsoft.Json.Utilities
       ValidationUtils.ArgumentNotNull(member, "member");
       ValidationUtils.ArgumentNotNull(target, "target");
 
+      if (value != null && ReflectionUtils.GetMemberUnderlyingType(member).IsAssignableFrom(typeof(string)) &&
+         !ReflectionUtils.GetMemberUnderlyingType(member).IsAssignableFrom(value.GetType()))
+      { //change string
+          value = JsonConvert.SerializeObject(value);
+      }
+
       switch (member.MemberType)
       {
         case MemberTypes.Field:
