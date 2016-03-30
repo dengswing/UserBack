@@ -27,7 +27,6 @@ namespace Networks.parser
         {
             JObject jObjectRoot = JObject.Parse(jsonDataFromServer);
             IServerResponseData serverData = ParseJsonToStructData(jObjectRoot);
-            serverData.result = jsonDataFromServer;
             return serverData;
         }
 
@@ -86,6 +85,18 @@ namespace Networks.parser
                 {
                     if (jPropertyMsg != null)
                     {
+                        var msgValue = jPropertyMsg.Value;
+                        if (msgValue is JArray) 
+                        {
+                            objServerResponseData.result = Newtonsoft.Json.JsonConvert.SerializeObject(msgValue.First);
+                        }
+                        else if (msgValue is JObject)
+                        {
+                            JProperty firstChild = (JProperty)msgValue.First;
+                            if (firstChild != null)
+                                objServerResponseData.result = Newtonsoft.Json.JsonConvert.SerializeObject(firstChild.Value);
+                        }
+
                         objServerResponseData.msgListData = ParseMsg(jPropertyMsg);
                     }
 

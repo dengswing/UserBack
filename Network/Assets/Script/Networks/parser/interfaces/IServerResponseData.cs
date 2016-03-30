@@ -4,7 +4,7 @@ namespace Networks.interfaces
     public interface IServerResponseData
     {
         /// <summary>
-        /// 原始返回结果
+        /// 原始返回结果msg
         /// </summary>
         string result { get; set; }
 

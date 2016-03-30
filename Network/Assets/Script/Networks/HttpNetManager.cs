@@ -566,6 +566,7 @@ namespace Networks
             string result = www.text;
             int res = -1;
             string errMsg = "";
+            string msg = "";
 
 #if UNITY_EDITOR
             if (statusType == StatusType.SERVER_ERROR) result = "{\"code\":10511,\"msg\":\"CommonVoList: Element 1 cannot be found in MissionLastVoList.\",\"gmt\":1452475369}";
@@ -579,7 +580,7 @@ namespace Networks
 
             //try
             //{
-            res = netParser.ParseData(result, out errMsg);
+            res = netParser.ParseData(result, out errMsg,out msg);
             serverTime = netParser.serverTime;
             //}
             //catch (Exception e)
@@ -591,7 +592,7 @@ namespace Networks
             //}
 
             errMsg = url;
-            TriggerResponse(data, res, result, errMsg);
+            TriggerResponse(data, res, msg, errMsg);
 
             if (res == RESPONSE_CODE_RESULT_SUCCESS && queueDataGroup.NextSendRequest)
             { //进入下一组
