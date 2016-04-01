@@ -30,6 +30,10 @@ namespace Xamasoft.JsonClassGenerator
                 var array = (JArray)token;
                 InternalType = GetCommonType(generator, array.ToArray());
             }
+            else 
+            {
+                FieldValue = token.ToString();
+            }
         }
 
         internal static JsonType GetNull(IJsonClassGeneratorConfig generator)
@@ -73,7 +77,7 @@ namespace Xamasoft.JsonClassGenerator
         public JsonTypeEnum Type { get; private set; }
         public JsonType InternalType { get; private set; }
         public string AssignedName { get; private set; }
-
+        public string FieldValue { get;private set;}
 
         public void AssignName(string name)
         {

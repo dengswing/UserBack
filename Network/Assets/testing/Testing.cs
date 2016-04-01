@@ -12,6 +12,7 @@ using Newtonsoft.Json.Serialization;
 using Networks.tool;
 using Newtonsoft.Json;
 using System.Reflection;
+using Networks.log;
 
 
 class Testing : MonoBehaviour
@@ -27,26 +28,48 @@ class Testing : MonoBehaviour
         // httpNetwork.requestURL = "http://dev-soul.shinezoneapp.com/?&{0}";
 
 
+        DebugConsole.Log("sss");
+        DebugConsole.Log("sss");
+        DebugConsole.Log("sss");
+        DebugConsole.Log("sss");
+        DebugConsole.Log("12343231231321");
+        DebugConsole.Log("sss");
+        DebugConsole.Log("sss");
+        DebugConsole.Log("sss");
+        DebugConsole.Log("sss");
+        DebugConsole.Log("99999999999999");
+
+
+
+        string encodedString = "{\"field1\": 0.5,\"field2\": \"sampletext\",\"field3\": [1,2,3]}";
+        JSONObject j = new JSONObject(encodedString);
+       // accessData(j);
+
         
-       // http://dev-mi-facebook.shinezone.com/index.php?*=[["game.login",["1",0,0,1,"3","4"]]]&halt=711&sign=6YjG2QUodzBRd9RDQweiig2s3MQ%3D
+
+        DebugConsole.Log(j.Print(true));
+        //access data (and print it)
+
+
+        // http://dev-mi-facebook.shinezone.com/index.php?*=[["game.login",["1",0,0,1,"3","4"]]]&halt=711&sign=6YjG2QUodzBRd9RDQweiig2s3MQ%3D
         httpNetwork.requestURL = "http://dev-mi-facebook.shinezone.com/index.php?{0}";
 
         httpNetwork.RegisterResponse("game.login", ResponseHandler);  //单个接口的侦听
         httpNetwork.serverErrorResponse = ServerErrorHandler;
         httpNetwork.netTimeOut = NetTimeOutHandler;  //网络超时
-       // httpNetwork.hamcKey = "key345"; //不传的话就默认不做api签名
-         httpNetwork.hamcKey = "key001";
+        // httpNetwork.hamcKey = "key345"; //不传的话就默认不做api签名
+        httpNetwork.hamcKey = "key001";
 
         httpNetwork.RegisterNetworkDataParse(new NetworkDataParser()); //注入解析类，不注入会报错
 
         httpNetwork.RegisterTableDataStruct(TestTableDataStruct.Instance);  //注入数据结构 new
         TestTableDataStruct.Instance.TableNotice += TableChange;
 
-        
+
         // httpNetwork.Post("game.reset", ResponseHandler);
-       httpNetwork.Post("game.init", ResponseHandler, 1, "2", "431");  //单一侦听,报了系统级别错误不会有回调
-       // httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
-       // httpNetwork.Post("package.index", ResponseHandler);
+        httpNetwork.Post("game.init", ResponseHandler, 1, "2", "431");  //单一侦听,报了系统级别错误不会有回调
+        // httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
+        // httpNetwork.Post("package.index", ResponseHandler);
         //httpNetwork.Post("cityOrder.list", ResponseHandler);
         // httpNetwork.Post("package.upgradeLv", ResponseHandler);
 
@@ -60,18 +83,53 @@ class Testing : MonoBehaviour
         TableDataManager.Instance.AddListenerDataTable("List", UpdateHandler); //注册侦听更改  new
 
 
-         string text = "{ \"vb\":{\"x\":100,\"y\":200,\"magnitude\":10},\"userId\": 799,  \"grids\": {    \"1\": 10,    \"2\": 20,    \"3\": null,    \"4\": null,    \"5\": null,    \"6\": null,    \"7\": null,    \"8\": null  },  \"devices\": null,  \"decorations\": 567}";
-       // string text = "{  \"userId\": [01,23]}";
+        string text = "{ \"vb\":{\"x\":100,\"y\":200,\"magnitude\":10},\"userId\": 799,  \"grids\": {    \"1\": 10,    \"2\": 20,    \"3\": null,    \"4\": null,    \"5\": null,    \"6\": null,    \"7\": null,    \"8\": null  },  \"devices\": null,  \"decorations\": 567}";
+        // string text = "{  \"userId\": [01,23]}";
         //string text = "{  \"userId\": 799}";
 
         CabinetInfo a = Newtonsoft.Json.JsonConvert.DeserializeObject(text, typeof(CabinetInfo)) as CabinetInfo;
 
         Debug.Log(a);
-        
+
         var list = new ItemMakeCDInfoQueue();
         var listDict = new Dictionary<string, object>();
         listDict.Add("55", list);
         TableDataManager.Instance.AddTableData("List", listDict);
+    }
+
+    void accessData(JSONObject obj)
+    {
+        switch (obj.type)
+        {
+            case JSONObject.Type.OBJECT:
+                for (int i = 0; i < obj.list.Count; i++)
+                {
+                    string key = (string)obj.keys[i];
+                    JSONObject j = (JSONObject)obj.list[i];
+                    Debug.Log(key);
+                    accessData(j);
+                }
+                break;
+            case JSONObject.Type.ARRAY:
+                foreach (JSONObject j in obj.list)
+                {
+                    accessData(j);
+                }
+                break;
+            case JSONObject.Type.STRING:
+                Debug.Log(obj.str);
+                break;
+            case JSONObject.Type.NUMBER:
+                Debug.Log(obj.n);
+                break;
+            case JSONObject.Type.BOOL:
+                Debug.Log(obj.b);
+                break;
+            case JSONObject.Type.NULL:
+                Debug.Log("NULL");
+                break;
+
+        }
     }
 
     void TableChange(string tableName, object data)
@@ -131,6 +189,9 @@ class Testing : MonoBehaviour
 
     void ResponseHandler(string cmd, int res, string value)
     {
+
+        DebugConsole.Log(value);
+
         Debug.Log("Testing:ResponseHandler:response:" + cmd + "|" + res);
 
         Debug.Log(TableDataManager.Instance.GetTableData<string>("aa"));

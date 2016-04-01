@@ -611,7 +611,7 @@ namespace Networks
         void TriggerResponse(IPostData data, int res, string result, string errMsg, bool isError = false)
         {
             if (serverErrorResponse != null && res != RESPONSE_CODE_RESULT_SUCCESS)
-            { //异常先抛出
+            { //异常先抛出、会继续回调
                 Debug.LogWarning("HttpNetManager::TriggerResponse Error : commandId:[" + data.ToString() + "]error:" + errMsg);
                 serverErrorResponse(errMsg, res, result);
             }

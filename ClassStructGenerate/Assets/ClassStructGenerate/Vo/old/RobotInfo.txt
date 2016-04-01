@@ -5,12 +5,21 @@ using System.Collections.Generic;
 namespace Vo
 {
 
+    public class Material
+    {
+        public string f011.0 { get; private set; }
+        public long? 10010012 { get; private set; }
+        public long? 01111222222 { get; private set; }
+        public long? 10010020 { get; private set; }
+        public long? 10010023 { get; private set; }
+    }
+
     public class Progress
     {
         public int itemDefId { get; private set; }
         public int cd { get; private set; }
         public int completeTime { get; private set; }
-        public List<Dictionary<int, int>> material { get; private set; }
+        public List<Material> material { get; private set; }
     }
 
     public class RobotInfo
@@ -21,7 +30,7 @@ namespace Vo
         public List<Progress> progress { get; private set; }
         public int isUnlock { get; private set; }
         public int proficiency { get; private set; }
-        public List<int> unlockSkill { get; private set; }
+        public List<long> unlockSkill { get; private set; }
     }
 
 }

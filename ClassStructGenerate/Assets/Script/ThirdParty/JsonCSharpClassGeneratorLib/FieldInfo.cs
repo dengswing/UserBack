@@ -16,6 +16,7 @@ namespace Xamasoft.JsonClassGenerator
             this.generator = generator;
             this.JsonMemberName = jsonMemberName;
             this.MemberName = jsonMemberName;
+            FieldValue = (type != null ? type.FieldValue : string.Empty);
             if (usePascalCase) MemberName = JsonClassGenerator.ToTitleCase(MemberName);
             this.Type = type;
             this.Examples = Examples;
@@ -25,6 +26,7 @@ namespace Xamasoft.JsonClassGenerator
         public string JsonMemberName { get; private set; }
         public JsonType Type { get; private set; }
         public IList<object> Examples { get; private set; }
+        public string FieldValue { get; private set; }
 
         public string GetGenerationCode(string jobject)
         {

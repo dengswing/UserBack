@@ -54,18 +54,11 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
         {
             if (type.Fields != null && type.Fields.Count > 0)
             { //取第一个进行判断
-                var sField = type.Fields[0].MemberName;
-                int n_int32;
-                long n_int64;
-                if (Int32.TryParse(sField, out n_int32))
+                var sMemberName = IntChange(type.Fields[0].MemberName);
+                if (sMemberName != "string")
                 {
                     type.AssignName("int");
-                    return "Dictionary<int, int>";
-                }
-                else  if (Int64.TryParse(sField, out n_int64))
-                {
-                    type.AssignName("int");
-                    return "Dictionary<int, long>";
+                    return string.Format("Dictionary<{0}, {1}>", sMemberName, IntChange(type.Fields[0].FieldValue));
                 }
                 else
                 {
@@ -76,8 +69,50 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
             {
                 return type.AssignedName;
             } 
-        }  
+        } 
 
+        string IntChange(string sField)        
+        {
+            if (string.IsNullOrEmpty(sField)) return "string";
+
+            long n_int64;
+            float n_float;
+            if (sField.Length <= 10)
+            {
+                int n_int32;
+                if (Int32.TryParse(sField, out n_int32))
+                {
+                    return "int";
+                }
+                else if (Int64.TryParse(sField, out n_int64))
+                {
+                    return "long";
+                }
+                else if (float.TryParse(sField, out n_float))
+                {
+                    return "float";
+                }
+                else 
+                {
+                    return "string";
+                }
+            }
+            else
+            {
+                if (Int64.TryParse(sField, out n_int64))
+                {
+                    return "long";
+                }
+                else if (float.TryParse(sField, out n_float))
+                {
+                    return "float";
+                }
+                else
+                {
+                    return "string";
+                }
+            }
+        }
 
         private bool ShouldApplyNoRenamingAttribute(IJsonClassGeneratorConfig config)
         {
