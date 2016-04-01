@@ -263,6 +263,10 @@ namespace Networks
                     list.CopyTo(objs, 0);
                     str += "[" + this.MakeParamters(objs) + "]";
                 }
+                else if (argv is IDictionary) 
+                {
+                    str += Newtonsoft.Json.JsonConvert.SerializeObject(argv);
+                }
                 else
                 {
                     str += argv;
