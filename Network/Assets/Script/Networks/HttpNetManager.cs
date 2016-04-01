@@ -104,8 +104,9 @@ namespace Networks
         bool isContentError;
 
         //调试控制台
+#if DEBUG_CONSOLE
         IDebugConsole _debugConsole;
-
+#endif
         //是否第一次请求
         bool isFirstPost = true;
         ///==============================================================================================
@@ -610,18 +611,8 @@ namespace Networks
                 Debug.LogError("HttpNetManager::PostAsync Error : netParser Can't be empty!");
             }
 
-            //try
-            //{
             res = netParser.ParseData(result, out errMsg, out msg);
             serverTime = netParser.serverTime;
-            //}
-            //catch (Exception e)
-            //{
-            //    errMsg = url;
-            //    DebugTrace("HttpNetManager::PostAsync Error : commandId:[" + data.ToString() + "]error:" + e.Message + " Trace [" + e.StackTrace + "]");
-            //    TriggerResponse(data, res, result, errMsg, true);
-            //    yield break;
-            //}
 
 #if DEBUG_CONSOLE
             tSpan = DateTime.Now.Subtract(localTime);
@@ -706,7 +697,11 @@ namespace Networks
         {
             if (!isActiveDebug) return;
             if (isLog) Debug.Log(msg);
+
+#if DEBUG_CONSOLE
             if (_debugConsole != null && isConsole) _debugConsole.Log(msg, isTime);
+#endif
+
         }
     }
 }

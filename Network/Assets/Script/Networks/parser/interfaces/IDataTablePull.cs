@@ -85,13 +85,6 @@
         void RemoveListenerDataTable(string tableName, DataTableUpdateDelegate updateBack);
 
         /// <summary>
-        /// 移除缓存的表格list(缓存为List的数据)
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        bool RemoveTableList<T>(string tableName, System.Predicate<T> cond = null);
-
-        /// <summary>
         /// 移除表格数据 (缓存为Dictionary的数据)
         /// </summary>
         /// <typeparam name="T"></typeparam>

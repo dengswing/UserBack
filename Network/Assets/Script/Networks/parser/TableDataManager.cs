@@ -167,38 +167,7 @@ namespace Networks.parser
                 return dataTableAll[tableName];
             else
                 return null;
-        }
-
-        /// <summary>
-        /// 移除缓存的表格list
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        public bool RemoveTableList<T>(string tableName, Predicate<T> cond = null)
-        {
-            if (!dataTableList.ContainsKey(tableName)) return false;
-
-            List<T> tableData = (List<T>)dataTableList[tableName];
-
-            if (tableData == null) return false;
-
-            if (cond == null)
-            {
-                tableData.Clear();
-            }
-            else
-            {
-                for (int i = tableData.Count; i > 0; i--)
-                {
-                    if (cond.Invoke((T)tableData[i - 1]))
-                        tableData.RemoveAt(i - 1);
-                }
-            }
-
-            if (tableData.Count <= 0) dataTableList.Remove(tableName);
-
-            return true;
-        }
+        }        
 
         /// <summary>
         /// 移除表格数据
@@ -293,6 +262,37 @@ namespace Networks.parser
             dataTableAll.Clear();
             dataTableList.Clear();
             dataTableDict.Clear();
+        }
+
+        /// <summary>
+        /// 移除缓存的表格list
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        bool RemoveTableList<T>(string tableName, Predicate<T> cond = null)
+        {
+            if (!dataTableList.ContainsKey(tableName)) return false;
+
+            List<T> tableData = (List<T>)dataTableList[tableName];
+
+            if (tableData == null) return false;
+
+            if (cond == null)
+            {
+                tableData.Clear();
+            }
+            else
+            {
+                for (int i = tableData.Count; i > 0; i--)
+                {
+                    if (cond.Invoke((T)tableData[i - 1]))
+                        tableData.RemoveAt(i - 1);
+                }
+            }
+
+            if (tableData.Count <= 0) dataTableList.Remove(tableName);
+
+            return true;
         }
 
         T GetTableDataDispose<T>(string tableName, Predicate<T> cond = null)
