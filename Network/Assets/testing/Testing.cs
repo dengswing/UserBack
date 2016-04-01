@@ -14,7 +14,6 @@ using Newtonsoft.Json;
 using System.Reflection;
 using Networks.log;
 
-
 class Testing : MonoBehaviour
 {
     public StatusType statusType = StatusType.NORMAL;
@@ -27,27 +26,6 @@ class Testing : MonoBehaviour
         httpNetwork.statusType = statusType;
         // httpNetwork.requestURL = "http://dev-soul.shinezoneapp.com/?&{0}";
 
-
-        DebugConsole.Log("sss");
-        DebugConsole.Log("sss");
-        DebugConsole.Log("sss");
-        DebugConsole.Log("sss");
-        DebugConsole.Log("12343231231321");
-        DebugConsole.Log("sss");
-        DebugConsole.Log("sss");
-        DebugConsole.Log("sss");
-        DebugConsole.Log("sss");
-        DebugConsole.Log("99999999999999");
-
-
-
-        string encodedString = "{\"field1\": 0.5,\"field2\": \"sampletext\",\"field3\": [1,2,3]}";
-        JSONObject j = new JSONObject(encodedString);
-       // accessData(j);
-
-        
-
-        DebugConsole.Log(j.Print(true));
         //access data (and print it)
 
 
@@ -65,9 +43,11 @@ class Testing : MonoBehaviour
         httpNetwork.RegisterTableDataStruct(TestTableDataStruct.Instance);  //注入数据结构 new
         TestTableDataStruct.Instance.TableNotice += TableChange;
 
+        var m = new Dictionary<string,string>();
+        m.Add("s","1");
 
         // httpNetwork.Post("game.reset", ResponseHandler);
-        httpNetwork.Post("game.init", ResponseHandler, 1, "2", "431");  //单一侦听,报了系统级别错误不会有回调
+        httpNetwork.Post("game.init", ResponseHandler, 1, "2", "431",m);  //单一侦听,报了系统级别错误不会有回调
         // httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
         // httpNetwork.Post("package.index", ResponseHandler);
         //httpNetwork.Post("cityOrder.list", ResponseHandler);
@@ -189,9 +169,6 @@ class Testing : MonoBehaviour
 
     void ResponseHandler(string cmd, int res, string value)
     {
-
-        DebugConsole.Log(value);
-
         Debug.Log("Testing:ResponseHandler:response:" + cmd + "|" + res);
 
         Debug.Log(TableDataManager.Instance.GetTableData<string>("aa"));

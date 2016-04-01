@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿//#define DEBUG_CONSOLE  //开关debug控制台
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -101,6 +103,9 @@ namespace Networks
         //是否连接error
         bool isContentError;
 
+        //调试控制台
+        IDebugConsole _debugConsole;
+
         //是否第一次请求
         bool isFirstPost = true;
         ///==============================================================================================
@@ -123,6 +128,9 @@ namespace Networks
         /// 最大重发次数
         /// </summary>
         uint _resetSendMax = 3;
+
+        //是否激活debug
+        bool _isActiveDebug = true;
         ///==============================================================================================
 
 
@@ -224,6 +232,15 @@ namespace Networks
         }
 
         /// <summary>
+        /// 是否激活debug
+        /// </summary>
+        public bool isActiveDebug
+        {
+            get { return _isActiveDebug; }
+            set { _isActiveDebug = value; }
+        }
+
+        /// <summary>
         /// 注入数据解析类,不注入默认使用框架里面的
         /// </summary>
         /// <param name="dataParse">Data parse.</param>
@@ -291,7 +308,7 @@ namespace Networks
             }
             else
             {
-                Debug.LogWarning("HttpNetManager::ResetSend :Error:No timeout, don't need to resend!");
+                DebugTrace("HttpNetManager::ResetSend :Error:No timeout, don't need to resend!");
             }
         }
 
@@ -400,6 +417,10 @@ namespace Networks
         {
             _Instance = this;
             DontDestroyOnLoad(this.gameObject);
+
+#if DEBUG_CONSOLE
+            _debugConsole = Networks.log.DebugConsole.Instance;
+#endif
         }
 
         void Update()
@@ -447,7 +468,7 @@ namespace Networks
             StopCoroutine("PostAsync");
             queueDataGroup.Clear();
             netTimer.Clear();
-            Debug.LogWarning("HttpNetManager::ResetSend :Error:Remove all request!");
+            DebugTrace("HttpNetManager::ResetSend :Error:Remove all request!");
         }
 
         /// <summary>
@@ -480,11 +501,11 @@ namespace Networks
             IPostData postData = queueDataGroup.currentPostData;
             if (postData == null)
             {
-                Debug.LogWarning("HttpNetManager::ResetSend :Error:No data can be sent!");
+                DebugTrace("HttpNetManager::ResetSend :Error:No data can be sent!");
                 return;
             }
 
-            Debug.LogWarning("HttpNetManager::ResetSend :reset send commandId:[" + postData.ToString() + "]" + isReset);
+            DebugTrace("HttpNetManager::ResetSend :reset send commandId:[" + postData.ToString() + "]" + isReset);
             StartCoroutine(PostAsync(postData, isReset));
         }
 
@@ -516,7 +537,7 @@ namespace Networks
         void NetTimeOut()
         {
             StopCoroutine("PostAsync");
-            Debug.LogWarning("HttpNetManager::NetTimeOut Error :network time out!");
+            DebugTrace("HttpNetManager::NetTimeOut Error :network time out!");
             if (null != netTimeOut) netTimeOut();
         }
 
@@ -536,7 +557,12 @@ namespace Networks
             if (statusType == StatusType.CONNECT_ERROR) url = "content::" + url;
 #endif
 
-            Debug.Log(">>:" + url);
+
+#if DEBUG_CONSOLE
+            var localTime = DateTime.Now;
+#endif
+
+            DebugTrace(">>:" + url);
             WWW www = new WWW(url);
             yield return www;
 
@@ -544,14 +570,21 @@ namespace Networks
             if (statusType == StatusType.NET_TIME_OUT) yield break;
 #endif
 
-            Debug.Log("<< [" + data.ToString() + "]:" + www.text);
+#if DEBUG_CONSOLE
+            TimeSpan tSpan = DateTime.Now.Subtract(localTime);
+            DebugTrace("post back time=" + tSpan.Milliseconds + " << " + url.Substring(url.IndexOf("*=") + 1), true, false);
+            localTime = DateTime.Now;
+#endif
+
+            DebugTrace("<< [" + data.ToString() + "]:" + www.text, false);
+
             netTimer.StopTime(); //计时停止
 
             if (netTimer.isTimeOut) yield break;    //超时退出请求,防止超时了还回来数据
 
             if (www.error != null)
             { //处理404  todo  断网应该如何处理
-                Debug.LogWarning("HttpNetManager::PostAsync Error:" + www.error);
+                DebugTrace("HttpNetManager::PostAsync Error:" + www.error);
                 serverErrorResponse(www.error, -1, "error");
                 isContentError = true;
                 yield break;    //测试超时
@@ -572,7 +605,6 @@ namespace Networks
             if (statusType == StatusType.SERVER_ERROR) result = "{\"code\":10511,\"msg\":\"CommonVoList: Element 1 cannot be found in MissionLastVoList.\",\"gmt\":1452475369}";
 #endif
 
-
             if (netParser == null)
             {
                 Debug.LogError("HttpNetManager::PostAsync Error : netParser Can't be empty!");
@@ -580,17 +612,23 @@ namespace Networks
 
             //try
             //{
-            res = netParser.ParseData(result, out errMsg,out msg);
+            res = netParser.ParseData(result, out errMsg, out msg);
             serverTime = netParser.serverTime;
             //}
             //catch (Exception e)
             //{
             //    errMsg = url;
-            //    Debug.LogWarning("HttpNetManager::PostAsync Error : commandId:[" + data.ToString() + "]error:" + e.Message + " Trace [" + e.StackTrace + "]");
+            //    DebugTrace("HttpNetManager::PostAsync Error : commandId:[" + data.ToString() + "]error:" + e.Message + " Trace [" + e.StackTrace + "]");
             //    TriggerResponse(data, res, result, errMsg, true);
             //    yield break;
             //}
 
+#if DEBUG_CONSOLE
+            tSpan = DateTime.Now.Subtract(localTime);
+            DebugTrace("post parse time=" + tSpan.Milliseconds + " << " + url.Substring(url.IndexOf("*=") + 1), true, false);
+            DebugTrace(result, true, false, false);
+
+#endif
             errMsg = url;
             TriggerResponse(data, res, msg, errMsg);
 
@@ -612,7 +650,7 @@ namespace Networks
         {
             if (serverErrorResponse != null && res != RESPONSE_CODE_RESULT_SUCCESS)
             { //异常先抛出、会继续回调
-                Debug.LogWarning("HttpNetManager::TriggerResponse Error : commandId:[" + data.ToString() + "]error:" + errMsg);
+                DebugTrace("HttpNetManager::TriggerResponse Error : commandId:[" + data.ToString() + "]error:" + errMsg);
                 serverErrorResponse(errMsg, res, result);
             }
 
@@ -645,12 +683,12 @@ namespace Networks
         /// <returns></returns>
         IEnumerator PostSingle(string commandId, string url, HttpNetResultDelegate resultBack)
         {
-            Debug.Log("singlePost>>:" + url);
+            DebugTrace("singlePost>>:" + url);
             WWW www = new WWW(url);
             yield return www;
             if (www.error != null)
             {
-                Debug.Log("singlePost:<< Error:" + www.error);
+                DebugTrace("singlePost:<< Error:" + www.error);
                 yield break;
             }
 
@@ -659,7 +697,16 @@ namespace Networks
                 resultBack(commandId, RESPONSE_CODE_RESULT_SUCCESS, www.text);
             }
 
-            Debug.Log("singlePost<< " + url + ":" + www.text);
+            DebugTrace("singlePost<< " + url + ":" + www.text, false);
+            DebugTrace(www.text, true, false);
+        }
+
+        //debug
+        void DebugTrace(string msg, bool isConsole = true, bool isLog = true, bool isTime = true)
+        {
+            if (!isActiveDebug) return;
+            if (isLog) Debug.Log(msg);
+            if (_debugConsole != null && isConsole) _debugConsole.Log(msg, isTime);
         }
     }
 }
