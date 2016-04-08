@@ -1,0 +1,29 @@
+ManifestFileVersion: 0
+CRC: 1509875920
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 49e182d7587e27657bc34acc1446cdb1
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: af72f19a6e11edc2c0e5a8958ebbdc4a
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/Sphere.prefab
+Dependencies:
+- Assets/StreamingAssets/Android/one.unity3d

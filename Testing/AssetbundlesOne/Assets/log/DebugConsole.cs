@@ -173,7 +173,7 @@ namespace Networks.log
         void OnGUI()
         {
             logStyle = GUI.skin.textArea;
-            logStyle.fontSize = 14;
+            logStyle.fontSize = 20;
             logStyle.fontStyle = FontStyle.Bold;
             LogUI();
         }

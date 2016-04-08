@@ -41,9 +41,9 @@ public class LoadAssetbundle : MonoBehaviour
             //    }
             //}
 
-             StartCoroutine("loaderTest");
+            StartCoroutine("loaderTest");
 
-           
+
 
             // StartCoroutine(loader());
 
@@ -54,65 +54,47 @@ public class LoadAssetbundle : MonoBehaviour
 
     IEnumerator loaderTest()
     {
-        string PathURL =
-#if UNITY_ANDROID
-            "jar:file://" + Application.dataPath + "!/assets/";
-#elif UNITY_IPHONE
-		    Application.dataPath + "/Raw/";
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
-        Application.dataPath +"/StreamingAssets";
-#else
-            string.Empty;
-#endif
-
-        var golbalPath = Path.Combine(PathURL, "Windows");
-        
+        var buildTarget = Platform.GetPlatformFile();
+        var golbalPath = Platform.GetStreamingAssetsSourceFile(buildTarget, false);
         DebugConsole.Instance.Log("0=>" + golbalPath);
 
-
-        WWW www = new WWW(golbalPath + "/Windows");
-
-        DebugConsole.Instance.Log("0.1=>" + golbalPath + "/Windows");
-        yield return www;
-
-        AssetBundle manifestBundle = www.assetBundle;
-
+        DebugConsole.Instance.Log("2=>"+ golbalPath + "/" + buildTarget);
+        AssetBundle manifestBundle = AssetBundle.CreateFromFile(golbalPath + "/" + buildTarget);
         DebugConsole.Instance.Log("1=>" + manifestBundle);
+        yield return null;
+        if (manifestBundle != null)
+        {
+            AssetBundleManifest manifest = (AssetBundleManifest)manifestBundle.LoadAsset("AssetBundleManifest");
 
-        //if (manifestBundle != null)
-        //{
-        //    AssetBundleManifest manifest = (AssetBundleManifest)manifestBundle.LoadAsset("AssetBundleManifest");
+            DebugConsole.Instance.Log("2=>" + manifest);
 
-        //    DebugConsole.Instance.Log("2=>" + manifest);
+            //获取依赖文件列表;
+            string[] cubedepends = manifest.GetAllDependencies("cube.unity3d");
 
-        //    //获取依赖文件列表;
-        //    string[] cubedepends = manifest.GetAllDependencies("cube.unity3d");
+            DebugConsole.Instance.Log("3=>" + cubedepends.Length);
 
-        //    DebugConsole.Instance.Log("3=>" + cubedepends.Length);
+            AssetBundle[] dependsAssetbundle = new AssetBundle[cubedepends.Length];
 
-        //    AssetBundle[] dependsAssetbundle = new AssetBundle[cubedepends.Length];
+            for (int index = 0; index < cubedepends.Length; index++)
+            {
+                //加载所有的依赖文件;
 
-        //    for (int index = 0; index < cubedepends.Length; index++)
-        //    {
-        //        //加载所有的依赖文件;
+                dependsAssetbundle[index] = AssetBundle.CreateFromFile(golbalPath + "/" + cubedepends[index]);
 
-        //        dependsAssetbundle[index] = AssetBundle.CreateFromFile(golbalPath + "/" + cubedepends[index]);
+                DebugConsole.Instance.Log("4=>" + golbalPath + "/" + cubedepends[index]);
+            }
 
-        //        DebugConsole.Instance.Log("4=>" + golbalPath + "/" + cubedepends[index]);
-        //    }
+            //加载我们需要的文件;"
+            AssetBundle cubeBundle = AssetBundle.CreateFromFile(golbalPath + "/cube.unity3d");
 
-        //    //加载我们需要的文件;"
-        //    AssetBundle cubeBundle = AssetBundle.CreateFromFile(golbalPath + "/cube.unity3d");
-
-        //    DebugConsole.Instance.Log("5=>" + golbalPath + "/cube.unity3d");
-
-        //    GameObject cube = cubeBundle.LoadAsset("Cube") as GameObject;
-        //    if (cube != null)
-        //    {
-        //        DebugConsole.Instance.Log("6=>ok");
-        //        Instantiate(cube);
-        //    }
-        //}
+            DebugConsole.Instance.Log("5=>" + golbalPath + "/cube.unity3d");
+            GameObject cube = cubeBundle.LoadAsset("Cube") as GameObject;
+            if (cube != null)
+            {
+                DebugConsole.Instance.Log("6=>ok");
+                Instantiate(cube);
+            }
+        }
     }
 
 
