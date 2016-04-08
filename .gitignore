@@ -16,3 +16,9 @@ Testing/poolManager/poolManager.sln
 Testing/poolManager/poolManager.v11.suo
 Network/Network.sln
 Network/Network.CSharp.Editor.csproj
+Testing/AssetbundlesOne/Library/
+*.suo
+Testing/Assetbundles/Library/
+AssetBundle/AssetBundle/Library/
+*.csproj
+*.sln

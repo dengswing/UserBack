@@ -1,0 +1,28 @@
+ManifestFileVersion: 0
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: assets/1390616300363.jpg
+      Dependencies: {}
+    Info_1:
+      Name: assets/myresources/cube0.prefab
+      Dependencies:
+        Dependency_0: assets/materials/1390616300363.mat
+    Info_2:
+      Name: assets/20121222171635_xdprn.thumb.600_0.jpeg
+      Dependencies: {}
+    Info_3:
+      Name: assets/materials/20121222171635_xdprn.thumb.600_0.mat
+      Dependencies:
+        Dependency_0: assets/20121222171635_xdprn.thumb.600_0.jpeg
+    Info_4:
+      Name: assets/materials/1390616300363.mat
+      Dependencies:
+        Dependency_0: assets/1390616300363.jpg
+    Info_5:
+      Name: assets/game.unity
+      Dependencies: {}
+    Info_6:
+      Name: assets/myresources/cube1.prefab
+      Dependencies:
+        Dependency_0: assets/materials/20121222171635_xdprn.thumb.600_0.mat

@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 7633834
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: f99809ff5b7037dbc24a28208537da2f
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 0fd99c5e9ad8f0f80da6ba03142e9c82
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+Assets:
+- Assets/20121222171635_xdPrn.thumb.600_0.jpeg
+Dependencies: []

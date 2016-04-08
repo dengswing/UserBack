@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 2469861734
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: d50a3fa180dcbdc87ffdce021d2a4ff8
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 687e69b670cde8559d26fe8b3eca4d21
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/Materials/20121222171635_xdPrn.thumb.600_0.mat
+Dependencies:
+- C:/Users/Administrator/Desktop/AssetbundleTest/Assets/../Assetbundle/assets/20121222171635_xdprn.thumb.600_0.jpeg

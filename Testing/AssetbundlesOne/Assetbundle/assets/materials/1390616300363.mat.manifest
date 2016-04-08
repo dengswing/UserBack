@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 84507919
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 1baf05a435330a4dce86aacc99b5f6f5
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 687e69b670cde8559d26fe8b3eca4d21
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/Materials/1390616300363.mat
+Dependencies:
+- C:/Users/Administrator/Desktop/AssetbundleTest/Assets/../Assetbundle/assets/1390616300363.jpg

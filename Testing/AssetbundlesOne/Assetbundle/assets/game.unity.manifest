@@ -1,0 +1,48 @@
+ManifestFileVersion: 0
+CRC: 2006560875
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: f6a86c25ad2a49bd7a2822f78b9b33e5
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d4af398837a66d8cc5b584589113f97f
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 20
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 81
+  Script: {instanceID: 0}
+- Class: 89
+  Script: {instanceID: 0}
+- Class: 92
+  Script: {instanceID: 0}
+- Class: 104
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5be422f1cf9fd4e4a85bb32dfea7b893, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 124
+  Script: {instanceID: 0}
+- Class: 127
+  Script: {instanceID: 0}
+- Class: 157
+  Script: {instanceID: 0}
+- Class: 258
+  Script: {instanceID: 0}
+Assets:
+- Assets/game.unity
+Dependencies: []
