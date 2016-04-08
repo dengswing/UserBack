@@ -58,8 +58,10 @@ public class LoadAssetbundle : MonoBehaviour
         var golbalPath = Platform.GetStreamingAssetsSourceFile(buildTarget);
         DebugConsole.Instance.Log("0=>" + golbalPath);
         //AssetBundle manifestBundle = AssetBundle.CreateFromFile(golbalPath + "/" + buildTarget);
-        var version = 1;
+        var version = 14;
         WWW www = WWW.LoadFromCacheOrDownload(golbalPath + "/" + buildTarget, version);
+
+        
 
         DebugConsole.Instance.Log("2=>" + www.url);
         yield return www;

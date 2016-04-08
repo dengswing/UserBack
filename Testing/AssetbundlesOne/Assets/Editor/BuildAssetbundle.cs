@@ -11,8 +11,25 @@ public class Builder : Editor
     public static string sourcePath = Application.dataPath + "/assectOne";
     const string AssetBundlesOutputPath = "Assets/StreamingAssets";
 
-    [MenuItem("Tools/AssetBundle/Build")]
-    public static void BuildAssetBundle()
+    [MenuItem("Tools/AssetBundle/Build_Android")]
+    public static void BuildAssetBundle_Android()
+    {
+        BuildAssetBundle(BuildTarget.Android);
+    }
+
+    [MenuItem("Tools/AssetBundle/Build_IOS")]
+    public static void BuildAssetBundle_IOS()
+    {
+        BuildAssetBundle(BuildTarget.iOS);
+    }
+
+    [MenuItem("Tools/AssetBundle/Build_Windows")]
+    public static void BuildAssetBundle_Windows()
+    {
+        BuildAssetBundle(EditorUserBuildSettings.activeBuildTarget);
+    }
+
+    static void BuildAssetBundle(BuildTarget buildTarget)
     {
         ClearAssetBundlesName();
 
@@ -25,7 +42,7 @@ public class Builder : Editor
         }
 
         //根据BuildSetting里面所激活的平台进行打包
-        BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.UncompressedAssetBundle, BuildTarget.Android);
+        BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.UncompressedAssetBundle, buildTarget);
 
         AssetDatabase.Refresh();
 
