@@ -125,29 +125,29 @@ namespace Networks.log
             GUI.BeginGroup(new Rect(0, 40, Screen.width - 10, Screen.height / 2));
 
 #if UNITY_IPHONE
-		switch(iPhone.generation)
+		switch(UnityEngine.iOS.Device.generation)
 		{
-		case iPhoneGeneration.iPhone:
-		case iPhoneGeneration.iPhone3G:
-		case iPhoneGeneration.iPhone3GS:
-		case iPhoneGeneration.iPhone4:
-		case iPhoneGeneration.iPhone4S:
-		case iPhoneGeneration.iPhone5:
-		case iPhoneGeneration.iPhoneUnknown:
-		case iPhoneGeneration.iPodTouch1Gen:
-		case iPhoneGeneration.iPodTouch2Gen:
-		case iPhoneGeneration.iPodTouch3Gen:
-		case iPhoneGeneration.iPodTouch4Gen:
-		case iPhoneGeneration.iPodTouch5Gen:
-		case iPhoneGeneration.iPodTouchUnknown:
+		case UnityEngine.iOS.DeviceGeneration.iPhone:
+		case UnityEngine.iOS.DeviceGeneration.iPhone3G:
+		case UnityEngine.iOS.DeviceGeneration.iPhone3GS:
+		case UnityEngine.iOS.DeviceGeneration.iPhone4:
+		case UnityEngine.iOS.DeviceGeneration.iPhone4S:
+		case UnityEngine.iOS.DeviceGeneration.iPhone5:
+		case UnityEngine.iOS.DeviceGeneration.iPhoneUnknown:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouch1Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouch2Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouch3Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouch4Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouch5Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouchUnknown:
 			scrollBarSize = Screen.width/8;
 			break;
-		case iPhoneGeneration.iPad1Gen:
-		case iPhoneGeneration.iPad2Gen:
-		case iPhoneGeneration.iPad3Gen:
-		case iPhoneGeneration.iPad4Gen:
-		case iPhoneGeneration.iPadMini1Gen:
-		case iPhoneGeneration.iPadUnknown:
+		case UnityEngine.iOS.DeviceGeneration.iPad1Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPad2Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPad3Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPad4Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPadMini1Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPadUnknown:
 			scrollBarSize = Screen.width/10;
 			break;
 		default:
