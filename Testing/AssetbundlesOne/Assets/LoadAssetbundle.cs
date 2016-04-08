@@ -55,13 +55,16 @@ public class LoadAssetbundle : MonoBehaviour
     IEnumerator loaderTest()
     {
         var buildTarget = Platform.GetPlatformFile();
-        var golbalPath = Platform.GetStreamingAssetsSourceFile(buildTarget, false);
+        var golbalPath = Platform.GetStreamingAssetsSourceFile(buildTarget);
         DebugConsole.Instance.Log("0=>" + golbalPath);
+        //AssetBundle manifestBundle = AssetBundle.CreateFromFile(golbalPath + "/" + buildTarget);
+        var version = 1;
+        WWW www = WWW.LoadFromCacheOrDownload(golbalPath + "/" + buildTarget, version);
 
-        DebugConsole.Instance.Log("2=>"+ golbalPath + "/" + buildTarget);
-        AssetBundle manifestBundle = AssetBundle.CreateFromFile(golbalPath + "/" + buildTarget);
-        DebugConsole.Instance.Log("1=>" + manifestBundle);
-        yield return null;
+        DebugConsole.Instance.Log("2=>" + www.url);
+        yield return www;
+        AssetBundle manifestBundle = www.assetBundle;
+        DebugConsole.Instance.Log("1.1=>" + manifestBundle);
         if (manifestBundle != null)
         {
             AssetBundleManifest manifest = (AssetBundleManifest)manifestBundle.LoadAsset("AssetBundleManifest");
@@ -79,19 +82,29 @@ public class LoadAssetbundle : MonoBehaviour
             {
                 //加载所有的依赖文件;
 
-                dependsAssetbundle[index] = AssetBundle.CreateFromFile(golbalPath + "/" + cubedepends[index]);
+                //golbalPath = Platform.GetStreamingAssetsSourceFile(buildTarget,false);
 
-                DebugConsole.Instance.Log("4=>" + golbalPath + "/" + cubedepends[index]);
+                www = WWW.LoadFromCacheOrDownload(golbalPath + "/" + cubedepends[index], version);
+                //DebugConsole.Instance.Log("1=>" + manifestBundle);
+                yield return www;
+                dependsAssetbundle[index] = www.assetBundle;
+                //dependsAssetbundle[index] = AssetBundle.CreateFromFile(golbalPath + "/" + cubedepends[index]);
+
+                DebugConsole.Instance.Log("4=>" + www.url);
             }
 
             //加载我们需要的文件;"
-            AssetBundle cubeBundle = AssetBundle.CreateFromFile(golbalPath + "/cube.unity3d");
 
-            DebugConsole.Instance.Log("5=>" + golbalPath + "/cube.unity3d");
+            www = WWW.LoadFromCacheOrDownload(golbalPath + "/cube.unity3d", version);
+            DebugConsole.Instance.Log("5=>" + www.url);
+            yield return www;
+            AssetBundle cubeBundle = www.assetBundle;
+
+            DebugConsole.Instance.Log("7=>" + cubeBundle);
             GameObject cube = cubeBundle.LoadAsset("Cube") as GameObject;
             if (cube != null)
             {
-                DebugConsole.Instance.Log("6=>ok");
+                DebugConsole.Instance.Log("8=>ok");
                 Instantiate(cube);
             }
         }

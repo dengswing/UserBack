@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 1509875920
+CRC: 185346573
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -24,6 +24,6 @@ ClassTypes:
 - Class: 135
   Script: {instanceID: 0}
 Assets:
-- Assets/Resources/Sphere.prefab
+- Assets/assectOne/Sphere.prefab
 Dependencies:
 - Assets/StreamingAssets/Android/one.unity3d

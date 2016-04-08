@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 242511162
+CRC: 1198160887
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -12,5 +12,5 @@ ClassTypes:
 - Class: 28
   Script: {instanceID: 0}
 Assets:
-- Assets/Resources/1390616300363.jpg
+- Assets/assectOne/1390616300363.jpg
 Dependencies: []

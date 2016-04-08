@@ -8,7 +8,7 @@ using System.IO;
 /// </summary>
 public class Builder : Editor
 {
-    public static string sourcePath = Application.dataPath + "/Resources";
+    public static string sourcePath = Application.dataPath + "/assectOne";
     const string AssetBundlesOutputPath = "Assets/StreamingAssets";
 
     [MenuItem("Tools/AssetBundle/Build")]

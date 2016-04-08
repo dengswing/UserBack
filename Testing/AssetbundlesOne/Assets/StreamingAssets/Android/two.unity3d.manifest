@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3172219661
+CRC: 2532448637
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -16,6 +16,6 @@ ClassTypes:
 - Class: 48
   Script: {instanceID: 0}
 Assets:
-- Assets/Resources/two.mat
+- Assets/assectOne/two.mat
 Dependencies:
 - Assets/StreamingAssets/Android/20121222171635_xdprn.thumb.600_0.unity3d
