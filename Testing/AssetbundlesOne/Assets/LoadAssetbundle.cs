@@ -43,13 +43,9 @@ public class LoadAssetbundle : MonoBehaviour
 
             StartCoroutine("loaderTest");
 
-
-
             // StartCoroutine(loader());
 
         }
-
-
     }
 
     IEnumerator loaderTest()
@@ -58,11 +54,8 @@ public class LoadAssetbundle : MonoBehaviour
         var golbalPath = Platform.GetStreamingAssetsSourceFile(buildTarget);
         DebugConsole.Instance.Log("0=>" + golbalPath);
         //AssetBundle manifestBundle = AssetBundle.CreateFromFile(golbalPath + "/" + buildTarget);
-        var version = 14;
+        var version = 36;
         WWW www = WWW.LoadFromCacheOrDownload(golbalPath + "/" + buildTarget, version);
-
-        
-
         DebugConsole.Instance.Log("2=>" + www.url);
         yield return www;
         AssetBundle manifestBundle = www.assetBundle;
@@ -73,8 +66,11 @@ public class LoadAssetbundle : MonoBehaviour
 
             DebugConsole.Instance.Log("2=>" + manifest);
 
+            var sAssetName = "cube/plane.unity3d";
+
+
             //获取依赖文件列表;
-            string[] cubedepends = manifest.GetAllDependencies("cube.unity3d");
+            string[] cubedepends = manifest.GetAllDependencies(sAssetName);
 
             DebugConsole.Instance.Log("3=>" + cubedepends.Length);
 
@@ -88,26 +84,61 @@ public class LoadAssetbundle : MonoBehaviour
 
                 www = WWW.LoadFromCacheOrDownload(golbalPath + "/" + cubedepends[index], version);
                 //DebugConsole.Instance.Log("1=>" + manifestBundle);
+                Debug.Log(www.url);
                 yield return www;
-                dependsAssetbundle[index] = www.assetBundle;
+                try
+                {
+                    dependsAssetbundle[index] = www.assetBundle;
+                }
+                catch (System.Exception)
+                {
+                    Debug.Log(www.url);
+                }
+                
                 //dependsAssetbundle[index] = AssetBundle.CreateFromFile(golbalPath + "/" + cubedepends[index]);
 
                 DebugConsole.Instance.Log("4=>" + www.url);
             }
 
             //加载我们需要的文件;"
-
-            www = WWW.LoadFromCacheOrDownload(golbalPath + "/cube.unity3d", version);
+            www = WWW.LoadFromCacheOrDownload(golbalPath + "/"+ sAssetName, version);
             DebugConsole.Instance.Log("5=>" + www.url);
             yield return www;
             AssetBundle cubeBundle = www.assetBundle;
 
             DebugConsole.Instance.Log("7=>" + cubeBundle);
-            GameObject cube = cubeBundle.LoadAsset("Cube") as GameObject;
+
+            GameObject cube = null;
+            try
+            {
+                cube = cubeBundle.LoadAsset("plane") as GameObject;
+            }
+            catch (System.Exception)
+            {
+                DebugConsole.Instance.Log("7.1=>" + " ...");
+            }
+            
+
+            DebugConsole.Instance.Log("7.2=>" + cube+" ...");
             if (cube != null)
             {
                 DebugConsole.Instance.Log("8=>ok");
                 Instantiate(cube);
+            }
+
+            GameObject Sphere = cubeBundle.LoadAsset("aaa") as GameObject;
+            if (Sphere != null)
+            {
+                DebugConsole.Instance.Log("9=>ok");
+                Sphere = Instantiate(Sphere);
+                Sphere.transform.position = new Vector3(2, 0, 0);
+                //Sphere.transform.Rotate(new Vector3(180, 0, 0));
+                //Sphere.transform.localScale = new Vector3(2, 2, 2);
+            }
+
+            var all = cubeBundle.GetAllAssetNames();
+            foreach(var i in all) {
+                Debug.Log(i);
             }
         }
     }

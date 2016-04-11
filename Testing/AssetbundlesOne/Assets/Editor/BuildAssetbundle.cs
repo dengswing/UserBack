@@ -11,31 +11,31 @@ public class Builder : Editor
     public static string sourcePath = Application.dataPath + "/assectOne";
     const string AssetBundlesOutputPath = "Assets/StreamingAssets";
 
-    [MenuItem("Tools/AssetBundle/Build_Android")]
+    [MenuItem("AssetBundle/Build_Windows")]
+    public static void BuildAssetBundle_Windows()
+    {
+        BuildAssetBundle(BuildTarget.StandaloneWindows);
+    }
+
+    [MenuItem("AssetBundle/Build_Android")]
     public static void BuildAssetBundle_Android()
     {
         BuildAssetBundle(BuildTarget.Android);
     }
 
-    [MenuItem("Tools/AssetBundle/Build_IOS")]
+    [MenuItem("AssetBundle/Build_IOS")]
     public static void BuildAssetBundle_IOS()
     {
         BuildAssetBundle(BuildTarget.iOS);
     }
 
-    [MenuItem("Tools/AssetBundle/Build_Windows")]
-    public static void BuildAssetBundle_Windows()
-    {
-        BuildAssetBundle(EditorUserBuildSettings.activeBuildTarget);
-    }
-
     static void BuildAssetBundle(BuildTarget buildTarget)
     {
-        ClearAssetBundlesName();
+      //  ClearAssetBundlesName();
 
-        Pack(sourcePath);
+      //  Pack(sourcePath);
 
-        string outputPath = Path.Combine(AssetBundlesOutputPath, Platform.GetPlatformFolder(EditorUserBuildSettings.activeBuildTarget));
+        string outputPath = Path.Combine(AssetBundlesOutputPath, Platform.GetPlatformFolder(buildTarget));
         if (!Directory.Exists(outputPath))
         {
             Directory.CreateDirectory(outputPath);

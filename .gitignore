@@ -23,3 +23,5 @@ AssetBundle/AssetBundle/Library/
 *.csproj
 *.sln
 Testing/AssetbundlesOne/Temp/
+Testing/AssetbundlesTwo/Library/
+Testing/AssetbundlesTwo/Temp/
