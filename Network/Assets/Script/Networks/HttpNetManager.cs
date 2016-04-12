@@ -305,6 +305,7 @@ namespace Networks
             //超时了允许重发
             if (netTimer.isTimeOut)
             {
+                isContentError = false;
                 ResetSendRequest(false);
             }
             else
@@ -470,6 +471,7 @@ namespace Networks
             queueDataGroup.Clear();
             netTimer.Clear();
             DebugTrace("HttpNetManager::ResetSend :Error:Remove all request!");
+            isContentError = false;
         }
 
         /// <summary>
@@ -479,8 +481,9 @@ namespace Networks
         {
             if (isContentError)
             {   //上一次请求断网、继续尝试下一次请求
-                isContentError = false;
-                ResetSendRequest(false); //重发 
+                if (netTimer.isTimeOut || netTimer.isRunning) return;                
+                netTimer.StartTime(); //计时开始
+                ResetSendRequest(); //重发 
                 return;
             }
 
@@ -579,22 +582,22 @@ namespace Networks
 
             DebugTrace("<< [" + data.ToString() + "]:" + www.text, false);
 
-            netTimer.StopTime(); //计时停止
-
             if (netTimer.isTimeOut) yield break;    //超时退出请求,防止超时了还回来数据
 
             if (www.error != null)
             { //处理404  todo  断网应该如何处理
                 DebugTrace("HttpNetManager::PostAsync Error:" + www.error);
                 serverErrorResponse(www.error, -1, "error");
+                if(!isContentError) netTimer.StopTime(); //计时停止
                 isContentError = true;
-                yield break;    //测试超时
+                yield break;
             }
             else
             {
                 isContentError = false;
             }
 
+            netTimer.StopTime(); //计时停止
             queueDataGroup.FinishPost();    //完成了本次请求
 
             string result = www.text;

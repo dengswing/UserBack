@@ -69,7 +69,7 @@ namespace Networks
         /// </summary>
         public void UpdateTime()
         {
-            if (simpleTimer.isRunning)
+            if (isRunning)
             {
                 float deltaTime = Time.realtimeSinceStartup - (float)lastTime;
                 lastTime = Time.realtimeSinceStartup;
@@ -101,6 +101,14 @@ namespace Networks
         public uint currentCount
         {
             get { return _currentCount; }
+        }
+
+        /// <summary>
+        /// 定时器是否在跑
+        /// </summary>
+        public bool isRunning
+        {
+            get{ return simpleTimer.isRunning; }
         }
 
         /// <summary>
