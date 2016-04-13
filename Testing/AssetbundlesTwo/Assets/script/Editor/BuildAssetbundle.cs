@@ -31,6 +31,9 @@ public class Builder : Editor
 
     static void BuildAssetBundle(BuildTarget buildTarget)
     {
+
+        Caching.CleanCache();
+
       //  ClearAssetBundlesName();
 
        Pack(sourcePath);

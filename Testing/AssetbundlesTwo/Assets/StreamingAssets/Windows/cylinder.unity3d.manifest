@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 4097194642
+CRC: 1266561499
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 837aa573aad19bfd54a9974815d3afb6
+    Hash: 309e9b0a690d0f50f9908cbce495a66a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 5ec9ed9c3c780928a8b1e86e429b9cbf
+    Hash: ab60a9b94c548963c92b18312347000a
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -30,6 +30,8 @@ ClassTypes:
 - Class: 136
   Script: {instanceID: 0}
 Assets:
+- Assets/res002/Q20160411112059.png
+- Assets/assectOne/why.prefab
 - Assets/assectOne/pref/CubeNo.prefab
 - Assets/assectOne/Cylinder.prefab
 - Assets/assectOne/nn/Capsule.prefab

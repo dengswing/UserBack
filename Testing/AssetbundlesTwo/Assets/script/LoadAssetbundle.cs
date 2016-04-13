@@ -1,8 +1,7 @@
-﻿using UnityEngine;
+﻿using Networks.log;
 using System.Collections;
 using System.IO;
-using Networks.log;
-using UnityEditor;
+using UnityEngine;
 
 public class LoadAssetbundle : MonoBehaviour
 {
@@ -11,12 +10,9 @@ public class LoadAssetbundle : MonoBehaviour
     {
         StartCoroutine("loaderTest");
 
-
-        GameObject cube = GameObject.Find("Cube");
-
-        var ss = AssetDatabase.LoadMainAssetAtPath("Assets/res/Materials/20121222171635.mat") as Material;
-        ss.mainTexture = AssetDatabase.LoadMainAssetAtPath("Assets/res/Q20160411112059.png") as Texture;
-        cube.GetComponent<Renderer>().material = ss;
+        //var ss = AssetDatabase.LoadMainAssetAtPath("Assets/res/Materials/20121222171635.mat") as Material;
+        //ss.mainTexture = AssetDatabase.LoadMainAssetAtPath("Assets/res/Q20160411112059.png") as Texture;
+       // cube.GetComponent<Renderer>().material.mainTexture = AssetDatabase.LoadMainAssetAtPath("Assets/res/Q20160411112059.png") as Texture;
     }
 
     void OnGUI()
@@ -67,8 +63,8 @@ public class LoadAssetbundle : MonoBehaviour
         var golbalPath = Platform.GetStreamingAssetsSourceFile(buildTarget);
         DebugConsole.Instance.Log("0=>" + golbalPath);
         //AssetBundle manifestBundle = AssetBundle.CreateFromFile(golbalPath + "/" + buildTarget);
-        var version = 40;
-        WWW www = WWW.LoadFromCacheOrDownload(golbalPath + "/" + buildTarget, version);
+        var version = 102;
+        WWW www = new WWW(golbalPath + "/" + buildTarget);
         DebugConsole.Instance.Log("2=>" + www.url);
         yield return www;
         AssetBundle manifestBundle = www.assetBundle;
@@ -95,7 +91,7 @@ public class LoadAssetbundle : MonoBehaviour
 
                 //golbalPath = Platform.GetStreamingAssetsSourceFile(buildTarget,false);
 
-                www = WWW.LoadFromCacheOrDownload(golbalPath + "/" + cubedepends[index], version);
+                www = new WWW(golbalPath + "/" + cubedepends[index]);
                 //DebugConsole.Instance.Log("1=>" + manifestBundle);
                 Debug.Log(www.url);
                 yield return www;
@@ -114,11 +110,12 @@ public class LoadAssetbundle : MonoBehaviour
             }
 
             //加载我们需要的文件;"
-            www = WWW.LoadFromCacheOrDownload(golbalPath + "/"+ sAssetName, version);
+            www = new WWW(golbalPath + "/"+ sAssetName);
             DebugConsole.Instance.Log("5=>" + www.url);
             yield return www;
             AssetBundle cubeBundle = www.assetBundle;
 
+            
             DebugConsole.Instance.Log("7=>" + cubeBundle);
 
             GameObject cube = null;
@@ -138,7 +135,7 @@ public class LoadAssetbundle : MonoBehaviour
                 Instantiate(cube);
             }
 
-            cube = cubeBundle.LoadAsset("Capsule") as GameObject;
+            cube = cubeBundle.LoadAsset("why") as GameObject;
             if (cube != null)
             {
                 DebugConsole.Instance.Log("8.1=>ok");
@@ -155,6 +152,10 @@ public class LoadAssetbundle : MonoBehaviour
                 //Sphere.transform.Rotate(new Vector3(180, 0, 0));
                 //Sphere.transform.localScale = new Vector3(2, 2, 2);
             }
+
+
+            cube = GameObject.Find("Cube");
+            cube.GetComponent<Renderer>().material.mainTexture = cubeBundle.LoadAsset("Q20160411112059") as Texture;
 
             var all = cubeBundle.GetAllAssetNames();
             foreach(var i in all) {
