@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System;
 using Networks.interfaces;
 using Networks.parser;
+using System.ComponentModel;
 
 namespace Networks
 {
-
+    #region debug
 #if UNITY_EDITOR
     public enum StatusType
     {
@@ -31,12 +32,14 @@ namespace Networks
         SERVER_ERROR
     }
 #endif
+    #endregion
 
     /// <summary>
     /// http请求
     /// </summary>
     public class HttpNetManager : MonoBehaviour
     {
+        #region  instantiate
         private static GameObject gameContainer = null;
         private static HttpNetManager _Instance;
         public static HttpNetManager Instance
@@ -60,8 +63,9 @@ namespace Networks
                 return _Instance;
             }
         }
+        #endregion
 
-
+        #region public property
         /// <summary>
         /// 返回的code结构是成功的
         /// </summary>
@@ -76,7 +80,19 @@ namespace Networks
         /// 网络超时
         /// </summary>
         public NetTimerDelegate netTimeOut;
+        #endregion
 
+        enum RequestState
+        {
+            [Description("初始状态")]
+            State_None = 0,
+            [Description("请求中状态")]
+            State_Requesting = 1,
+            [Description("完成")]
+            State_Complete = 2
+        }
+
+        #region private property
         /// <summary>
         /// 请求回调委托
         /// </summary>
@@ -132,8 +148,11 @@ namespace Networks
 
         //是否激活debug
         bool _isActiveDebug = true;
-        ///==============================================================================================
 
+        //请求的记录
+        Dictionary<string, RequestState> requestState = new Dictionary<string, RequestState>();
+        ///==============================================================================================
+        #endregion
 
 #if UNITY_EDITOR
         StatusType _statusType;
@@ -143,7 +162,7 @@ namespace Networks
             set { _statusType = value; }
         }
 #endif
-
+        #region get set property
         /// <summary>
         /// 用户id
         /// </summary>
@@ -242,6 +261,16 @@ namespace Networks
         }
 
         /// <summary>
+        /// 服务器时间
+        /// </summary>
+        public long gmt
+        {
+            get { return serverTime; }
+        }
+        #endregion
+
+        #region register delegate
+        /// <summary>
         /// 注入数据解析类,不注入默认使用框架里面的
         /// </summary>
         /// <param name="dataParse">Data parse.</param>
@@ -275,6 +304,17 @@ namespace Networks
         }
 
         /// <summary>
+        /// 注入数据表结构
+        /// </summary>
+        /// <param name="dataTable"></param>
+        public void RegisterTableDataStruct(AbsTableDataStruct dataTable)
+        {
+            TableDataManager.Instance.tableDataStruct = dataTable;
+        }
+        #endregion
+
+        #region post request
+        /// <summary>
         /// 打包请求
         /// </summary>
         /// <param name="commandId">后端的接口名称</param>
@@ -295,46 +335,6 @@ namespace Networks
         {
             List<object> args = new List<object>(c);
             queueDataGroup.AddRequest(commandId, args, resultBack);
-        }
-
-        /// <summary>
-        /// 启动重新在发送请求
-        /// </summary>
-        public void StartResetSend()
-        {
-            //超时了允许重发
-            if (netTimer.isTimeOut)
-            {
-                isContentError = false;
-                ResetSendRequest(false);
-            }
-            else
-            {
-                DebugTrace("HttpNetManager::ResetSend :Error:No timeout, don't need to resend!");
-            }
-        }
-
-        /// <summary>
-        /// 清除所有未请求的数据
-        /// </summary>
-        public void Clear()
-        {
-            RemoveAllRequset();
-        }
-
-        /// <summary>
-        /// 清除所有未请求的数据
-        /// </summary>
-        /// <param name="sendAllData">是否发送所有未发送的请求</param>
-        public void Clear(bool isSendAllData)
-        {
-            if (isSendAllData)
-            {
-                string URL = queueDataGroup.AllRequestData(serverTime);
-                if (URL != null) StartCoroutine(PostSingle(null, URL, null));
-            }
-
-            Clear();
         }
 
         /// <summary>
@@ -386,13 +386,47 @@ namespace Networks
         }
 
         /// <summary>
-        /// 服务器时间
+        /// 启动重新在发送请求
         /// </summary>
-        public long gmt
+        public void StartResetSend()
         {
-            get { return serverTime; }
+            //超时了允许重发
+            if (netTimer.isTimeOut)
+            {
+                isContentError = false;
+                ResetSendRequest(false);
+            }
+            else
+            {
+                DebugTrace("HttpNetManager::ResetSend :Error:No timeout, don't need to resend!");
+            }
+        }
+        #endregion
+
+        #region clear 
+        /// <summary>
+        /// 清除所有未请求的数据
+        /// </summary>
+        public void Clear()
+        {
+            RemoveAllRequset();
         }
 
+        /// <summary>
+        /// 清除所有未请求的数据
+        /// </summary>
+        /// <param name="sendAllData">是否发送所有未发送的请求</param>
+        public void Clear(bool isSendAllData)
+        {
+            if (isSendAllData)
+            {
+                string URL = queueDataGroup.AllRequestData(serverTime);
+                if (URL != null) StartCoroutine(PostSingle(null, URL, null));
+            }
+
+            Clear();
+        }
+        
         /// <summary>
         /// 重置本地时间
         /// </summary>
@@ -400,15 +434,7 @@ namespace Networks
         {
             localTime = DateTime.Now;
         }
-
-        /// <summary>
-        /// 注入数据表结构
-        /// </summary>
-        /// <param name="dataTable"></param>
-        public void RegisterTableDataStruct(AbsTableDataStruct dataTable)
-        {
-            TableDataManager.Instance.tableDataStruct = dataTable;
-        }
+        #endregion
 
         private HttpNetManager()
         {
@@ -435,6 +461,7 @@ namespace Networks
             SendRequest();
         }
 
+        #region init 
         void Init()
         {
             queueDataGroup = new QueueDataGroupManager();
@@ -447,6 +474,7 @@ namespace Networks
             netTimer.waitResponseTime = waitResponseTime;
             netTimer.resetSendMax = resetSendMax;
         }
+        #endregion
 
         /// <summary>
         /// 游戏服务器当前时间（秒为单位）
@@ -472,6 +500,7 @@ namespace Networks
             netTimer.Clear();
             DebugTrace("HttpNetManager::ResetSend :Error:Remove all request!");
             isContentError = false;
+            requestState.Clear();
         }
 
         /// <summary>
@@ -545,6 +574,7 @@ namespace Networks
             if (null != netTimeOut) netTimeOut();
         }
 
+        #region post request
         /// <summary>
         /// 请求http
         /// </summary>
@@ -553,9 +583,12 @@ namespace Networks
         IEnumerator PostAsync(IPostData data, bool isReset = false)
         {
             if (netTimer.isTimeOut) yield break;    //超时退出请求
+            string url = data.url;
+            var requestKey = RequestOnlyKey(url);
+            if (CheckRequestState(requestKey)) yield break;   //已结束
 
             if (!isReset) netTimer.StartTime(); //计时开始
-            string url = data.url;
+           
 
 #if UNITY_EDITOR
             if (statusType == StatusType.CONNECT_ERROR) url = "content::" + url;
@@ -569,6 +602,9 @@ namespace Networks
             DebugTrace(">>:" + url);
             WWW www = new WWW(url);
             yield return www;
+
+            if (CheckRequestState(requestKey)) yield break;   //已结束
+            requestState[requestKey] = RequestState.State_Complete;
 
 #if UNITY_EDITOR
             if (statusType == StatusType.NET_TIME_OUT) yield break;
@@ -632,6 +668,30 @@ namespace Networks
             }
         }
 
+        #region request state
+        string RequestOnlyKey(string url)
+        {
+            var split = url.Split(new char[1] { '&' });
+            foreach (var key in split)
+            {
+                if (key.IndexOf("sign") != -1) return  key;
+            }
+            return null;
+        }
+        bool CheckRequestState(string key)
+        {
+            if (requestState.ContainsKey(key))
+            {
+                return (requestState[key] == RequestState.State_Complete);
+            }
+            else
+            {
+                requestState.Add(key, RequestState.State_Requesting);
+                return false;
+            }
+        }
+        #endregion
+
         /// <summary>
         /// 触发回调委托
         /// </summary>
@@ -694,8 +754,9 @@ namespace Networks
             DebugTrace("singlePost<< " + url + ":" + www.text, false);
             DebugTrace(www.text, true, false);
         }
+        #endregion
 
-        //debug
+        #region debug
         void DebugTrace(string msg, bool isConsole = true, bool isLog = true, bool isTime = true)
         {
             if (!isActiveDebug) return;
@@ -706,5 +767,6 @@ namespace Networks
 #endif
 
         }
+        #endregion
     }
 }
