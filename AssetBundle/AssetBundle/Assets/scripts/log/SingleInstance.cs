@@ -2,7 +2,7 @@
 
 namespace Utilities
 {
-    public class SingletonMono<T> : MonoBehaviour where T : MonoBehaviour
+    public class SingleInstance<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static T sInstance;
 
@@ -16,7 +16,9 @@ namespace Utilities
             {
                 if (sIsQuitting && Application.isPlaying)
                 {
+#if UNITY_EDITOR
                     Debug.LogWarning("application is quitting");
+#endif
                     return null;
                 }
 
@@ -35,7 +37,7 @@ namespace Utilities
                         {
                             GameObject singleton = new GameObject();
                             sInstance = singleton.AddComponent<T>();
-                            singleton.name = "(singleton) " + typeof(T).ToString();
+                            singleton.name = "(singleton) " + typeof(T).Name;
                             DontDestroyOnLoad(singleton);
                         }
                     }
@@ -49,7 +51,9 @@ namespace Utilities
         {
             if (Application.isPlaying)
             {
+#if UNITY_EDITOR
                 Debug.LogWarningFormat("singleton [{0}] destroy", this.ToString());
+#endif
                 sIsQuitting = true;
             }
         }

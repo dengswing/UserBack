@@ -14,6 +14,11 @@ namespace Networks.parser
         /// </summary>
         public static readonly TableDataManager Instance = new TableDataManager();
 
+        /// <summary>
+        /// 删除表通知
+        /// </summary>
+        public DeleteTableDelegate DeleteTable;
+
         //当前请求返回的结果
         IServerResponseData _currentResponseData;
         Dictionary<string, DataTableUpdateDelegate> dataTableListener = new Dictionary<string, DataTableUpdateDelegate>(); //数据表变更委托
@@ -197,6 +202,8 @@ namespace Networks.parser
             }
 
             if (tableData.Count <= 0) dataTableAll.Remove(tableName);
+
+            if (DeleteTable != null) DeleteTable(tableName);
         }
 
         /// <summary>

@@ -1,52 +1,17 @@
 ﻿using Networks.interfaces;
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using Utilities;
 
 namespace Networks.log
 {
     /// <summary>
     /// debug
     /// </summary>
-    public class DebugConsole : MonoBehaviour, IDebugConsole
+    public class DebugConsole : SingleInstance<DebugConsole>, IDebugConsole
     {
-        enum EDebugType
-        {
-            [Description("Debug Request")]
-            EDebugRequest,
-            [Description("Debug Other")]
-            EDebugString,
-        }
-
-        static GameObject gameContainer = null;
-        static IDebugConsole _Instance;
-        public static IDebugConsole Instance
-        {
-            get
-            {
-                if (_Instance == null)
-                {
-                    _Instance = FindObjectOfType<DebugConsole>();
-                    if (_Instance == null && gameContainer == null)
-                    {
-                        gameContainer = new GameObject();
-                        gameContainer.name = "DebugConsole";
-                        gameContainer.AddComponent(typeof(DebugConsole));
-                    }
-
-                    _Instance = FindObjectOfType<DebugConsole>();
-                    if (_Instance != null)
-                    {
-                        var gameObject = ((DebugConsole)_Instance).gameObject;
-                        DontDestroyOnLoad(gameObject);
-                    }
-                }
-                return _Instance;
-            }
-        }
-
         int sDebugStringMaxLength = 65535 / 4;
         float scrollBarSize = 20;
         Vector2 scrollpos = new Vector2();
@@ -107,22 +72,27 @@ namespace Networks.log
 
         void LogUI()
         {
-            if (GUI.Button(new Rect(0, 10, 100, 30), "open log file"))
+            if (GUI.Button(new Rect(0, 10, 100, 50), "open log file"))
             {
                 OpenLogFile();
             }
 
-            if (GUI.Button(new Rect(110, 10, 100, 30), "clear log"))
+            if (GUI.Button(new Rect(110, 10, 100, 50), "clear log"))
             {
                 ClearLog();
             }
 
-            if (GUI.Button(new Rect(220, 10, 100, 30), "clear log file"))
+            if (GUI.Button(new Rect(220, 10, 100, 50), "clear log file"))
             {
                 DelLogFile();
             }
 
-            GUI.BeginGroup(new Rect(0, 40, Screen.width - 10, Screen.height / 2));
+            if (GUI.Button(new Rect(330, 10, 100, 50), "OnDestroy"))
+            {
+                Destroy(this);
+            }
+
+            GUI.BeginGroup(new Rect(0, 60, Screen.width - 10, Screen.height / 2));
 
 #if UNITY_IPHONE
 		switch(iPhone.generation)
@@ -173,7 +143,7 @@ namespace Networks.log
         void OnGUI()
         {
             logStyle = GUI.skin.textArea;
-            logStyle.fontSize = 20;
+            logStyle.fontSize = 30;
             logStyle.fontStyle = FontStyle.Bold;
             LogUI();
         }
@@ -236,16 +206,6 @@ namespace Networks.log
         {
             if (!string.IsNullOrEmpty(mDumpDebugFile) && File.Exists(mDumpDebugFile))
                 File.Delete(mDumpDebugFile);
-        }
-
-        void OnDisable()
-        {
-
-        }
-
-        void OnDestroy()
-        {
-
         }
 
     }

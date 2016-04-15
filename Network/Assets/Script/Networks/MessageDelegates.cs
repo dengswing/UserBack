@@ -27,4 +27,10 @@
     /// </summary>
     /// <param name="data">数据</param>
     public delegate void DataTableUpdateDelegate(object data);
+
+    /// <summary>
+    /// 删除表内容通知
+    /// </summary>
+    /// <param name="tableName">表名</param>
+    public delegate void DeleteTableDelegate(string tableName);
 }
