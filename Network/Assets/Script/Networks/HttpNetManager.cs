@@ -37,34 +37,8 @@ namespace Networks
     /// <summary>
     /// http请求
     /// </summary>
-    public class HttpNetManager : MonoBehaviour
+    public class HttpNetManager : Utilities.SingleInstance<HttpNetManager>
     {
-        #region  instantiate
-        private static GameObject gameContainer = null;
-        private static HttpNetManager _Instance;
-        public static HttpNetManager Instance
-        {
-            get
-            {
-                if (_Instance == null)
-                {
-                    _Instance = FindObjectOfType<HttpNetManager>();
-                    if (_Instance == null && gameContainer == null)
-                    {
-                        gameContainer = new GameObject();
-                        gameContainer.name = "HttpNetManager";
-                        gameContainer.AddComponent(typeof(HttpNetManager));
-                    }
-
-                    _Instance = FindObjectOfType<HttpNetManager>();
-                    if (_Instance != null)
-                        DontDestroyOnLoad(_Instance.gameObject);
-                }
-                return _Instance;
-            }
-        }
-        #endregion
-
         #region public property
         /// <summary>
         /// 返回的code结构是成功的
@@ -443,8 +417,6 @@ namespace Networks
 
         void Awake()
         {
-            _Instance = this;
-            DontDestroyOnLoad(this.gameObject);
 
 #if DEBUG_CONSOLE
             _debugConsole = Networks.log.DebugConsole.Instance;

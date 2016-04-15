@@ -19,6 +19,7 @@ namespace Networks.parser
         /// </summary>
         public DeleteTableDelegate DeleteTable;
 
+        #region property
         //当前请求返回的结果
         IServerResponseData _currentResponseData;
         Dictionary<string, DataTableUpdateDelegate> dataTableListener = new Dictionary<string, DataTableUpdateDelegate>(); //数据表变更委托
@@ -26,7 +27,9 @@ namespace Networks.parser
         AbsTableDataStruct _tableDataStruct;  //表结构数据
         Dictionary<string, object> dataTableList = new Dictionary<string, object>();  //表格数据数组缓存,（只存被获取过一次的缓存数据）
         Dictionary<string, object> dataTableDict = new Dictionary<string, object>();  //表格数据字典缓存,（只存被获取过一次的缓存数据）
+        #endregion
 
+        #region get set property
         /// <summary>
         /// 设置表结构
         /// </summary>
@@ -51,6 +54,7 @@ namespace Networks.parser
             get { return _currentResponseData; }
             set { _currentResponseData = value; }
         }
+        #endregion
 
         /// <summary>
         /// 获取对应的类
@@ -63,6 +67,7 @@ namespace Networks.parser
             return _tableDataStruct.findTableTypeData(tableName);
         }
 
+        #region add table content
         /// <summary>
         /// 增加表格数据
         /// </summary>
@@ -88,7 +93,9 @@ namespace Networks.parser
                 dataTableList.Remove(tableName); //移除缓存list
             }
         }
+        #endregion
 
+        #region get table content
         /// <summary>
         /// 返回数据表
         /// </summary>
@@ -173,7 +180,9 @@ namespace Networks.parser
             else
                 return null;
         }
+        #endregion
 
+        #region remove table content
         /// <summary>
         /// 移除表格list数据
         /// </summary>
@@ -247,6 +256,7 @@ namespace Networks.parser
 
             return true;
         }
+        #endregion
 
         /// <summary>
         /// 消息通知
@@ -261,6 +271,7 @@ namespace Networks.parser
             _tableDataStruct.FireNotice(tableName, data);
         }
 
+        #region table listener and remove
         /// <summary>
         /// 增加数据表委托
         /// </summary>
@@ -289,6 +300,7 @@ namespace Networks.parser
             if (dataTableListener.ContainsKey(tableName))
                 dataTableListener[tableName] -= updateBack;
         }
+        #endregion
 
         /// <summary>
         /// 清除所有缓存数据
@@ -331,6 +343,7 @@ namespace Networks.parser
 
             return true;
         }
+        #region get table content
 
         T GetTableDataDispose<T>(string tableName, Predicate<T> cond = null)
         {
@@ -454,6 +467,8 @@ namespace Networks.parser
             if (cond == null && !dataTableDict.ContainsKey(tableName)) dataTableDict.Add(tableName, data);
             return data;
         }
+
+        #endregion
 
         /// <summary>
         /// 移除缓存的表格字典
