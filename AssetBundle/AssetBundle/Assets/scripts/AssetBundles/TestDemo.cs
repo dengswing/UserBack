@@ -6,19 +6,19 @@ using UnityEngine;
 /// <summary>
 /// 每个bundle的信息
 /// </summary>
-public class TestDeme : MonoBehaviour
+public class TestDemo : MonoBehaviour
 {
     void Start() 
     {
-        var assetBundleManager = new AssetBundleManager();
-
-        assetBundleManager.loaderComplete = CallBackLoaderComplete;
-        assetBundleManager.CreateLoader("ddd");
-
+        var assetBundleManager = AssetBundleManager.Instance;
+        assetBundleManager.Load("AssectFrist",CallBackLoaderComplete);
     }
 
     void CallBackLoaderComplete(AssetBundleInfo info) 
     {
+#if DEBUG_CONSOLE
+        Networks.log.DebugConsole.Instance.Log(info.ToString());
+#endif
         Instantiate(info.LoadAsset("cube"));
     }
 }

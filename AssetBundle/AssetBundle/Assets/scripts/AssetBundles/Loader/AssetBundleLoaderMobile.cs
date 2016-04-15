@@ -15,6 +15,7 @@ namespace AssetBundles.Loader
             if (state == LoadState.State_None)
             {
                 state = LoadState.State_Loading;
+                bundleManager.RequestLoadBundle(this);
             }
             else if (state == LoadState.State_Error)
             {
@@ -35,13 +36,17 @@ namespace AssetBundles.Loader
             var serverPath = PathGlobal.GetStreamingAssetsSourceFile(platfrom);
             var localPath = PathGlobal.GetPersistentDataPathSourceFile(platfrom);
 
+#if DEBUG_CONSOLE
+            Networks.log.DebugConsole.Instance.Log("LoadBundle:: serverPath=" + serverPath + "|localPath=" + localPath);
+#endif
+
             if (File.Exists(localPath))
-                bundleManager.StartCoroutine(ServerLoader(PathGlobal.GetJoinPath(localPath, platfrom), bundleName));
+                bundleManager.StartCoroutine(LocalLoder(localPath, bundleName));
             else
-                bundleManager.StartCoroutine(ServerLoader(PathGlobal.GetJoinPath(serverPath, platfrom), bundleName));
+                bundleManager.StartCoroutine(ServerLoader(serverPath, bundleName));
         }
 
-        IEnumerator LocalLoder(string path, string bundleName)
+        protected virtual IEnumerator LocalLoder(string path, string bundleName)
         {
             //AssetBundleCreateRequest load = AssetBundle.LoadFromFileAsync(path);
             //yield return load;
@@ -64,6 +69,10 @@ namespace AssetBundles.Loader
 
             var sAssetName = string.Format("{0}.unity3d", bundleName);
             AssetBundleCreateRequest load = AssetBundle.LoadFromFileAsync(PathGlobal.GetJoinPath(path, sAssetName));
+
+#if DEBUG_CONSOLE
+            Networks.log.DebugConsole.Instance.Log("LocalLoder:: url=" + PathGlobal.GetJoinPath(path, sAssetName));
+#endif
             yield return load;
             bundle = load.assetBundle;
             Complete();
@@ -71,8 +80,9 @@ namespace AssetBundles.Loader
         }
 
 
-        IEnumerator ServerLoader(string path, string bundleName)
+        protected virtual IEnumerator ServerLoader(string path, string bundleName)
         {
+            //var platfrom = PathGlobal.GetPlatformFile();
             //WWW www = new WWW(path);
             //yield return www;
             //if (www.error != null)
@@ -103,6 +113,10 @@ namespace AssetBundles.Loader
 
             var sAssetName = string.Format("{0}.unity3d", bundleName);
             WWW www = new WWW(PathGlobal.GetJoinPath(path, sAssetName));
+
+#if DEBUG_CONSOLE
+            Networks.log.DebugConsole.Instance.Log("ServerLoader:: url=" + www.url);
+#endif
             yield return www;
             if (www.error != null)
             {
@@ -122,11 +136,24 @@ namespace AssetBundles.Loader
             var path = PathGlobal.GetJoinPath(PathGlobal.GetPlatformFile(), fileName);
             path = PathGlobal.GetPersistentDataPathSourceFile(path);
 
+            //if (!Directory.Exists(path))
+            //{
+            //    // Create the directory it does not exist.
+            //    Directory.CreateDirectory(path);
+            //}
+
             using (FileStream stream = new FileStream(path, FileMode.OpenOrCreate))
             {
+
+#if DEBUG_CONSOLE
+                Networks.log.DebugConsole.Instance.Log("ReplaceLocalRes:: url=" + path);
+#endif
                 byte[] data = www.bytes;
                 stream.Write(data, 0, data.Length);
 
+#if DEBUG_CONSOLE
+                Networks.log.DebugConsole.Instance.Log("ReplaceLocalRes:: write success");
+#endif
                 www.Dispose();
                 www = null;
             }

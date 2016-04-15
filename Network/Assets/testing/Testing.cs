@@ -1,18 +1,10 @@
-﻿using UnityEngine;
+﻿#define SG
+//#define Marvelisland
+
+using UnityEngine;
 using Networks;
 using Networks.parser;
 using System.Collections.Generic;
-using System.Text;
-
-using System;
-using System.IO;
-using System.Security.Cryptography;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using Networks.tool;
-using Newtonsoft.Json;
-using System.Reflection;
-using Networks.log;
 
 class Testing : MonoBehaviour
 {
@@ -22,21 +14,32 @@ class Testing : MonoBehaviour
     void Start()
     {
         httpNetwork = HttpNetManager.Instance;
-        httpNetwork.userID = "9"; //用户id
         httpNetwork.statusType = statusType;
-        // httpNetwork.requestURL = "http://dev-soul.shinezoneapp.com/?&{0}";
 
-        //access data (and print it)
+#if Marvelisland
+        httpNetwork.userID = "1"; //用户id
+#elif SG
+        httpNetwork.userID = "9"; //用户id
+#endif
 
 
+#if SG
+        httpNetwork.requestURL = "http://dev-soul.shinezoneapp.com/?&{0}";
+#elif Marvelisland
         // http://dev-mi-facebook.shinezone.com/index.php?*=[["game.login",["1",0,0,1,"3","4"]]]&halt=711&sign=6YjG2QUodzBRd9RDQweiig2s3MQ%3D
         httpNetwork.requestURL = "http://dev-mi-facebook.shinezone.com/index.php?{0}";
+#endif
 
         httpNetwork.RegisterResponse("game.login", ResponseHandler);  //单个接口的侦听
         httpNetwork.serverErrorResponse = ServerErrorHandler;
         httpNetwork.netTimeOut = NetTimeOutHandler;  //网络超时
-        // httpNetwork.hamcKey = "key345"; //不传的话就默认不做api签名
+
+#if SG
+        httpNetwork.hamcKey = "key345"; //不传的话就默认不做api签名
+#elif Marvelisland
         httpNetwork.hamcKey = "key001";
+        //httpNetwork.token = "123";
+#endif
 
         httpNetwork.RegisterNetworkDataParse(new NetworkDataParser()); //注入解析类，不注入会报错
 
@@ -46,9 +49,12 @@ class Testing : MonoBehaviour
         var m = new Dictionary<string,string>();
         m.Add("s","1");
 
+#if Marvelisland
+        httpNetwork.Post("game.init", ResponseHandler, 1, "3", "4");  //单一侦听,报了系统级别错误不会有回调
+#elif SG
+        httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
+#endif
         // httpNetwork.Post("game.reset", ResponseHandler);
-        httpNetwork.Post("game.init", ResponseHandler, 1, "2", "431",m);  //单一侦听,报了系统级别错误不会有回调
-        // httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
         // httpNetwork.Post("package.index", ResponseHandler);
         //httpNetwork.Post("cityOrder.list", ResponseHandler);
         // httpNetwork.Post("package.upgradeLv", ResponseHandler);

@@ -34,6 +34,11 @@ namespace Networks.interfaces
         Dictionary<string, object> updateListData { get; set; }
 
         /// <summary>
+        /// delete 的内容（Json原始数据，没有解析）
+        /// </summary>
+        Dictionary<string, object> deleteListData { get; set; }
+
+        /// <summary>
         /// 根据表结构构建的数据 （update的内容）
         /// </summary>
         Dictionary<string, object> updataListTableStruct { get; set; }

@@ -32,7 +32,7 @@ namespace Networks.parser
                 _tableDataStruct = value;
                 _tableDataStruct.RegisterBindingTableStrcut();
             }
-            get 
+            get
             {
                 return _tableDataStruct;
             }
@@ -78,8 +78,8 @@ namespace Networks.parser
         {
             if (dataTableList.ContainsKey(tableName))
             {
-              //  List<object> dataList = GetTableDataList<object>(tableName);
-               // dataList.Add(data);
+                //  List<object> dataList = GetTableDataList<object>(tableName);
+                // dataList.Add(data);
                 dataTableList.Remove(tableName); //移除缓存list
             }
         }
@@ -155,7 +155,7 @@ namespace Networks.parser
                 return default(Dictionary<string, T>);
             }
         }
-        
+
         /// <summary>
         /// 获取表格数据
         /// </summary>
@@ -167,7 +167,37 @@ namespace Networks.parser
                 return dataTableAll[tableName];
             else
                 return null;
-        }        
+        }
+
+        /// <summary>
+        /// 移除表格list数据
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="data"></param>
+        public void RemoveTableListData(string tableName, List<string> data)
+        {
+            if (!dataTableAll.ContainsKey(tableName)) return;
+
+            Dictionary<string, object> tableData = (Dictionary<string, object>)dataTableAll[tableName];
+            foreach (var key in data)
+            {
+                if (tableData.ContainsKey(key)) tableData.Remove(key);
+
+                if (dataTableDict.ContainsKey(tableName))
+                {
+                    Dictionary<string, object> cacheTableData = (Dictionary<string, object>)dataTableDict[tableName];
+                    if (cacheTableData.ContainsKey(key)) cacheTableData.Remove(key);
+                    if (cacheTableData.Count <= 0) dataTableDict.Remove(tableName);
+                }
+
+                if (dataTableList.ContainsKey(tableName))
+                {
+                    dataTableList.Remove(tableName);
+                }
+            }
+
+            if (tableData.Count <= 0) dataTableAll.Remove(tableName);
+        }
 
         /// <summary>
         /// 移除表格数据
@@ -209,7 +239,7 @@ namespace Networks.parser
             if (tableData.Count <= 0) dataTableAll.Remove(tableName);
 
             return true;
-        }       
+        }
 
         /// <summary>
         /// 消息通知
@@ -366,7 +396,7 @@ namespace Networks.parser
                         if (listObj.Count > 0)
                         {
                             data = new List<T>();
-                            listObj.ForEach(x => data.Add((T)x));                            
+                            listObj.ForEach(x => data.Add((T)x));
                         }
 
                         listObj = null;

@@ -16,6 +16,7 @@ namespace Networks.parser
         const string SERVER_RESPONSE_MSG = "msg";   //内容
         const string SERVER_RESPONSE_GMT = "gmt";   //服务器时间
         const string SERVER_RESPONSE_UPDATE = "UPDATE"; //更新数据
+        const string SERVER_RESPONSE_DELETE = "DELETE"; //删除
 
         //错误key
         const int RESPONSE_CODE_ERROR = -999;
@@ -44,6 +45,31 @@ namespace Networks.parser
             return tableStructList;
         }
 
+        public List<string> GetTableDeleteList(object data)
+        {
+            List<string> deleteList = new List<string>();
+            GetArrayValue(data, deleteList);
+            return deleteList;
+        }
+
+        void GetArrayValue(object data, List<string> list)
+        {
+            if (data is JArray)
+            {
+                foreach (var value in (JArray)data)
+                {
+                    list.Add(value.ToString());
+                }
+            }
+            else if (data is JObject)
+            {
+                foreach (JProperty property in ((JObject)data).Children())
+                {
+                    GetArrayValue(property.Value, list);
+                }
+            }
+        }
+
         /// <summary>
         /// json数据包装成数据结构
         /// </summary>
@@ -57,23 +83,29 @@ namespace Networks.parser
             JProperty jPropertyMsg = null;
             JProperty jPropertyUpdate = null;
             JProperty jPropertyGmt = null;
+            JProperty jPropertyDelete = null;
+
             foreach (JProperty jPropertyRootItem in rootData.Children())
             {
-                if (SERVER_RESPONSE_CODE == jPropertyRootItem.Name)
+                switch (jPropertyRootItem.Name)
                 {
-                    jPropertyCode = jPropertyRootItem;
-                }
-                else if (SERVER_RESPONSE_MSG == jPropertyRootItem.Name)
-                {
-                    jPropertyMsg = jPropertyRootItem;
-                }
-                else if (SERVER_RESPONSE_UPDATE == jPropertyRootItem.Name)
-                {
-                    jPropertyUpdate = jPropertyRootItem;
-                }
-                else if (SERVER_RESPONSE_GMT == jPropertyRootItem.Name)
-                {
-                    jPropertyGmt = jPropertyRootItem;
+                    case SERVER_RESPONSE_CODE:
+                        jPropertyCode = jPropertyRootItem;
+                        break;
+                    case SERVER_RESPONSE_MSG:
+                        jPropertyMsg = jPropertyRootItem;
+                        break;
+                    case SERVER_RESPONSE_UPDATE:
+                        jPropertyUpdate = jPropertyRootItem;
+                        break;
+                    case SERVER_RESPONSE_GMT:
+                        jPropertyGmt = jPropertyRootItem;
+                        break;
+                    case SERVER_RESPONSE_DELETE:
+                        jPropertyDelete = jPropertyRootItem;
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -86,7 +118,7 @@ namespace Networks.parser
                     if (jPropertyMsg != null)
                     {
                         var msgValue = jPropertyMsg.Value;
-                        if (msgValue is JArray) 
+                        if (msgValue is JArray)
                         {
                             objServerResponseData.result = Newtonsoft.Json.JsonConvert.SerializeObject(msgValue.First);
                         }
@@ -103,6 +135,11 @@ namespace Networks.parser
                     if (jPropertyUpdate != null)
                     {
                         objServerResponseData.updateListData = ParseUpdate(jPropertyUpdate);
+                    }
+
+                    if (jPropertyDelete != null)
+                    {
+                        objServerResponseData.deleteListData = ParseUpdate(jPropertyDelete);
                     }
 
                 }
@@ -186,7 +223,7 @@ namespace Networks.parser
                 tableStructList.Add(jMsg.Name, tableList);
             }
 
-        Found:
+            Found:
             return;
         }
 

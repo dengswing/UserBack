@@ -18,6 +18,9 @@ namespace AssetBundles.Loader
         State_Complete = 3
     }
 
+    /// <summary>
+    /// 加载基类
+    /// </summary>
     public abstract class AssetBundleLoaderAbs
     {
         public string bundleName;
@@ -25,6 +28,8 @@ namespace AssetBundles.Loader
         public AssetBundleManager bundleManager;
         public AssetBundleData bundleData;
         public AssetBundleInfo bundleInfo;
+
+        internal CallBackLoaderComplete loaderComplete;
 
         public virtual void Load()
         {
@@ -41,33 +46,33 @@ namespace AssetBundles.Loader
 
         }
 
+        /// <summary>
+        /// 是否加载完成
+        /// </summary>
         public virtual bool isComplete
         {
-            get
-            {
-                return state == LoadState.State_Error || state == LoadState.State_Complete;
-            }
+            get { return state == LoadState.State_Error || state == LoadState.State_Complete; }
         }
 
         protected virtual void Complete()
         {
-            //if (onComplete != null)
-            //{
-            //    var handler = onComplete;
-            //    onComplete = null;
-            //    handler(bundleInfo);
-            //}
+            if (loaderComplete != null)
+            {
+                var handler = loaderComplete;
+                loaderComplete = null;
+                handler(bundleInfo);
+            }
             bundleManager.LoadComplete(this);
         }
 
         protected virtual void Error()
         {
-            //if (onComplete != null)
-            //{
-            //    var handler = onComplete;
-            //    onComplete = null;
-            //    handler(bundleInfo);
-            //}
+            if (loaderComplete != null)
+            {
+                var handler = loaderComplete;
+                loaderComplete = null;
+                handler(bundleInfo);
+            }
             bundleManager.LoadError(this);
         }
 

@@ -1,5 +1,6 @@
 ﻿namespace Networks.interfaces
 {
+    using System.Collections.Generic;
     public interface IDataTablePull
     {
         /// <summary>
@@ -59,7 +60,7 @@
         /// </summary>
         /// <param name="tableName">表名</param>
         /// <returns></returns>
-        System.Collections.Generic.List<T> GetTableDataList<T>(string tableName, System.Predicate<T> cond = null);
+        List<T> GetTableDataList<T>(string tableName, System.Predicate<T> cond = null);
 
         /// <summary>
         /// 返回数据表（字典形式）
@@ -68,7 +69,7 @@
         /// <param name="tableName"></param>
         /// <param name="cond"></param>
         /// <returns></returns>
-        System.Collections.Generic.Dictionary<string, T> GetTableDataDictionary<T>(string tableName, System.Predicate<T> cond = null);
+        Dictionary<string, T> GetTableDataDictionary<T>(string tableName, System.Predicate<T> cond = null);
 
         /// <summary>
         /// 侦听表更新
@@ -97,5 +98,12 @@
         /// 清除所有缓存数据
         /// </summary>
         void RemoveAllData();
+
+        /// <summary>
+        /// 移除表格list数据
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="data"></param>
+        void RemoveTableListData(string tableName, List<string> data);
     }
 }

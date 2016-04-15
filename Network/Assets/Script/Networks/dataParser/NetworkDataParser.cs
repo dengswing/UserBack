@@ -32,7 +32,9 @@ namespace Networks.parser
         /// <returns></returns>
         public int ParseData(string netstringBuff, out string serverMsg, out string msg)
         {
-            // netstringBuff = "{\"code\": 0,\"msg\": [{\"result\": 1}],\"gmt\": 1448872840,\"UPDATE\": {  \"ModuleProfileInfo\": {    \"156\": {      \"5\": {\"info\": 2}    }  },  \"ModuleProfile\": {\"156\": {\"token\": 47500}},  \"List\": {    \"156\": {      \"5\": {        \"listInfo\": [          {            \"itemDefId\": 10000003,            \"cd\": 35,            \"completeTime\": 1448872816,            \"material\": [              {\"10010011\": 1},              {\"10010012\": 1}            ]          },          {            \"itemDefId\": 10000011,            \"cd\": 35,            \"completeTime\": 1448872851,            \"material\": [              {\"10010008\": 3},              {\"10010020\": 1},              {\"10010023\": 1}            ]          }        ]      }    }  },  \"RobotInfo\": {    \"156\": {      \"700002\": {        \"proficiency\": 2,        \"isUpgrade\": 0,        \"progress\": [          {            \"entityId\": 50110030005,            \"count\": 0          },          {            \"entityId\": 50110030006,            \"count\": 0          },          {            \"entityId\": 50110030007,            \"count\": 0          }        ]      }    }  },  \"OldElectricNpc\": {    \"156\": {      \"607\": {        \"electricNpcDefId\": 0,        \"carryOldElectricDefId\": 0,        \"lastLeaveTime\": 1448872840      }    }  }}}";
+             netstringBuff = "{\"code\":0,\"msg\":[{\"result\":1}],\"gmt\":1448872840,\"UPDATE\":{\"ModuleProfileInfo\":{\"156\":{\"5\":{\"info\":2}}},\"ModuleProfile\":{\"156\":{\"token\":47500}},\"List\":{\"156\":{\"5\":{\"listInfo\":[{\"itemDefId\":10000003,\"cd\":35,\"completeTime\":1448872816,\"material\":[{\"10010011\":1},{\"10010012\":1}]},{\"itemDefId\":10000011,\"cd\":35,\"completeTime\":1448872851,\"material\":[{\"10010008\":3},{\"10010020\":1},{\"10010023\":1}]}]}}},\"RobotInfo\":{\"156\":{\"700002\":{\"proficiency\":2,\"isUpgrade\":0,\"progress\":[{\"entityId\":50110030005,\"count\":0},{\"entityId\":50110030006,\"count\":0},{\"entityId\":50110030007,\"count\":0}]}}},\"OldElectricNpc\":{\"156\":{\"607\":{\"electricNpcDefId\":0,\"carryOldElectricDefId\":0,\"lastLeaveTime\":1448872840}}}},\"DELETE\":{\"List\":{\"156\":[55]},\"ModuleProfile\":[\"156\"]}}";
+            Networks.log.DebugConsole.Instance.Log(netstringBuff);
+
             IServerResponseData objServerResponseData = JsonDataManager.Instance.ParseJsonDataFromServer(netstringBuff);
             dataTableManager.currentResponseData = objServerResponseData;
 
@@ -59,14 +61,33 @@ namespace Networks.parser
                 data.msgListTableStruct.Add(allTableData);
             }
 
-            if (data.updateListData == null) return;
-            data.updataListTableStruct = TableChangeStruct(data.updateListData); //更新的内容
 
-            foreach (var j in data.updataListTableStruct)
+            if (data.deleteListData != null)
             {
-                dataTableManager.FireNotice(j.Key, j.Value);
+                DeleteTableData(data.deleteListData); //删除的内容
+            }
+
+            if (data.updateListData != null)
+            {
+                data.updataListTableStruct = TableChangeStruct(data.updateListData); //更新的内容
+
+                foreach (var j in data.updataListTableStruct)
+                {
+                    dataTableManager.FireNotice(j.Key, j.Value);
+                }
+            }
+
+        }
+
+        void DeleteTableData(Dictionary<string, object> data)
+        {
+            foreach (var table in data)
+            {
+                var delList = JsonDataManager.Instance.GetTableDeleteList(table.Value);
+                dataTableManager.RemoveTableListData(table.Key, delList);
             }
         }
+
 
         /// <summary>
         /// 根据数据库表格来转换结构

@@ -82,7 +82,14 @@ namespace AssetBundles
         /// <returns></returns>
         public static string GetPersistentDataPathSourceFile(string path)
         {
+
+#if UNITY_EDITOR
             return GetJoinPath(Application.persistentDataPath, path);
+#else
+            return GetJoinPath(Application.persistentDataPath, path);
+#endif
+
+
         }
 
         /// <summary>

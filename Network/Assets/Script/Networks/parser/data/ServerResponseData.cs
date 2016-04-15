@@ -16,6 +16,8 @@ namespace Networks.data
         Dictionary<string, object> _updataListTableStruct; //根据表结构构建的数据 （update的内容）
         List<Dictionary<string, object>> _msgListTableStruct; //根据表结构构建的数据 （msg的内容）
 
+        public Dictionary<string, object> deleteListData { get; set; } //删除列表
+
         public string result
         {
             get { return _result; }
