@@ -129,7 +129,9 @@ namespace Networks
         #endregion
 
 #if UNITY_EDITOR
-        StatusType _statusType;
+
+        [SerializeField]
+        StatusType _statusType;        
         public StatusType statusType
         {
             get { return _statusType; }

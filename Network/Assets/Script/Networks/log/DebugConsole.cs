@@ -12,7 +12,7 @@ namespace Networks.log
     /// </summary>
     public class DebugConsole : SingleInstance<DebugConsole>, IDebugConsole
     {
-        int sDebugStringMaxLength = 65535 / 4;
+        int sDebugStringMaxLength = 65535 / 5;
         float scrollBarSize = 20;
         Vector2 scrollpos = new Vector2();
         GUIStyle logStyle = null;
@@ -48,19 +48,16 @@ namespace Networks.log
             }
 
             var debug = msg;
-            if (mDebugString.Capacity < mDebugString.Length + debug.Length + 50)
+            if (sDebugStringMaxLength > mDebugString.Length)
             {
-                debug = debug.Substring(0, mDebugString.Capacity - mDebugString.Length - 50) + "\n........";
+                if (isTime) mDebugString.AppendFormat("======{0}======\n", DateTime.Now.ToString());
+                mDebugString.AppendLine(debug);
             }
-
-            if (isTime) mDebugString.AppendFormat("======{0}======\n", DateTime.Now.ToString());
-            mDebugString.AppendLine(debug);
 
             if (isTime) mDumpString.AppendFormat("======{0}======\n", DateTime.Now.ToString());
             mDumpString.AppendLine(msg);
 
             DumpDebugInfoToFile();
-
         }
 
         void Awake()
@@ -89,35 +86,35 @@ namespace Networks.log
 
             if (GUI.Button(new Rect(330, 10, 100, 50), "OnDestroy"))
             {
-                Destroy(this);
+                gameObject.SetActive(false);
             }
 
             GUI.BeginGroup(new Rect(0, 60, Screen.width - 10, Screen.height / 2));
 
 #if UNITY_IPHONE
-		switch(iPhone.generation)
+		switch(UnityEngine.iOS.Device.generation)
 		{
-		case iPhoneGeneration.iPhone:
-		case iPhoneGeneration.iPhone3G:
-		case iPhoneGeneration.iPhone3GS:
-		case iPhoneGeneration.iPhone4:
-		case iPhoneGeneration.iPhone4S:
-		case iPhoneGeneration.iPhone5:
-		case iPhoneGeneration.iPhoneUnknown:
-		case iPhoneGeneration.iPodTouch1Gen:
-		case iPhoneGeneration.iPodTouch2Gen:
-		case iPhoneGeneration.iPodTouch3Gen:
-		case iPhoneGeneration.iPodTouch4Gen:
-		case iPhoneGeneration.iPodTouch5Gen:
-		case iPhoneGeneration.iPodTouchUnknown:
+		case UnityEngine.iOS.DeviceGeneration.iPhone:
+		case UnityEngine.iOS.DeviceGeneration.iPhone3G:
+		case UnityEngine.iOS.DeviceGeneration.iPhone3GS:
+		case UnityEngine.iOS.DeviceGeneration.iPhone4:
+		case UnityEngine.iOS.DeviceGeneration.iPhone4S:
+		case UnityEngine.iOS.DeviceGeneration.iPhone5:
+		case UnityEngine.iOS.DeviceGeneration.iPhoneUnknown:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouch1Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouch2Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouch3Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouch4Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouch5Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPodTouchUnknown:
 			scrollBarSize = Screen.width/8;
 			break;
-		case iPhoneGeneration.iPad1Gen:
-		case iPhoneGeneration.iPad2Gen:
-		case iPhoneGeneration.iPad3Gen:
-		case iPhoneGeneration.iPad4Gen:
-		case iPhoneGeneration.iPadMini1Gen:
-		case iPhoneGeneration.iPadUnknown:
+		case UnityEngine.iOS.DeviceGeneration.iPad1Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPad2Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPad3Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPad4Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPadMini1Gen:
+		case UnityEngine.iOS.DeviceGeneration.iPadUnknown:
 			scrollBarSize = Screen.width/10;
 			break;
 		default:
@@ -207,6 +204,5 @@ namespace Networks.log
             if (!string.IsNullOrEmpty(mDumpDebugFile) && File.Exists(mDumpDebugFile))
                 File.Delete(mDumpDebugFile);
         }
-
     }
 }
