@@ -37,10 +37,16 @@ namespace AssetBundles.Loader
             var localPath = PathGlobal.GetPersistentDataPathSourceFile(platfrom);
 
 #if DEBUG_CONSOLE
-            Networks.log.DebugConsole.Instance.Log("LoadBundle:: serverPath=" + serverPath + "|localPath=" + localPath);
+            UnityEngine.Debug.Log("LoadBundle:: serverPath=" + serverPath + "|localPath=" + localPath);
 #endif
 
-            if (File.Exists(localPath))
+            var sAssetName = string.Format("{0}.unity3d", bundleName);
+            sAssetName = PathGlobal.GetJoinPath(localPath, sAssetName);
+
+#if DEBUG_CONSOLE
+            UnityEngine.Debug.Log("LoadBundle:: sAssetName=" + sAssetName);
+#endif
+            if (File.Exists(sAssetName))
                 bundleManager.StartCoroutine(LocalLoder(localPath, bundleName));
             else
                 bundleManager.StartCoroutine(ServerLoader(serverPath, bundleName));
@@ -71,7 +77,7 @@ namespace AssetBundles.Loader
             AssetBundleCreateRequest load = AssetBundle.LoadFromFileAsync(PathGlobal.GetJoinPath(path, sAssetName));
 
 #if DEBUG_CONSOLE
-            Networks.log.DebugConsole.Instance.Log("LocalLoder:: url=" + PathGlobal.GetJoinPath(path, sAssetName));
+            UnityEngine.Debug.Log("LocalLoder:: url=" + PathGlobal.GetJoinPath(path, sAssetName));
 #endif
             yield return load;
             bundle = load.assetBundle;
@@ -115,7 +121,7 @@ namespace AssetBundles.Loader
             WWW www = new WWW(PathGlobal.GetJoinPath(path, sAssetName));
 
 #if DEBUG_CONSOLE
-            Networks.log.DebugConsole.Instance.Log("ServerLoader:: url=" + www.url);
+            UnityEngine.Debug.Log("ServerLoader:: url=" + www.url);
 #endif
             yield return www;
             if (www.error != null)
@@ -136,23 +142,31 @@ namespace AssetBundles.Loader
             var path = PathGlobal.GetJoinPath(PathGlobal.GetPlatformFile(), fileName);
             path = PathGlobal.GetPersistentDataPathSourceFile(path);
 
-            //if (!Directory.Exists(path))
-            //{
-            //    // Create the directory it does not exist.
-            //    Directory.CreateDirectory(path);
-            //}
+            var deposit = path.Substring(0, path.LastIndexOf("/"));
 
+#if DEBUG_CONSOLE
+            UnityEngine.Debug.Log("ReplaceLocalRes:: deposit=" + deposit);
+#endif
+            if (!Directory.Exists(deposit))
+            {
+                Directory.CreateDirectory(deposit);
+            }
+
+
+#if DEBUG_CONSOLE
+            UnityEngine.Debug.Log("ReplaceLocalRes:: path=" + path);
+#endif
             using (FileStream stream = new FileStream(path, FileMode.OpenOrCreate))
             {
 
 #if DEBUG_CONSOLE
-                Networks.log.DebugConsole.Instance.Log("ReplaceLocalRes:: url=" + path);
+                UnityEngine.Debug.Log("ReplaceLocalRes:: url=" + path);
 #endif
                 byte[] data = www.bytes;
                 stream.Write(data, 0, data.Length);
 
 #if DEBUG_CONSOLE
-                Networks.log.DebugConsole.Instance.Log("ReplaceLocalRes:: write success");
+                UnityEngine.Debug.Log("ReplaceLocalRes:: write success");
 #endif
                 www.Dispose();
                 www = null;

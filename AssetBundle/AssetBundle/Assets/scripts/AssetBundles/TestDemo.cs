@@ -17,7 +17,7 @@ public class TestDemo : MonoBehaviour
     void CallBackLoaderComplete(AssetBundleInfo info) 
     {
 #if DEBUG_CONSOLE
-        Networks.log.DebugConsole.Instance.Log(info.ToString());
+        UnityEngine.Debug.Log(info.ToString());
 #endif
         Instantiate(info.LoadAsset("cube"));
     }

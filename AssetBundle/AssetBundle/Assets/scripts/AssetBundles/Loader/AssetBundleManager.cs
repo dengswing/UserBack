@@ -6,7 +6,7 @@ namespace AssetBundles.Loader
     /// <summary>
     /// 加载总管理
     /// </summary>
-    public class AssetBundleManager : SingletonMono<AssetBundleManager>
+    public class AssetBundleManager : SingleInstance<AssetBundleManager>
     {
         /// <summary>
         /// 正在加载的缓存
@@ -81,7 +81,7 @@ namespace AssetBundles.Loader
             }
             else
             {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
                 loader = CreateLoader();
                 loader.bundleManager = this;
                 loader.bundleName = path;
@@ -106,7 +106,7 @@ namespace AssetBundles.Loader
 #if UNITY_EDITOR
             return new AssetBundleLoaderMobile();
 #elif UNITY_IOS
-            return new IOSAssetBundleLoader(); 
+            return new AssetBundleLoaderMobile(); 
 #else
             return new AssetBundleLoaderMobile();
 #endif
@@ -116,7 +116,7 @@ namespace AssetBundles.Loader
         {
 
 #if DEBUG_CONSOLE
-            Networks.log.DebugConsole.Instance.Log("LoadComplete:: loader finish="+ loader.bundleName);
+            UnityEngine.Debug.Log("LoadComplete:: loader finish="+ loader.bundleName);
 #endif
             if (loaderCache.ContainsKey(loader.bundleName))
             {
@@ -129,7 +129,7 @@ namespace AssetBundles.Loader
         internal void LoadError(AssetBundleLoaderAbs loader)
         {
 #if DEBUG_CONSOLE
-            Networks.log.DebugConsole.Instance.Log("LoadError:: loader finish=" + loader.bundleName);
+            UnityEngine.Debug.Log("LoadError:: loader finish=" + loader.bundleName);
 #endif
             LoadComplete(loader);
         }

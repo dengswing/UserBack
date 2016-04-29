@@ -49,7 +49,7 @@ namespace AssetBundles
 #elif UNITY_ANDROID
        return "Android";
 #else
-       return "IOS"
+       return "IOS";
 #endif
         }
 
@@ -88,8 +88,6 @@ namespace AssetBundles
 #else
             return GetJoinPath(Application.persistentDataPath, path);
 #endif
-
-
         }
 
         /// <summary>
