@@ -24,7 +24,7 @@ class Testing : MonoBehaviour
 
 
 #if SG
-        httpNetwork.requestURL = "http://dev-soul.shinezoneapp.com/?&{0}";
+        httpNetwork.requestURL = "http://dev-soul.shinezoneapp.com/?dev=jinfeifei&{0}";
 #elif Marvelisland
         // http://dev-mi-facebook.shinezone.com/index.php?*=[["game.login",["1",0,0,1,"3","4"]]]&halt=711&sign=6YjG2QUodzBRd9RDQweiig2s3MQ%3D
         httpNetwork.requestURL = "http://dev-mi-facebook.shinezone.com/index.php?{0}";
@@ -52,7 +52,8 @@ class Testing : MonoBehaviour
 #if Marvelisland
         httpNetwork.Post("game.init", ResponseHandler, 1, "3", "4");  //单一侦听,报了系统级别错误不会有回调
 #elif SG
-        httpNetwork.Post("game.login", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
+        httpNetwork.Post("test.data", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
+        httpNetwork.Post("test.try", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
 #endif
         // httpNetwork.Post("game.reset", ResponseHandler);
         // httpNetwork.Post("package.index", ResponseHandler);
@@ -66,7 +67,7 @@ class Testing : MonoBehaviour
         // httpNetwork.PostOneToOne("game.login", "Http://test.com/&*={0}", PostOneToOneHandler);      
 
         TableDataManager.Instance.AddListenerDataTable("ModuleProfile", UpdateHandler); //注册侦听更改  new
-        TableDataManager.Instance.AddListenerDataTable("List", UpdateHandler); //注册侦听更改  new
+        TableDataManager.Instance.AddListenerDataTable("ModuleMission", UpdateHandler); //注册侦听更改  new
 
 
         string text = "{ \"vb\":{\"x\":100,\"y\":200,\"magnitude\":10},\"userId\": 799,  \"grids\": {    \"1\": 10,    \"2\": 20,    \"3\": null,    \"4\": null,    \"5\": null,    \"6\": null,    \"7\": null,    \"8\": null  },  \"devices\": null,  \"decorations\": 567}";
@@ -93,7 +94,7 @@ class Testing : MonoBehaviour
         Debug.Log(data);
 
 
-        CabinetInfo cabinet = TableDataManager.Instance.GetTableData<CabinetInfo>("CabinetInfo");
+        ModuleMission cabinet = TableDataManager.Instance.GetTableData<ModuleMission>("ModuleMission");
 
         Dictionary<string, ModuleProfileInfo> dictModuleProfileInfo = TableDataManager.Instance.GetTableDataDictionary<ModuleProfileInfo>("ModuleProfileInfo");
 

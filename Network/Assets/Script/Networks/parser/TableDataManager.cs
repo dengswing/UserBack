@@ -192,7 +192,17 @@ namespace Networks.parser
         {
             if (!dataTableAll.ContainsKey(tableName)) return;
 
-            Dictionary<string, object> tableData = (Dictionary<string, object>)dataTableAll[tableName];
+            Dictionary<string, object> tableData;
+
+            try
+            {
+                tableData = (Dictionary<string, object>)dataTableAll[tableName];
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
             foreach (var key in data)
             {
                 if (tableData.ContainsKey(key)) tableData.Remove(key);
@@ -203,11 +213,13 @@ namespace Networks.parser
                     if (cacheTableData.ContainsKey(key)) cacheTableData.Remove(key);
                     if (cacheTableData.Count <= 0) dataTableDict.Remove(tableName);
                 }
+            }
 
-                if (dataTableList.ContainsKey(tableName))
-                {
-                    dataTableList.Remove(tableName);
-                }
+            if (dataTableList.ContainsKey(tableName))
+            {
+                dataTableList.Remove(tableName);
+
+                FireNotice(tableName, tableData);
             }
 
             if (tableData.Count <= 0) dataTableAll.Remove(tableName);

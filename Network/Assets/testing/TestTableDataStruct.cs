@@ -18,6 +18,7 @@ public class TestTableDataStruct : AbsTableDataStruct
         typeDict["CabinetInfo"] = typeof(CabinetInfo);
         typeDict["ModuleProfileInfo"] = typeof(ModuleProfileInfo);
         typeDict["ModuleItem"] = typeof(ModuleItem);
+        typeDict["ModuleMission"] = typeof(ModuleMission);
         
     }
 
