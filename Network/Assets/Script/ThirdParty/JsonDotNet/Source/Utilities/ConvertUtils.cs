@@ -497,7 +497,7 @@ namespace Newtonsoft.Json.Utilities
 			}
 			else if (targetType == typeof(Int64))
 			{
-				val = 0l;
+				val = 0L;
 				return true;
 			}
 			else if (targetType == typeof(double))

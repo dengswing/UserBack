@@ -53,7 +53,7 @@ class Testing : MonoBehaviour
         httpNetwork.Post("game.init", ResponseHandler, 1, "3", "4");  //单一侦听,报了系统级别错误不会有回调
 #elif SG
         httpNetwork.Post("test.data", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
-        httpNetwork.Post("test.try", ResponseHandler);  //单一侦听,报了系统级别错误不会有回调
+        httpNetwork.Post("test.try", ResponseHandler,"4");  //单一侦听,报了系统级别错误不会有回调
 #endif
         // httpNetwork.Post("game.reset", ResponseHandler);
         // httpNetwork.Post("package.index", ResponseHandler);

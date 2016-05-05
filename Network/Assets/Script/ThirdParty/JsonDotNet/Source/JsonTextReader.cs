@@ -446,7 +446,7 @@ namespace Newtonsoft.Json
 
         if (currentChar == '\0' && _end)
 	          return false;
-		bool ret = false;
+		//bool ret = false;
         switch (CurrentState)
         {
           case State.Start:

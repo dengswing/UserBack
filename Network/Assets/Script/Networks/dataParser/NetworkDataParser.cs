@@ -170,7 +170,7 @@ namespace Networks.parser
                     {
                         tableData = Newtonsoft.Json.JsonConvert.DeserializeObject(dataValue, classStruct);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         tableData = null;
                     }

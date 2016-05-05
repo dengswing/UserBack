@@ -108,7 +108,7 @@ namespace Networks.parser
             {
                 return GetTableDataDispose<T>(tableName);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return default(T);
             }
@@ -126,7 +126,7 @@ namespace Networks.parser
             {
                 return GetTableDataDispose<T>(tableName, cond);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return default(T);
             }
@@ -144,7 +144,7 @@ namespace Networks.parser
             {
                 return GetTableDataListDispose<T>(tableName, cond);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return default(List<T>);
             }
@@ -162,7 +162,7 @@ namespace Networks.parser
             {
                 return GetTableDataDictionaryDispose<T>(tableName, cond);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return default(Dictionary<string, T>);
             }

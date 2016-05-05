@@ -33,4 +33,10 @@
     /// </summary>
     /// <param name="tableName">表名</param>
     public delegate void DeleteTableDelegate(string tableName);
+
+    /// <summary>
+    /// 网络请求的状态委托
+    /// </summary>
+    /// <param name="isStart">是否开始发送请求，true:开始发送、false:结束发送</param>
+    public delegate void NetSendStateDelegate(bool isStart);
 }

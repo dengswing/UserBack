@@ -35,25 +35,15 @@ namespace Networks
     #endregion
 
     /// <summary>
-    /// http请求
+    /// http请求,IHttpNetManager接口里面是可以外部访问的
     /// </summary>
-    public class HttpNetManager : Utilities.SingleInstance<HttpNetManager>
+    public class HttpNetManager : Utilities.SingleInstance<HttpNetManager>,IHttpNetManager
     {
         #region public property
         /// <summary>
         /// 返回的code结构是成功的
         /// </summary>
         public const int RESPONSE_CODE_RESULT_SUCCESS = 0;
-
-        /// <summary>
-        /// 服务器异常
-        /// </summary>
-        public HttpNetResultDelegate serverErrorResponse;
-
-        /// <summary>
-        /// 网络超时
-        /// </summary>
-        public NetTimerDelegate netTimeOut;
         #endregion
 
         enum RequestState
@@ -125,11 +115,25 @@ namespace Networks
 
         //请求的记录
         Dictionary<string, RequestState> requestState = new Dictionary<string, RequestState>();
+
+        /// <summary>
+        /// 服务器异常
+        /// </summary>
+        HttpNetResultDelegate _serverErrorResponse;
+
+        /// <summary>
+        /// 网络超时
+        /// </summary>
+        NetTimerDelegate _netTimeOut;
+
+        /// <summary>
+        /// 网络请求状态侦听
+        /// </summary>
+        NetSendStateDelegate _netSendState;
         ///==============================================================================================
         #endregion
 
 #if UNITY_EDITOR
-
         [SerializeField]
         StatusType _statusType;        
         public StatusType statusType
@@ -153,7 +157,7 @@ namespace Networks
         }
 
         /// <summary>
-        /// 用户id
+        /// 用户token
         /// </summary>
         public string token
         {
@@ -221,6 +225,7 @@ namespace Networks
         /// </summary>
         public string hamcKey
         {
+            get { return (null != queueDataGroup ? queueDataGroup.hmacKey : string.Empty); }
             set
             {
                 if (null != queueDataGroup) queueDataGroup.hmacKey = value;
@@ -287,6 +292,22 @@ namespace Networks
         {
             TableDataManager.Instance.tableDataStruct = dataTable;
         }
+        
+        /// <summary>
+        /// 服务器异常
+        /// </summary>
+        public HttpNetResultDelegate serverErrorResponse { get { return _serverErrorResponse; } set { _serverErrorResponse = value; } }
+
+        /// <summary>
+        /// 网络超时
+        /// </summary>
+        public NetTimerDelegate netTimeOut { get { return _netTimeOut; } set { _netTimeOut = value; } }
+
+        /// <summary>
+        /// 网络请求状态侦听
+        /// </summary>
+        public NetSendStateDelegate netSendState { get { return _netSendState; } set { _netSendState = value; } }
+
         #endregion
 
         #region post request
@@ -573,9 +594,11 @@ namespace Networks
             var localTime = DateTime.Now;
 #endif
 
+            if (null != netSendState) netSendState(true);
             DebugTrace(">>:" + url);
             WWW www = new WWW(url);
             yield return www;
+            if (null != netSendState) netSendState(false);
 
             if (CheckRequestState(requestKey)) yield break;   //已结束
             requestState[requestKey] = RequestState.State_Complete;
@@ -591,13 +614,13 @@ namespace Networks
 #endif
 
             DebugTrace("<< [" + data.ToString() + "]:" + www.text, false);
-
+            
             if (netTimer.isTimeOut) yield break;    //超时退出请求,防止超时了还回来数据
 
             if (www.error != null)
             { //处理404  todo  断网应该如何处理
                 DebugTrace("HttpNetManager::PostAsync Error:" + www.error);
-                serverErrorResponse(www.error, -1, "error");
+                if(null != serverErrorResponse) serverErrorResponse(www.error, -1, "error");
                 if(!isContentError) netTimer.StopTime(); //计时停止
                 isContentError = true;
                 yield break;

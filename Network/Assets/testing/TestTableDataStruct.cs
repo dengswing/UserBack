@@ -19,7 +19,7 @@ public class TestTableDataStruct : AbsTableDataStruct
         typeDict["ModuleProfileInfo"] = typeof(ModuleProfileInfo);
         typeDict["ModuleItem"] = typeof(ModuleItem);
         typeDict["ModuleMission"] = typeof(ModuleMission);
-        
+        typeDict["Knowledge"] = typeof(Knowledge);
     }
 
     public override void FireNotice(string tableName, object data)

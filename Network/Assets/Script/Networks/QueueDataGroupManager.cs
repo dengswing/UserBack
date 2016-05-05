@@ -51,6 +51,7 @@ namespace Networks
         /// </summary>
         public string hmacKey
         {
+            get { return _hmacKey; }
             set { _hmacKey = value; }
         }
 
