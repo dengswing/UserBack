@@ -68,6 +68,10 @@ namespace Networks.parser
                     GetArrayValue(property.Value, list);
                 }
             }
+            else
+            {
+                list.Add(data.ToString());
+            }
         }
 
         /// <summary>
@@ -270,6 +274,11 @@ namespace Networks.parser
                 {
                     foreach (JProperty property in jMsgItem.Children())
                     {
+                        if (IsSimpleValue(property))
+                        {
+                            continue;
+                        }
+
                         foreach (JObject jMsgObjectRoot in property.Children())
                         {
                             msgListData.Add(ParseJsonStruct(jMsgObjectRoot));
