@@ -81,6 +81,7 @@ namespace AssetBundles.Loader
 #endif
             yield return load;
             bundle = load.assetBundle;
+                        
             Complete();
             //}
         }

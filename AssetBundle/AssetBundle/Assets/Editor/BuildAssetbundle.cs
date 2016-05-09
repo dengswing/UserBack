@@ -42,7 +42,7 @@ public class Builder : Editor
         {
             Directory.CreateDirectory(outputPath);
         }
-
+        
         //根据BuildSetting里面所激活的平台进行打包
         BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.UncompressedAssetBundle, buildTarget);
 
