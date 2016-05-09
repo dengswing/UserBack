@@ -1,5 +1,6 @@
 ﻿using AssetBundles;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ using UnityEngine;
 /// </summary>
 public class Builder : Editor
 {
-    public static string sourcePath = Application.dataPath + "/AssectFrist";
+    static string sourcePath = Application.dataPath + "/Resource";
     const string AssetBundlesOutputPath = "Assets/StreamingAssets";
 
     [MenuItem("AssetBundle/Build_Windows")]
@@ -31,87 +32,56 @@ public class Builder : Editor
 
     static void BuildAssetBundle(BuildTarget buildTarget)
     {
-        Caching.CleanCache();
+        Caching.CleanCache();       
 
-      //  ClearAssetBundlesName();
-
-       Pack(sourcePath);
+        Pack(sourcePath);
 
         string outputPath = Path.Combine(AssetBundlesOutputPath, PathGlobal.GetPlatformFolder(buildTarget));
         if (!Directory.Exists(outputPath))
         {
             Directory.CreateDirectory(outputPath);
         }
-        
+
         //根据BuildSetting里面所激活的平台进行打包
-        BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.UncompressedAssetBundle, buildTarget);
+        var assetBundleManifest = BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.DeterministicAssetBundle | BuildAssetBundleOptions.ChunkBasedCompression, buildTarget);
+
+        var assetBundles = assetBundleManifest.GetAllAssetBundles();
+        var len = assetBundleManifest.GetAllAssetBundlesWithVariant();
 
         AssetDatabase.Refresh();
-
-        Debug.Log("打包完成");
-
-    }
-
-    /// <summary>
-    /// 清除之前设置过的AssetBundleName，避免产生不必要的资源也打包
-    /// 之前说过，只要设置了AssetBundleName的，都会进行打包，不论在什么目录下
-    /// </summary>
-    static void ClearAssetBundlesName()
-    {
-        int length = AssetDatabase.GetAllAssetBundleNames().Length;
-        Debug.Log(length);
-        string[] oldAssetBundleNames = new string[length];
-        for (int i = 0; i < length; i++)
-        {
-            oldAssetBundleNames[i] = AssetDatabase.GetAllAssetBundleNames()[i];
-        }
-
-        for (int j = 0; j < oldAssetBundleNames.Length; j++)
-        {
-            AssetDatabase.RemoveAssetBundleName(oldAssetBundleNames[j], true);
-        }
-        length = AssetDatabase.GetAllAssetBundleNames().Length;
-        Debug.Log(length);
+        Debug.Log(assetBundleManifest.name + @"打包完成：" + assetBundles.Length);
     }
 
     static void Pack(string source)
     {
-        DirectoryInfo folder = new DirectoryInfo(source);
-        FileSystemInfo[] files = folder.GetFileSystemInfos();
-        int length = files.Length;
-        for (int i = 0; i < length; i++)
+        var mdList = Directory.GetFiles(source, "*.*", SearchOption.AllDirectories)
+           .Where(file => !file.ToLower().EndsWith(".meta"))
+           .ToList();
+
+        var length = (mdList != null ? mdList.Count : 0);
+        for (var i = 0; i < length; i++)
         {
-            if (files[i] is DirectoryInfo)
-            {
-                Pack(files[i].FullName);
-            }
-            else
-            {
-                if (!files[i].Name.EndsWith(".meta"))
-                {
-                    file(files[i].FullName);
-                }
-            }
+            var name = Path.GetFileNameWithoutExtension(mdList[i]);
+            FileAssetBundle(mdList[i]);
+        }        
+    }
+
+    static void FileAssetBundle(string source)
+    {
+        var path = ReplacePath(source);
+        var resource = path.Substring(Application.dataPath.Length + 1);
+        var assetPath = string.Format("Assets/{0}", resource);
+
+        AssetImporter assetImporter = AssetImporter.GetAtPath(assetPath);
+
+        if (!string.IsNullOrEmpty(assetImporter.assetBundleName))
+        {
+            var assetName = resource.Substring(resource.IndexOf("/") + 1);
+            Debug.Log("||+>" + assetImporter.assetBundleName + "|" + assetName);
         }
     }
 
-    static void file(string source)
-    {
-        string _source = Replace(source);
-        string _assetPath = "Assets" + _source.Substring(Application.dataPath.Length);
-        string _assetPath2 = _source.Substring(Application.dataPath.Length + 1);
-        Debug.Log (source);
-        string assetName = _assetPath2.Substring(_assetPath2.IndexOf("/") + 1);
-
-        //在代码中给资源设置AssetBundleName
-        AssetImporter assetImporter = AssetImporter.GetAtPath(_assetPath);
-
-        Debug.Log("||+>"+assetImporter.assetBundleName+"|"+ assetName);
-        //assetName = assetName.Replace(Path.GetExtension(assetName), ".unity3d");
-       // assetImporter.assetBundleName = assetName;
-    }
-
-    static string Replace(string s)
+    static string ReplacePath(string s)
     {
         return s.Replace("\\", "/");
     }

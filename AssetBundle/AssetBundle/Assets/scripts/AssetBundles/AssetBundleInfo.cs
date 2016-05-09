@@ -28,7 +28,7 @@ namespace AssetBundles
         /// <returns></returns>
         public Object LoadAsset(string name)
         {
-            if (bundle == null) return null;
+            if (bundle == null) return null;            
 
             if (bundlesCacheRes.ContainsKey(name))
             {
