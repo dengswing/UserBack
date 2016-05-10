@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace AssetBundles.Loader
 {
     public class AssetBundleLoaderMobile : AssetBundleLoaderAbs
     {
-        protected AssetBundle bundle;
+        protected AssetBundle bundle;      
 
         public override void Load()
         {
@@ -51,6 +52,15 @@ namespace AssetBundles.Loader
             else
                 bundleManager.StartCoroutine(ServerLoader(serverPath, bundleName));
         }
+
+        public virtual IEnumerator LoaderBundler(string path, string bundleName)
+        {
+           
+
+            var www = WWW.LoadFromCacheOrDownload(sPath);
+        }
+
+        #region loader version old
 
         protected virtual IEnumerator LocalLoder(string path, string bundleName)
         {
@@ -173,6 +183,8 @@ namespace AssetBundles.Loader
                 www = null;
             }
         }
+
+        #endregion
 
         protected override void Complete()
         {

@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using AssetBundles.data;
+using AssetBundles.parse;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using Utilities;
 
 namespace AssetBundles.Loader
@@ -8,6 +13,7 @@ namespace AssetBundles.Loader
     /// </summary>
     public class AssetBundleManager : SingleInstance<AssetBundleManager>
     {
+        #region property
         /// <summary>
         /// 正在加载的缓存
         /// </summary>
@@ -16,15 +22,67 @@ namespace AssetBundles.Loader
         /// <summary>
         /// 同时最大的加载数
         /// </summary>
-        private const int MAX_REQUEST = 3;
+        const int MAX_REQUEST = 3;
         /// <summary>
         /// 可再次申请的加载数
         /// </summary>
-        private int _requestRemain = MAX_REQUEST;
+        int _requestRemain = MAX_REQUEST;
         /// <summary>
         /// 当前申请要加载的队列
         /// </summary>
-        private Queue<AssetBundleLoaderAbs> _requestQueue = new Queue<AssetBundleLoaderAbs>();
+        Queue<AssetBundleLoaderAbs> _requestQueue = new Queue<AssetBundleLoaderAbs>();
+
+        /// <summary>
+        /// 解析器
+        /// </summary>
+        BundleDataManager parseManager;
+
+        /// <summary>
+        /// 初始化完成加载回调
+        /// </summary>
+        Action initFinishBack;
+
+        #endregion
+
+        #region get set property
+
+        #endregion
+
+        public AssetBundleManager()
+        {
+            parseManager = new BundleDataManager();
+        }
+
+        /// <summary>
+        /// 开始加载
+        /// </summary>
+        /// <param name="path">加载的文件路径</param>
+        /// <param name="finishBack">加载完成回调</param>
+        /// <param name="version">文件的版本号</param>
+        public void StartLoad(string path, Action finishBack, int version = 1)
+        {
+            if (null != initFinishBack || null == finishBack)
+            {
+                return;
+            }
+
+            initFinishBack = finishBack;
+            StartCoroutine(LoaderDependJson(ParseDepend, path, version));
+        }
+
+        void ParseDepend(string value, int version)
+        {
+            parseManager.ParseDepend(value);
+
+            var path = PathGlobal.GetStreamingAssetsSourceFile(PathGlobal.GetPlatformFile()); //bundle main url
+
+            StartCoroutine(LoaderBundleManifest((AssetBundleManifest maifest) =>
+            {
+                parseManager.ParseManifest(maifest);
+                                
+            }, path, version));
+        }
+
 
 
         public void Load(string path, CallBackLoaderComplete handler = null)
@@ -105,10 +163,8 @@ namespace AssetBundles.Loader
         {
 #if UNITY_EDITOR
             return new AssetBundleLoaderMobile();
-#elif UNITY_IOS
-            return new AssetBundleLoaderMobile(); 
 #else
-            return new AssetBundleLoaderMobile();
+            return new AssetBundleLoaderMobile(); 
 #endif
         }
 
@@ -116,7 +172,7 @@ namespace AssetBundles.Loader
         {
 
 #if DEBUG_CONSOLE
-            UnityEngine.Debug.Log("LoadComplete:: loader finish="+ loader.bundleName);
+            UnityEngine.Debug.Log("LoadComplete:: loader finish=" + loader.bundleName);
 #endif
             if (loaderCache.ContainsKey(loader.bundleName))
             {
@@ -132,6 +188,62 @@ namespace AssetBundles.Loader
             UnityEngine.Debug.Log("LoadError:: loader finish=" + loader.bundleName);
 #endif
             LoadComplete(loader);
+        }
+
+
+        /// <summary>
+        /// 加载depend.json
+        /// </summary>
+        /// <param name="callBack"></param>
+        /// <returns></returns>
+        IEnumerator LoaderDependJson(Action<string, int> callBack, string path, int version)
+        {
+            var www = WWW.LoadFromCacheOrDownload(path, version);
+
+#if DEBUG_CONSOLE
+            UnityEngine.Debug.LogFormat("LoaderDependJson::path={0}|version={1}", www.url, www.GetHashCode());
+#endif
+            yield return www;
+            if (www.error != null)
+            {
+#if DEBUG_CONSOLE
+                UnityEngine.Debug.LogFormat("LoaderDependJson::Error");
+#endif
+                yield return null;
+            }
+
+            var value = www.text;
+            callBack(value, version);
+            www.Dispose();
+            www = null;
+        }
+
+        /// <summary>
+        /// 加载manifest
+        /// </summary>
+        /// <param name="callBack"></param>
+        /// <returns></returns>
+        IEnumerator LoaderBundleManifest(Action<AssetBundleManifest> callBack, string path, int version = 1)
+        {
+            var www = WWW.LoadFromCacheOrDownload(path, version);
+
+#if DEBUG_CONSOLE
+            UnityEngine.Debug.LogFormat("LoaderBundleManifest::path={0}|version={1}", www.url, version);
+#endif
+            yield return www;
+            if (www.error != null)
+            {
+#if DEBUG_CONSOLE
+                UnityEngine.Debug.LogFormat("LoaderBundleManifest::Error");
+#endif
+                yield return null;
+            }
+
+            var manifestBundle = www.assetBundle;
+            var manifest = (AssetBundleManifest)manifestBundle.LoadAsset("AssetBundleManifest");
+            callBack(manifest);
+            www.Dispose();
+            www = null;
         }
     }
 }

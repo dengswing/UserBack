@@ -7,7 +7,7 @@ namespace AssetBundles
     /// </summary>
     public class AssetBundleData
     {
-        public string version;
+        public int version = 1;
         public string bundleName;
         public List<string> bundleRes;
     }
