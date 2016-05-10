@@ -8,6 +8,8 @@ namespace AssetBundles
 {
     public class PathGlobal
     {
+        public const string sDependFile = "depend.json"; //bundle关系名称
+        public const string sBundleSuffix = ".unity3d";    //打包后缀
 
         /// <summary>
         /// 平台文件夹
@@ -48,8 +50,10 @@ namespace AssetBundles
             return "Windows";
 #elif UNITY_ANDROID
        return "Android";
-#else
+#elif UNITY_IOS
        return "IOS";
+#else
+       return "Other";
 #endif
         }
 
@@ -68,9 +72,11 @@ namespace AssetBundles
             else
                 filePath = string.Format("{0}/StreamingAssets/{1}", Application.dataPath, path);
 #elif UNITY_ANDROID
-        filePath = string.Format("jar:file://{0}!/assets/{1}", Application.dataPath, path);
+            filePath = string.Format("jar:file://{0}!/assets/{1}", Application.dataPath, path);
+#elif UNITY_IOS
+            filePath = string.Format("file://{0}/Raw/{1}", Application.dataPath, path);
 #else
-        filePath = string.Format("file://{0}/Raw/{1}", Application.dataPath, path);
+            filePath = string.Format("{0}/StreamingAssets/{1}", Application.dataPath, path);
 #endif
             return filePath;
         }
@@ -82,12 +88,7 @@ namespace AssetBundles
         /// <returns></returns>
         public static string GetPersistentDataPathSourceFile(string path)
         {
-
-#if UNITY_EDITOR
             return GetJoinPath(Application.persistentDataPath, path);
-#else
-            return GetJoinPath(Application.persistentDataPath, path);
-#endif
         }
 
         /// <summary>

@@ -2,5 +2,9 @@ ManifestFileVersion: 0
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: assectfrist.unity3d
+      Name: prefab.unity3d
+      Dependencies:
+        Dependency_0: materials.unity3d
+    Info_1:
+      Name: materials.unity3d
       Dependencies: {}

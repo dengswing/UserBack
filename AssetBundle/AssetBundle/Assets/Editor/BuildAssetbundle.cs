@@ -1,6 +1,9 @@
 ﻿using AssetBundles;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,79 +13,163 @@ using UnityEngine;
 public class Builder : Editor
 {
     static string sourcePath = Application.dataPath + "/Resource";
-    const string AssetBundlesOutputPath = "Assets/StreamingAssets";
+    const string assetBundlesOutputPath = "Assets/StreamingAssets"; //打包的位置
 
     [MenuItem("AssetBundle/Build_Windows")]
-    public static void BuildAssetBundle_Windows()
+    public static void BuildAssetBundleWindows()
     {
         BuildAssetBundle(BuildTarget.StandaloneWindows);
     }
 
     [MenuItem("AssetBundle/Build_Android")]
-    public static void BuildAssetBundle_Android()
+    public static void BuildAssetBundleAndroid()
     {
         BuildAssetBundle(BuildTarget.Android);
     }
 
     [MenuItem("AssetBundle/Build_IOS")]
-    public static void BuildAssetBundle_IOS()
+    public static void BuildAssetBundleIOS()
     {
         BuildAssetBundle(BuildTarget.iOS);
     }
 
+    /// <summary>
+    /// 打包
+    /// </summary>
+    /// <param name="buildTarget"></param>
     static void BuildAssetBundle(BuildTarget buildTarget)
     {
-        Caching.CleanCache();       
+        Caching.CleanCache();
 
-        Pack(sourcePath);
-
-        string outputPath = Path.Combine(AssetBundlesOutputPath, PathGlobal.GetPlatformFolder(buildTarget));
+        var platform = PathGlobal.GetPlatformFolder(buildTarget);
+        string outputPath = Path.Combine(assetBundlesOutputPath, platform);
         if (!Directory.Exists(outputPath))
         {
             Directory.CreateDirectory(outputPath);
         }
 
+        Dictionary<string, VersionInfo> dInfo = new Dictionary<string, VersionInfo>();
+        PackManager(sourcePath, dInfo);
+
         //根据BuildSetting里面所激活的平台进行打包
         var assetBundleManifest = BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.DeterministicAssetBundle | BuildAssetBundleOptions.ChunkBasedCompression, buildTarget);
+        
+        VersionManager(assetBundleManifest, dInfo);
+        var path = Path.Combine(outputPath, PathGlobal.sDependFile);
+        WriteFile(dInfo, path);
 
-        var assetBundles = assetBundleManifest.GetAllAssetBundles();
-        var len = assetBundleManifest.GetAllAssetBundlesWithVariant();
+        Debug.LogFormat("{0}打包完成：{1}", platform, dInfo.Count);
 
         AssetDatabase.Refresh();
-        Debug.Log(assetBundleManifest.name + @"打包完成：" + assetBundles.Length);
     }
 
-    static void Pack(string source)
+    /// <summary>
+    /// 获取版本号
+    /// </summary>
+    /// <param name="manifest"></param>
+    /// <param name="dInfo"></param>
+    static void VersionManager(AssetBundleManifest manifest, Dictionary<string, VersionInfo> dInfo)
+    {
+        var assetBundles = new string[0] { };
+        if (null != manifest)
+        {
+            assetBundles = manifest.GetAllAssetBundles();
+        }
+
+        foreach (var item in assetBundles)
+        {
+            if (!dInfo.ContainsKey(item)) continue;
+            dInfo[item].version = manifest.GetAssetBundleHash(item).ToString();
+        }
+    }
+
+    /// <summary>
+    /// 存关系表
+    /// </summary>
+    /// <param name="info"></param>
+    /// <param name="path"></param>
+    static void WriteFile(Dictionary<string, VersionInfo> dInfo, string path)
+    {
+        using (FileStream stream = new FileStream(path, FileMode.OpenOrCreate))
+        {
+            var sVersion = JsonConvert.SerializeObject(dInfo);
+            byte[] data = Encoding.UTF8.GetBytes(sVersion);
+            stream.Write(data, 0, data.Length);
+        }
+    }
+
+    /// <summary>
+    /// 获取所有文件
+    /// </summary>
+    /// <param name="source"></param>
+    static void PackManager(string source, Dictionary<string, VersionInfo> dInfo)
     {
         var mdList = Directory.GetFiles(source, "*.*", SearchOption.AllDirectories)
            .Where(file => !file.ToLower().EndsWith(".meta"))
            .ToList();
 
-        var length = (mdList != null ? mdList.Count : 0);
-        for (var i = 0; i < length; i++)
+        foreach (var item in mdList)
         {
-            var name = Path.GetFileNameWithoutExtension(mdList[i]);
-            FileAssetBundle(mdList[i]);
-        }        
+            var name = Path.GetFileNameWithoutExtension(item);
+            FileAssetBundle(item, dInfo);
+        }
     }
 
-    static void FileAssetBundle(string source)
+    /// <summary>
+    /// 找出绑定了bundlename的文件
+    /// </summary>
+    /// <param name="source"></param>
+    static void FileAssetBundle(string source, Dictionary<string, VersionInfo> dInfo)
     {
         var path = ReplacePath(source);
         var resource = path.Substring(Application.dataPath.Length + 1);
         var assetPath = string.Format("Assets/{0}", resource);
-
         AssetImporter assetImporter = AssetImporter.GetAtPath(assetPath);
 
-        if (!string.IsNullOrEmpty(assetImporter.assetBundleName))
-        {
-            var assetName = resource.Substring(resource.IndexOf("/") + 1);
-            Debug.Log("||+>" + assetImporter.assetBundleName + "|" + assetName);
+        var bundleName = assetImporter.assetBundleName;
+        if (string.IsNullOrEmpty(bundleName)) return;
+
+        if (bundleName.IndexOf(PathGlobal.sBundleSuffix) == -1)
+        { //没加后缀的自动加上
+            assetImporter.assetBundleName = string.Format("{0}{1}", bundleName, PathGlobal.sBundleSuffix);
+            bundleName = assetImporter.assetBundleName;
         }
+
+        VersionInfo info;
+        if (dInfo.ContainsKey(bundleName))
+        {
+            info = dInfo[bundleName];
+        }
+        else
+        {
+            info = new VersionInfo();
+            dInfo[bundleName] = info;
+            info.binding = new List<string>();
+        }
+        var assetName = resource.Substring(resource.IndexOf("/") + 1);
+        info.binding.Add(assetName);
     }
 
     static string ReplacePath(string s)
     {
         return s.Replace("\\", "/");
     }
+}
+
+class VersionInfo
+{
+    /// <summary>
+    /// 版本号
+    /// </summary>
+    public string version;
+
+    /// <summary>
+    /// 唯一名称
+    /// </summary>
+   // public string bundleName;
+
+    /// <summary>
+    /// 绑定路径
+    /// </summary>
+    public List<string> binding;
 }
