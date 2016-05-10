@@ -2,18 +2,15 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace AssetBundles
+namespace AssetBundles.data
 {
     /// <summary>
     /// 每个bundle的信息
     /// </summary>
     public class AssetBundleInfo
     {
-        //名称
-        public string bundleName;
-
         //数据
-        public AssetBundleData bundleData;
+        public DependInfo bundleData;
 
         //资源bundle
         internal AssetBundle bundle;

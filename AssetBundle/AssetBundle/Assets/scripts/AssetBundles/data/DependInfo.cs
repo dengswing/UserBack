@@ -3,7 +3,7 @@
 namespace AssetBundles.data
 {
     /// <summary>
-    /// 解析数据管理
+    /// 依赖信息
     /// </summary>
     public class DependInfo
     {
@@ -15,7 +15,7 @@ namespace AssetBundles.data
         /// <summary>
         /// 唯一名称
         /// </summary>
-        // public string bundleName;
+         public string bundleName;
 
         /// <summary>
         /// 绑定路径

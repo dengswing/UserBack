@@ -147,6 +147,7 @@ namespace AssetBundles
                 info = new DependInfo();
                 dInfo[bundleName] = info;
                 info.binding = new List<string>();
+                info.bundleName = bundleName;
             }
             var assetName = resource.Substring(resource.IndexOf("/") + 1);
             info.binding.Add(assetName);

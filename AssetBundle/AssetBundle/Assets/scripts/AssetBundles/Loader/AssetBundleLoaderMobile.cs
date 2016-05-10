@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.IO;
 using UnityEngine;
 
@@ -7,16 +6,20 @@ namespace AssetBundles.Loader
 {
     public class AssetBundleLoaderMobile : AssetBundleLoaderAbs
     {
-        protected AssetBundle bundle;      
+        internal AssetBundleManager bundleManager;
+        protected AssetBundle bundle;
 
-        public override void Load()
+        /// <summary>
+        /// 开始加载
+        /// </summary>
+        public override void LoadBundle()
         {
-            base.Load();
+            base.LoadBundle();
 
             if (state == LoadState.State_None)
             {
                 state = LoadState.State_Loading;
-                bundleManager.RequestLoadBundle(this);
+                LoaderBundle();
             }
             else if (state == LoadState.State_Error)
             {
@@ -28,39 +31,42 @@ namespace AssetBundles.Loader
             }
         }
 
-        public override void LoadBundle()
+        void LoaderBundle()
         {
-            base.LoadBundle();
-
             var platfrom = PathGlobal.GetPlatformFile();
-            if (bundleData != null) bundleName = bundleData.bundleName;
-            var serverPath = PathGlobal.GetStreamingAssetsSourceFile(platfrom);
-            var localPath = PathGlobal.GetPersistentDataPathSourceFile(platfrom);
-
-#if DEBUG_CONSOLE
-            UnityEngine.Debug.Log("LoadBundle:: serverPath=" + serverPath + "|localPath=" + localPath);
-#endif
-
-            var sAssetName = string.Format("{0}.unity3d", bundleName);
-            sAssetName = PathGlobal.GetJoinPath(localPath, sAssetName);
-
-#if DEBUG_CONSOLE
-            UnityEngine.Debug.Log("LoadBundle:: sAssetName=" + sAssetName);
-#endif
-            if (File.Exists(sAssetName))
-                bundleManager.StartCoroutine(LocalLoder(localPath, bundleName));
-            else
-                bundleManager.StartCoroutine(ServerLoader(serverPath, bundleName));
-        }
-
-        public virtual IEnumerator LoaderBundler(string path, string bundleName)
-        {
-           
-
-            var www = WWW.LoadFromCacheOrDownload(sPath);
+            var path = PathGlobal.GetStreamingAssetsSourceFile(platfrom);
+            Hash128 version = bundleManager.GetBundleHash(bundleData.bundleName);
+            bundleManager.LoaderManager((WWW www) =>
+            {
+                bundle = www.assetBundle;
+                Complete();
+            }, path, version);
         }
 
         #region loader version old
+
+        //        void LoaderBundle()
+        //        {
+        //            var platfrom = PathGlobal.GetPlatformFile();
+        //            if (bundleData != null) bundleName = bundleData.bundleName;
+        //            var serverPath = PathGlobal.GetStreamingAssetsSourceFile(platfrom);
+        //            var localPath = PathGlobal.GetPersistentDataPathSourceFile(platfrom);
+
+        //#if DEBUG_CONSOLE
+        //            UnityEngine.Debug.Log("LoadBundle:: serverPath=" + serverPath + "|localPath=" + localPath);
+        //#endif
+
+        //            var sAssetName = string.Format("{0}.unity3d", bundleName);
+        //            sAssetName = PathGlobal.GetJoinPath(localPath, sAssetName);
+
+        //#if DEBUG_CONSOLE
+        //            UnityEngine.Debug.Log("LoadBundle:: sAssetName=" + sAssetName);
+        //#endif
+        //            if (File.Exists(sAssetName))
+        //                bundleManager.StartCoroutine(LocalLoder(localPath, bundleName));
+        //            else
+        //                bundleManager.StartCoroutine(ServerLoader(serverPath, bundleName));
+        //        }
 
         protected virtual IEnumerator LocalLoder(string path, string bundleName)
         {
@@ -91,7 +97,7 @@ namespace AssetBundles.Loader
 #endif
             yield return load;
             bundle = load.assetBundle;
-                        
+
             Complete();
             //}
         }

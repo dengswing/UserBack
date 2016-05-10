@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using AssetBundles.data;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace AssetBundles.Loader
@@ -23,23 +24,13 @@ namespace AssetBundles.Loader
     /// </summary>
     public abstract class AssetBundleLoaderAbs
     {
-        public string bundleName;
-        public LoadState state = LoadState.State_None;
-        public AssetBundleManager bundleManager;
-        public AssetBundleData bundleData;
-        public AssetBundleInfo bundleInfo;
-
+        internal LoadState state = LoadState.State_None;
+        internal AssetBundleInfo bundleInfo;
+        internal DependInfo bundleData;
         internal CallBackLoaderComplete loaderComplete;
 
-        public virtual void Load()
-        {
-
-        }
-
         /// <summary>
-        /// 其它都准备好了，加载AssetBundle
-        /// 注意：这个方法只能被 AssetBundleManager 调用
-        /// 由 Manager 统一分配加载时机，防止加载过卡
+        /// 正式加载
         /// </summary>
         public virtual void LoadBundle()
         {
@@ -62,7 +53,6 @@ namespace AssetBundles.Loader
                 loaderComplete = null;
                 handler(bundleInfo);
             }
-            bundleManager.LoadComplete(this);
         }
 
         protected virtual void Error()
@@ -73,7 +63,6 @@ namespace AssetBundles.Loader
                 loaderComplete = null;
                 handler(bundleInfo);
             }
-            bundleManager.LoadError(this);
         }
 
         /// <summary>
@@ -83,7 +72,6 @@ namespace AssetBundles.Loader
         protected void CreateBundleInfo(AssetBundle assetBundle = null)
         {
             if (bundleInfo == null) bundleInfo = new AssetBundleInfo();
-            bundleInfo.bundleName = bundleName;
             bundleInfo.bundle = assetBundle;
             bundleInfo.bundleData = bundleData;
         }
