@@ -16,7 +16,7 @@ public class TestDemo : MonoBehaviour
         assetBundleManager.LoadAssetBundle(() =>
         {
             Debug.Log("load init finish");
-        }, 1);
+        },true);
     }
 
 //    void CallBackLoaderComplete(AssetBundleInfo info) 

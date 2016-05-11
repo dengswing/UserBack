@@ -34,10 +34,11 @@ namespace AssetBundles.Loader
         {
             var platfrom = PathGlobal.GetPlatformFile();
             var path = PathGlobal.GetStreamingAssetsSourceFile(platfrom);
+            path = PathGlobal.GetJoinPath(path, bundleData.bundleName);
             Hash128 version = bundleManager.GetBundleHash(bundleData.bundleName);
-            bundleManager.LoaderManager((WWW www) =>
+            bundleManager.LoaderManager((AssetBundle asset) =>
             {
-                bundle = www.assetBundle;
+                bundle = asset;
                 Complete();
             }, path, version);
         }

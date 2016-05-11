@@ -154,8 +154,12 @@ namespace AssetBundles.Loader
 
             LoadAssetCurrent++;
             requestRemain++;
-            AssetBundleLoaderAbs nextBundle = requestQueue.Dequeue();
-            if (null != nextBundle) RequestLoadBundle(nextBundle, true);
+
+            if (requestQueue.Count > 0)
+            {
+                AssetBundleLoaderAbs nextBundle = requestQueue.Dequeue();
+                if (null != nextBundle) RequestLoadBundle(nextBundle, true);
+            }
 
             if (dComplete.ContainsKey(assetName) && dComplete[assetName] != null)
             {

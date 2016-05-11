@@ -15,19 +15,16 @@ namespace AssetBundles
     {
         #region property       
 
-        /// <summary>
-        /// 队列加载
-        /// </summary>
+        //队列加载
         QueueLoaderBundle queueLoader;
 
-        /// <summary>
-        /// 解析器
-        /// </summary>
+        //解析器
         BundleDataManager dataManager;
 
-        /// <summary>
-        /// 初始化完成加载回调
-        /// </summary>
+        //加载器
+        WWWManager wwwManager;
+
+        //初始化完成加载回调
         Action initFinishBack;
 
         #endregion
@@ -37,6 +34,7 @@ namespace AssetBundles
         {
             dataManager = new BundleDataManager();
             queueLoader = new QueueLoaderBundle(this);
+            wwwManager = new WWWManager(this);
         }
 
         /// <summary>
@@ -51,23 +49,9 @@ namespace AssetBundles
         /// <summary>
         /// 加载资源
         /// </summary>
-        /// <param name="finishBack">加载完成回调</param>
-        /// <param name="version">文件的版本号</param>
-        public void LoadAssetBundle(Action finishBack, int version = 1)
-        {
-            var platfrom = PathGlobal.GetPlatformFile();
-            var path = PathGlobal.GetStreamingAssetsSourceFile(platfrom);
-            path = PathGlobal.GetJoinPath(path, PathGlobal.DEPEND_FILE);
-            LoadAssetBundle(path, finishBack, version);
-        }
-
-        /// <summary>
-        /// 加载资源
-        /// </summary>
-        /// <param name="path">加载的文件路径</param>
-        /// <param name="finishBack">加载完成回调</param>
-        /// <param name="version">文件的版本号</param>
-        public void LoadAssetBundle(string path, Action finishBack, int version = 1)
+        /// <param name="finishBack">加载所有资源完成回调</param>
+        /// <param name="isHaveUpdate">是否有更新</param>
+        public void LoadAssetBundle(Action finishBack, bool isHaveUpdate = false)
         {
             if (null != initFinishBack || null == finishBack)
             {
@@ -75,7 +59,7 @@ namespace AssetBundles
             }
 
             initFinishBack = finishBack;
-            LoaderDependJson(ParseDepend, path, version);
+            LoaderDependJson(ParseDepend, isHaveUpdate);
         }
 
         /// <summary>
@@ -88,10 +72,18 @@ namespace AssetBundles
             return dataManager.Manifest.GetAssetBundleHash(name);
         }
 
+        internal void LoaderManager(Action<AssetBundle> callBack, string path, Hash128 version)
+        {
+            wwwManager.LoadAssetBundle(callBack, path, version);
+        }
+
         void ParseDepend(string value, int version)
         {
             dataManager.ParseDepend(value);
-            var path = PathGlobal.GetStreamingAssetsSourceFile(PathGlobal.GetPlatformFile()); //bundle main url
+
+            var platform = PathGlobal.GetPlatformFile();
+            var path = PathGlobal.GetStreamingAssetsSourceFile(platform); //bundle main url
+            path = PathGlobal.GetJoinPath(path, platform);
             LoaderBundleManifest((AssetBundleManifest maifest) =>
             {
                 dataManager.ParseManifest(maifest);
@@ -115,14 +107,13 @@ namespace AssetBundles
         /// </summary>
         /// <param name="callBack"></param>
         /// <returns></returns>
-        void LoaderDependJson(Action<string, int> callBack, string path, int version)
+        void LoaderDependJson(Action<string, int> callBack, bool isHaveUpdate)
         {
-            StartCoroutine(LoaderManager((WWW www) =>
+            var name = PathGlobal.DEPEND_FILE;
+            wwwManager.LoadFile((string data) =>
             {
-                var value = www.url;
-                callBack(value, version);
-
-            }, path, version));
+                callBack(data, 1); //to du 1 version
+            }, name, !isHaveUpdate);
         }
 
         /// <summary>
@@ -132,61 +123,12 @@ namespace AssetBundles
         /// <returns></returns>
         void LoaderBundleManifest(Action<AssetBundleManifest> callBack, string path, int version = 1)
         {
-            StartCoroutine(LoaderManager((WWW www) =>
+            wwwManager.LoadAssetBundle((AssetBundle asset) =>
             {
-                var manifestBundle = www.assetBundle;
-                var manifest = (AssetBundleManifest)manifestBundle.LoadAsset("AssetBundleManifest");
+                var manifest = asset.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
                 callBack(manifest);
 
-            }, path, version));
-        }
-
-        #endregion
-
-        #region loader manager
-
-        IEnumerator LoaderManager(Action<WWW> callBack, string path, int version)
-        {
-            var www = WWW.LoadFromCacheOrDownload(path, version);
-
-#if DEBUG_CONSOLE
-            UnityEngine.Debug.LogFormat("LoaderManager::path={0}|version={1}", www.url, version);
-#endif
-            yield return www;
-            if (www.error != null)
-            {
-#if DEBUG_CONSOLE
-                UnityEngine.Debug.LogFormat("LoaderManager::Error");
-#endif
-                yield return null;
-            }
-
-            callBack(www);
-
-            www.Dispose();
-            www = null;
-        }
-
-        public IEnumerator LoaderManager(Action<WWW> callBack, string path, Hash128 version)
-        {
-            var www = WWW.LoadFromCacheOrDownload(path, version);
-
-#if DEBUG_CONSOLE
-            UnityEngine.Debug.LogFormat("LoaderManager::path={0}|version={1}", www.url, version.ToString());
-#endif
-            yield return www;
-            if (www.error != null)
-            {
-#if DEBUG_CONSOLE
-                UnityEngine.Debug.LogFormat("LoaderManager::Error");
-#endif
-                yield return null;
-            }
-
-            callBack(www);
-
-            www.Dispose();
-            www = null;
+            }, path, version);
         }
 
         #endregion
