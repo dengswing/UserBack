@@ -8,8 +8,9 @@ namespace AssetBundles
 {
     public class PathGlobal
     {
-        public const string sDependFile = "depend.json"; //bundle关系名称
-        public const string sBundleSuffix = ".unity3d";    //打包后缀
+        public const string DEPEND_FILE = "depend.json"; //bundle关系名称
+        public const string BUNDLE_SUFFIX = ".unity3d";    //打包后缀
+        public static string ServerURL; //服务器地址
 
         /// <summary>
         /// 平台文件夹
@@ -65,6 +66,11 @@ namespace AssetBundles
         /// <returns></returns>
         public static string GetStreamingAssetsSourceFile(string path, bool forWWW = true)
         {
+            if (!string.IsNullOrEmpty(ServerURL))
+            {
+                return string.Format(ServerURL, path);
+            }
+
             string filePath = null;
 #if UNITY_EDITOR
             if (forWWW)

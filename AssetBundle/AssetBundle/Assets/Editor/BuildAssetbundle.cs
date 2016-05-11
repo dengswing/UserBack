@@ -57,7 +57,7 @@ namespace AssetBundles
             var assetBundleManifest = BuildPipeline.BuildAssetBundles(outputPath, BuildAssetBundleOptions.DeterministicAssetBundle | BuildAssetBundleOptions.ChunkBasedCompression, buildTarget);
 
             VersionManager(assetBundleManifest, dInfo);
-            var path = Path.Combine(outputPath, PathGlobal.sDependFile);
+            var path = Path.Combine(outputPath, PathGlobal.DEPEND_FILE);
             WriteFile(dInfo, path);
 
             Debug.LogFormat("{0}打包完成：{1}", platform, dInfo.Count);
@@ -131,9 +131,9 @@ namespace AssetBundles
             var bundleName = assetImporter.assetBundleName;
             if (string.IsNullOrEmpty(bundleName)) return;
 
-            if (bundleName.IndexOf(PathGlobal.sBundleSuffix) == -1)
+            if (bundleName.IndexOf(PathGlobal.BUNDLE_SUFFIX) == -1)
             { //没加后缀的自动加上
-                assetImporter.assetBundleName = string.Format("{0}{1}", bundleName, PathGlobal.sBundleSuffix);
+                assetImporter.assetBundleName = string.Format("{0}{1}", bundleName, PathGlobal.BUNDLE_SUFFIX);
                 bundleName = assetImporter.assetBundleName;
             }
 

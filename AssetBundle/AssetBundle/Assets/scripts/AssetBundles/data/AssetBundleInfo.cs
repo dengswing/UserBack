@@ -10,7 +10,7 @@ namespace AssetBundles.data
     public class AssetBundleInfo
     {
         //数据
-        public DependInfo bundleData;
+        internal DependInfo bundleData;
 
         //资源bundle
         internal AssetBundle bundle;
@@ -19,13 +19,18 @@ namespace AssetBundles.data
         Dictionary<string, Object> bundlesCacheRes = new Dictionary<string, Object>();
 
         /// <summary>
+        /// 返回bundle名
+        /// </summary>
+        public string BundleName { get { return (null != bundleData ? bundleData.bundleName : string.Empty); } }
+
+        /// <summary>
         /// 获取资源
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         public Object LoadAsset(string name)
         {
-            if (bundle == null) return null;            
+            if (bundle == null) return null;
 
             if (bundlesCacheRes.ContainsKey(name))
             {

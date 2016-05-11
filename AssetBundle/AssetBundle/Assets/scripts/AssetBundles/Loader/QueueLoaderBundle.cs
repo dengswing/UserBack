@@ -1,10 +1,6 @@
 ﻿using AssetBundles.data;
-using AssetBundles.parse;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Utilities;
 
 namespace AssetBundles.Loader
 {
@@ -15,32 +11,25 @@ namespace AssetBundles.Loader
     {
         #region property
 
-        /// <summary>
-        /// 已经在加载的
-        /// </summary>
+        //已经在加载的
         Dictionary<string, AssetBundleLoaderAbs> loaderCache;
 
-        /// <summary>
-        /// 同时最大的加载数
-        /// </summary>
+        //同时最大的加载数
         const int MAX_REQUEST = 3;
 
-        /// <summary>
-        /// 可再次申请的加载数
-        /// </summary>
+        //可再次申请的加载数
         int requestRemain = MAX_REQUEST;
-        /// <summary>
-        /// 当前申请要加载的队列
-        /// </summary>
+
+        //当前申请要加载的队列
         Queue<AssetBundleLoaderAbs> requestQueue;
 
-        /// <summary>
-        ///所有的完成加载回调
-        /// </summary>
+        //所有的完成加载回调
         Action allFinishBack;
 
         AssetBundleManager bundleManager;
 
+        //完成回调
+        Dictionary<string, CallBackLoaderComplete> dComplete;
         #endregion
 
         public QueueLoaderBundle(AssetBundleManager bundleManager)
@@ -48,19 +37,58 @@ namespace AssetBundles.Loader
             this.bundleManager = bundleManager;
             requestQueue = new Queue<AssetBundleLoaderAbs>();
             loaderCache = new Dictionary<string, AssetBundleLoaderAbs>();
+            dComplete = new Dictionary<string, CallBackLoaderComplete>();
         }
 
+        #region get set
+        /// <summary>
+        /// 申请加载的总数
+        /// </summary>
+        public int LoadAssetCount { get; private set; }
+
+        /// <summary>
+        /// 当前已经加载好的数量
+        /// </summary>
+        public int LoadAssetCurrent { get; private set; }
+
+        /// <summary>
+        /// 是否完成所有加载
+        /// </summary>
+        public bool IsFinishAllLoad { get { return LoadAssetCount == LoadAssetCurrent; } }
+        #endregion
+
+        /// <summary>
+        /// 加载所有的
+        /// </summary>
+        /// <param name="infoAll"></param>
+        /// <param name="handler"></param>
+        public void Load(Dictionary<string, DependInfo> infoAll, CallBackLoaderComplete handler)
+        {
+            foreach (var item in infoAll)
+            {
+                Load(item.Value, handler);
+            }
+        }
+
+        /// <summary>
+        /// 加载
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="handler"></param>
         public void Load(DependInfo info, CallBackLoaderComplete handler)
         {
             AssetBundleLoaderAbs loader = CreateLoader(info);
 
-            if (loader.isComplete)
+            if (loader.IsComplete)
             {
                 if (handler != null) handler(loader.bundleInfo);
             }
             else
             {
-                if (handler != null) loader.loaderComplete += handler;
+                if (!dComplete.ContainsKey(info.bundleName))
+                {
+                    dComplete.Add(info.bundleName, handler);
+                }
                 RequestLoadBundle(loader);
             }
         }
@@ -82,14 +110,18 @@ namespace AssetBundles.Loader
 
             loader.bundleManager = bundleManager;
             loader.bundleData = info;
+            loader.loaderComplete = LoadComplete;
+            loader.loaderError = LoadError;
 
             loaderCache[name] = loader;
             return loader;
         }
 
-        //开始加载
-        internal void RequestLoadBundle(AssetBundleLoaderAbs loader)
+        #region queue loader
+        void RequestLoadBundle(AssetBundleLoaderAbs loader, bool isNext = false)
         {
+            if (!isNext) LoadAssetCount++; //计算加载数量
+
             if (requestRemain < 0) requestRemain = 0;
 
             if (requestRemain == 0)
@@ -104,30 +136,42 @@ namespace AssetBundles.Loader
 
         void LoadBundle(AssetBundleLoaderAbs loader)
         {
-            if (!loader.isComplete)
+            if (!loader.IsComplete)
             {
                 requestRemain--;
                 loader.LoadBundle();
             }
         }
+        #endregion
 
-        internal void LoadComplete(AssetBundleLoaderAbs loader)
+        #region loader callback
+        void LoadComplete(AssetBundleLoaderAbs loader)
         {
+            var assetName = loader.BundleName;
 #if DEBUG_CONSOLE
-            UnityEngine.Debug.Log("LoadComplete:: loader finish=" + loader.bundleName);
+            UnityEngine.Debug.Log("LoadComplete:: loader finish=" + assetName);
 #endif
 
+            LoadAssetCurrent++;
             requestRemain++;
             AssetBundleLoaderAbs nextBundle = requestQueue.Dequeue();
-            if (null != nextBundle) RequestLoadBundle(nextBundle);
+            if (null != nextBundle) RequestLoadBundle(nextBundle, true);
+
+            if (dComplete.ContainsKey(assetName) && dComplete[assetName] != null)
+            {
+                dComplete[assetName](loader.bundleInfo);
+                dComplete[assetName] = null;
+                dComplete.Remove(assetName);
+            }
         }
 
-        internal void LoadError(AssetBundleLoaderAbs loader)
+        void LoadError(AssetBundleLoaderAbs loader)
         {
 #if DEBUG_CONSOLE
-            UnityEngine.Debug.Log("LoadError:: loader finish=" + loader.bundleName);
+            UnityEngine.Debug.Log("LoadError:: loader finish=" + loader.BundleName);
 #endif
             LoadComplete(loader);
         }
+        #endregion
     }
 }

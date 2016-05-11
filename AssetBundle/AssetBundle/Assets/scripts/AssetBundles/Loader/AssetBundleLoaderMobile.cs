@@ -6,7 +6,6 @@ namespace AssetBundles.Loader
 {
     public class AssetBundleLoaderMobile : AssetBundleLoaderAbs
     {
-        internal AssetBundleManager bundleManager;
         protected AssetBundle bundle;
 
         /// <summary>

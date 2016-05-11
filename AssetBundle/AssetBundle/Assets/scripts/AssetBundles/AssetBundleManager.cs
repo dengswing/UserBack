@@ -1,19 +1,24 @@
-﻿using AssetBundles.parse;
+﻿using AssetBundles.data;
+using AssetBundles.Loader;
+using AssetBundles.parse;
 using System;
 using System.Collections;
 using UnityEngine;
 using Utilities;
 
-namespace AssetBundles.Loader
+namespace AssetBundles
 {
     /// <summary>
     /// 加载总管理
     /// </summary>
-    public class AssetBundleManager : SingleInstance<AssetBundleManager>
+    public class AssetBundleManager : SingleInstance<AssetBundleManager>, IAssetBundleManager
     {
         #region property       
 
-
+        /// <summary>
+        /// 队列加载
+        /// </summary>
+        QueueLoaderBundle queueLoader;
 
         /// <summary>
         /// 解析器
@@ -27,22 +32,42 @@ namespace AssetBundles.Loader
 
         #endregion
 
-        #region get set property
-
-        #endregion
 
         public AssetBundleManager()
         {
             dataManager = new BundleDataManager();
+            queueLoader = new QueueLoaderBundle(this);
         }
 
         /// <summary>
-        /// 开始加载
+        /// 服务器地址
+        /// </summary>
+        public string ServerUrl
+        {
+            get { return PathGlobal.ServerURL; }
+            set { PathGlobal.ServerURL = value; }
+        }
+
+        /// <summary>
+        /// 加载资源
+        /// </summary>
+        /// <param name="finishBack">加载完成回调</param>
+        /// <param name="version">文件的版本号</param>
+        public void LoadAssetBundle(Action finishBack, int version = 1)
+        {
+            var platfrom = PathGlobal.GetPlatformFile();
+            var path = PathGlobal.GetStreamingAssetsSourceFile(platfrom);
+            path = PathGlobal.GetJoinPath(path, PathGlobal.DEPEND_FILE);
+            LoadAssetBundle(path, finishBack, version);
+        }
+
+        /// <summary>
+        /// 加载资源
         /// </summary>
         /// <param name="path">加载的文件路径</param>
         /// <param name="finishBack">加载完成回调</param>
         /// <param name="version">文件的版本号</param>
-        public void StartLoad(string path, Action finishBack, int version = 1)
+        public void LoadAssetBundle(string path, Action finishBack, int version = 1)
         {
             if (null != initFinishBack || null == finishBack)
             {
@@ -60,7 +85,7 @@ namespace AssetBundles.Loader
         /// <returns></returns>
         internal Hash128 GetBundleHash(string name)
         {
-            return dataManager.manifest.GetAssetBundleHash(name);
+            return dataManager.Manifest.GetAssetBundleHash(name);
         }
 
         void ParseDepend(string value, int version)
@@ -76,12 +101,13 @@ namespace AssetBundles.Loader
 
         void LoaderAllBundle()
         {
-            var dInfo = dataManager.dependInfo;
-            foreach (var item in dInfo)
-            {
+            queueLoader.Load(dataManager.DependInfo, CompleteHandler);
+        }
 
-            }
-        }        
+        void CompleteHandler(AssetBundleInfo data)
+        {
+            dataManager.AddAssetBundleInfo(data);
+        }
 
         #region loader resource
         /// <summary>
@@ -93,7 +119,7 @@ namespace AssetBundles.Loader
         {
             StartCoroutine(LoaderManager((WWW www) =>
             {
-                var value = www.text;
+                var value = www.url;
                 callBack(value, version);
 
             }, path, version));
@@ -114,6 +140,10 @@ namespace AssetBundles.Loader
 
             }, path, version));
         }
+
+        #endregion
+
+        #region loader manager
 
         IEnumerator LoaderManager(Action<WWW> callBack, string path, int version)
         {

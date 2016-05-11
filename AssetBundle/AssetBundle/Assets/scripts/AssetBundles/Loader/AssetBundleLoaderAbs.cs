@@ -27,7 +27,14 @@ namespace AssetBundles.Loader
         internal LoadState state = LoadState.State_None;
         internal AssetBundleInfo bundleInfo;
         internal DependInfo bundleData;
-        internal CallBackLoaderComplete loaderComplete;
+        internal AssetBundleManager bundleManager;
+        internal CallBackLoader loaderComplete;
+        internal CallBackLoader loaderError;
+
+        /// <summary>
+        /// asset名称
+        /// </summary>
+        public string BundleName { get { return bundleData.bundleName; } }
 
         /// <summary>
         /// 正式加载
@@ -40,7 +47,7 @@ namespace AssetBundles.Loader
         /// <summary>
         /// 是否加载完成
         /// </summary>
-        public virtual bool isComplete
+        public virtual bool IsComplete
         {
             get { return state == LoadState.State_Error || state == LoadState.State_Complete; }
         }
@@ -51,17 +58,17 @@ namespace AssetBundles.Loader
             {
                 var handler = loaderComplete;
                 loaderComplete = null;
-                handler(bundleInfo);
+                handler(this);
             }
         }
 
         protected virtual void Error()
         {
-            if (loaderComplete != null)
+            if (loaderError != null)
             {
-                var handler = loaderComplete;
-                loaderComplete = null;
-                handler(bundleInfo);
+                var handler = loaderError;
+                loaderError = null;
+                handler(this);
             }
         }
 
@@ -69,11 +76,13 @@ namespace AssetBundles.Loader
         /// 创建内容
         /// </summary>
         /// <param name="assetBundle"></param>
-        protected void CreateBundleInfo(AssetBundle assetBundle = null)
+        protected AssetBundleInfo CreateBundleInfo(AssetBundle assetBundle = null)
         {
             if (bundleInfo == null) bundleInfo = new AssetBundleInfo();
             bundleInfo.bundle = assetBundle;
             bundleInfo.bundleData = bundleData;
+
+            return bundleInfo;
         }
     }
 }
