@@ -9,6 +9,8 @@ namespace AssetBundles.parse
     /// </summary>
     public class BundleDataManager
     {
+        Dictionary<string, string> assetBundleDepend;
+
         #region get set
         /// <summary>
         /// asset依赖信息
@@ -25,11 +27,35 @@ namespace AssetBundles.parse
         /// </summary>
         public Dictionary<string, AssetBundleInfo> AssetBundleInfoData { get; private set; }
         #endregion
-
-
+        
         public BundleDataManager()
         {
             AssetBundleInfoData = new Dictionary<string, AssetBundleInfo>();
+        }
+     
+        /// <summary>
+        /// 获取资源
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="name">名称</param>
+        /// <returns></returns>
+        public T GetAsset<T>(string name) where T : Object
+        {
+            return GetAssetBundle<T>(name);
+        }
+
+        T GetAssetBundle<T>(string name) where T : Object
+        {
+            if (null == assetBundleDepend || !assetBundleDepend.ContainsKey(name)) return default(T);
+
+            T data = default(T);
+            var bundleName = assetBundleDepend[name];
+            if (AssetBundleInfoData.ContainsKey(bundleName))
+            {
+                data = AssetBundleInfoData[bundleName].LoadAsset<T>(name);
+            }
+
+            return data;
         }
 
         /// <summary>
@@ -39,6 +65,18 @@ namespace AssetBundles.parse
         internal void ParseDepend(string value)
         {
             DependInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, DependInfo>>(value);
+
+            if (null == assetBundleDepend) assetBundleDepend = new Dictionary<string, string>();
+            assetBundleDepend.Clear();
+
+            foreach (var item in DependInfo)
+            {
+                var depend = item.Value;
+                foreach (var assetName in depend.binding)
+                {
+                    assetBundleDepend.Add(assetName, depend.bundleName);
+                }
+            }
         }
 
         /// <summary>

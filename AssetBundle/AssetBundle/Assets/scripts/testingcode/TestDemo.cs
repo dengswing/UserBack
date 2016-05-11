@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class TestDemo : MonoBehaviour
 {
-    void Start() 
+    void Start()
     {
         var assetBundleManager = AssetBundleManager.Instance;
         //assetBundleManager.Load("AssectFrist",CallBackLoaderComplete);
@@ -16,14 +16,16 @@ public class TestDemo : MonoBehaviour
         assetBundleManager.LoadAssetBundle(() =>
         {
             Debug.Log("load init finish");
-        },true);
+            var cube = assetBundleManager.GetAsset<GameObject>("cube.prefab");
+            Instantiate(cube);
+        }, true);
     }
 
-//    void CallBackLoaderComplete(AssetBundleInfo info) 
-//    {
-//#if DEBUG_CONSOLE
-//        UnityEngine.Debug.Log(info.ToString());
-//#endif
-//        Instantiate(info.LoadAsset("cube"));
-//    }
+    //    void CallBackLoaderComplete(AssetBundleInfo info) 
+    //    {
+    //#if DEBUG_CONSOLE
+    //        UnityEngine.Debug.Log(info.ToString());
+    //#endif
+    //        Instantiate(info.LoadAsset("cube"));
+    //    }
 }

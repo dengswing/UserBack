@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace AssetBundles.Loader
 {
+    /// <summary>
+    /// 加载管理
+    /// </summary>
     public class WWWManager
     {
         AssetBundleManager bundleManager;

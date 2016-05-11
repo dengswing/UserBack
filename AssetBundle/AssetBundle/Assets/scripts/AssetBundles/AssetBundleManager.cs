@@ -2,7 +2,6 @@
 using AssetBundles.Loader;
 using AssetBundles.parse;
 using System;
-using System.Collections;
 using UnityEngine;
 using Utilities;
 
@@ -63,6 +62,27 @@ namespace AssetBundles
         }
 
         /// <summary>
+        /// 获取资源
+        /// </summary>
+        /// <param name="name">名称</param>
+        /// <returns></returns>
+        public GameObject GetAsset(string name)
+        {
+            return GetAsset<GameObject>(name);
+        }
+
+        /// <summary>
+        /// 获取资源
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="name">名称</param>
+        /// <returns></returns>
+        public T GetAsset<T>(string name) where T : UnityEngine.Object
+        {
+            return dataManager.GetAsset<T>(name);
+        }
+
+        /// <summary>
         /// 获取bundle的hash
         /// </summary>
         /// <param name="name"></param>
@@ -99,6 +119,11 @@ namespace AssetBundles
         void CompleteHandler(AssetBundleInfo data)
         {
             dataManager.AddAssetBundleInfo(data);
+            if (queueLoader.IsFinishAllLoad && initFinishBack != null)
+            {
+                initFinishBack();
+                initFinishBack = null;
+            }
         }
 
         #region loader resource

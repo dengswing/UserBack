@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace AssetBundles.data
 {
@@ -28,24 +27,28 @@ namespace AssetBundles.data
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Object LoadAsset(string name)
+        public T LoadAsset<T>(string name) where T : Object
         {
-            if (bundle == null) return null;
+            T data = default(T);
+            if (bundle == null) return data;
 
             if (bundlesCacheRes.ContainsKey(name))
             {
-                return bundlesCacheRes[name];
+                data = (T)bundlesCacheRes[name];
             }
             else if (bundle.Contains(name))
             {
-                bundlesCacheRes.Add(name, bundle.LoadAsset(name));
-                return bundlesCacheRes[name];
-            }
-            else
-            {
-                return null;
-            }
-        }
+                try
+                {
+                    data = (T)bundle.LoadAsset(name);
+                    bundlesCacheRes.Add(name, data);
+                }
+                catch (System.Exception)
+                {
 
+                }
+            }
+            return data;
+        }
     }
 }
