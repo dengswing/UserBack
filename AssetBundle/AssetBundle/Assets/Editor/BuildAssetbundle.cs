@@ -14,7 +14,7 @@ namespace AssetBundles
     /// </summary>
     public class Builder : Editor
     {
-        static string sourcePath = Application.dataPath + "/Resource";
+        static string sourcePath = Application.dataPath + "/Resources";
         const string assetBundlesOutputPath = "Assets/StreamingAssets"; //打包的位置
 
         [MenuItem("AssetBundle/Build_Windows")]

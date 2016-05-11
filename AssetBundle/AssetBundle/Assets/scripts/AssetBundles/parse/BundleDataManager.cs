@@ -44,15 +44,15 @@ namespace AssetBundles.parse
             return GetAssetBundle<T>(name);
         }
 
-        T GetAssetBundle<T>(string name) where T : Object
+        T GetAssetBundle<T>(string path) where T : Object
         {
-            if (null == assetBundleDepend || !assetBundleDepend.ContainsKey(name)) return default(T);
+            if (null == assetBundleDepend || !assetBundleDepend.ContainsKey(path)) return default(T);
 
             T data = default(T);
-            var bundleName = assetBundleDepend[name];
+            var bundleName = assetBundleDepend[path];
             if (AssetBundleInfoData.ContainsKey(bundleName))
             {
-                data = AssetBundleInfoData[bundleName].LoadAsset<T>(name);
+                data = AssetBundleInfoData[bundleName].LoadAsset<T>(path);
             }
 
             return data;

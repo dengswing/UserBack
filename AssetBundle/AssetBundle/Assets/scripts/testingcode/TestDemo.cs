@@ -11,13 +11,17 @@ public class TestDemo : MonoBehaviour
     void Start()
     {
         var assetBundleManager = AssetBundleManager.Instance;
-        //assetBundleManager.Load("AssectFrist",CallBackLoaderComplete);
 
+        var Cube = GameObject.Find("Cube");
         assetBundleManager.LoadAssetBundle(() =>
         {
             Debug.Log("load init finish");
-            var cube = assetBundleManager.GetAsset<GameObject>("cube.prefab");
+             var cube = assetBundleManager.GetAsset<GameObject>("cube.prefab");
             Instantiate(cube);
+
+            var sss = assetBundleManager.GetAsset<Material>("aa/Materials/pic_1.mat");
+            Cube.GetComponent<MeshRenderer>().materials[0].mainTexture = sss.mainTexture;
+
         }, true);
     }
 

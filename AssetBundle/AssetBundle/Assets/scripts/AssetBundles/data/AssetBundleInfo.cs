@@ -25,23 +25,28 @@ namespace AssetBundles.data
         /// <summary>
         /// 获取资源
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="path">素材路径</param>
         /// <returns></returns>
-        public T LoadAsset<T>(string name) where T : Object
+        public T LoadAsset<T>(string path) where T : Object
+        {
+            return GetAsset<T>(path);
+        }
+
+        protected virtual T GetAsset<T>(string path) where T : Object
         {
             T data = default(T);
             if (bundle == null) return data;
 
-            if (bundlesCacheRes.ContainsKey(name))
+            if (bundlesCacheRes.ContainsKey(path))
             {
-                data = (T)bundlesCacheRes[name];
+                data = (T)bundlesCacheRes[path];
             }
-            else if (bundle.Contains(name))
+            else if (bundle.Contains(path))
             {
                 try
                 {
-                    data = (T)bundle.LoadAsset(name);
-                    bundlesCacheRes.Add(name, data);
+                    data = (T)bundle.LoadAsset(path);
+                    bundlesCacheRes.Add(path, data);
                 }
                 catch (System.Exception)
                 {
@@ -50,5 +55,6 @@ namespace AssetBundles.data
             }
             return data;
         }
+
     }
 }

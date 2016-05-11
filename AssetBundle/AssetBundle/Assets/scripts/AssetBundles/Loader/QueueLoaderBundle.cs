@@ -103,7 +103,7 @@ namespace AssetBundles.Loader
 
             AssetBundleLoaderAbs loader;
 #if UNITY_EDITOR
-            loader = new AssetBundleLoaderMobile();
+            loader = new AssetBundleLoaderEditor();
 #else
             loader = new AssetBundleLoaderMobile(); 
 #endif

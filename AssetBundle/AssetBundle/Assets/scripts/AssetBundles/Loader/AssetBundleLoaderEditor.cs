@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using AssetBundles.data;
+using UnityEditor;
+using UnityEngine;
 
 namespace AssetBundles.Loader
 {
     /// <summary>
-    /// 手机加载
+    /// 编辑器加载
     /// </summary>
-    public class AssetBundleLoaderMobile : AssetBundleLoaderAbs
+    public class AssetBundleLoaderEditor : AssetBundleLoaderAbs
     {
         protected AssetBundle bundle;
 
@@ -19,7 +21,7 @@ namespace AssetBundles.Loader
             if (state == LoadState.State_None)
             {
                 state = LoadState.State_Loading;
-                LoaderBundle();
+                Complete();
             }
             else if (state == LoadState.State_Error)
             {
@@ -31,24 +33,13 @@ namespace AssetBundles.Loader
             }
         }
 
-        void LoaderBundle()
-        {
-            var platfrom = PathGlobal.GetPlatformFile();
-            var path = PathGlobal.GetStreamingAssetsSourceFile(platfrom);
-            path = PathGlobal.GetJoinPath(path, bundleData.bundleName);
-            Hash128 version = bundleManager.GetBundleHash(bundleData.bundleName);
-            bundleManager.LoaderManager((AssetBundle asset) =>
-            {
-                bundle = asset;
-                Complete();
-            }, path, version);
-        }
-
         protected override void Complete()
         {
             state = LoadState.State_Complete;
-            if (bundle != null) CreateBundleInfo(bundle);
-            bundle = null;
+
+            bundleInfo = new EditorInfo();
+            CreateBundleInfo();
+
             base.Complete();
         }
 
@@ -56,6 +47,26 @@ namespace AssetBundles.Loader
         {
             state = LoadState.State_Error;
             base.Error();
+        }
+    }
+    class EditorInfo : AssetBundleInfo
+    {
+        protected override T GetAsset<T>(string path)
+        {
+            var index = path.IndexOf(".");
+            if (index != -1) path = path.Substring(0, index);
+
+            T data = default(T);
+            try
+            {
+                data = Resources.Load<T>(path);
+            }
+            catch (System.Exception)
+            {
+                data = (T)AssetDatabase.LoadMainAssetAtPath(path);
+            }
+
+            return data;
         }
     }
 }

@@ -2,6 +2,7 @@
 using AssetBundles.Loader;
 using AssetBundles.parse;
 using System;
+using System.Collections;
 using UnityEngine;
 using Utilities;
 
@@ -66,9 +67,9 @@ namespace AssetBundles
         /// </summary>
         /// <param name="name">名称</param>
         /// <returns></returns>
-        public GameObject GetAsset(string name)
+        public UnityEngine.Object GetAsset(string name)
         {
-            return GetAsset<GameObject>(name);
+            return GetAsset<UnityEngine.Object>(name);
         }
 
         /// <summary>
@@ -119,6 +120,15 @@ namespace AssetBundles
         void CompleteHandler(AssetBundleInfo data)
         {
             dataManager.AddAssetBundleInfo(data);
+
+            StopCoroutine("LoadFinishCheck");
+            StartCoroutine("LoadFinishCheck");
+        }
+
+        IEnumerator LoadFinishCheck()
+        {
+            yield return new WaitForSeconds(.1f);
+
             if (queueLoader.IsFinishAllLoad && initFinishBack != null)
             {
                 initFinishBack();
