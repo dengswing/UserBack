@@ -22,4 +22,17 @@ namespace AssetBundles.data
         /// </summary>
         public List<string> binding;
     }
+
+    public class VersionInfo
+    {
+        /// <summary>
+        /// 主版本号
+        /// </summary>
+        public int maifestVersion;
+
+        /// <summary>
+        /// 所有依赖
+        /// </summary>
+        public Dictionary<string, DependInfo> dDependInfo;
+    }
 }

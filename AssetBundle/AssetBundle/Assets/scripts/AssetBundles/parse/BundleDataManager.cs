@@ -11,28 +11,32 @@ namespace AssetBundles.parse
     {
         Dictionary<string, string> assetBundleDepend;
 
+        VersionInfo assetVersion;
+
         #region get set
         /// <summary>
         /// asset依赖信息
         /// </summary>
-        public Dictionary<string, DependInfo> DependInfo { get; private set; }
+        public Dictionary<string, DependInfo> DependInfo { get { return (null != assetVersion ? assetVersion.dDependInfo : null); } }
+
+        public int MaifestVersion { get { return (null != assetVersion ? assetVersion.maifestVersion : 1); } }
 
         /// <summary>
         /// 主asset
         /// </summary>
-        public AssetBundleManifest Manifest { get; private set; }
+        public AssetBundleManifest Maifest { get; private set; }
 
         /// <summary>
         /// asset数据
         /// </summary>
         public Dictionary<string, AssetBundleInfo> AssetBundleInfoData { get; private set; }
         #endregion
-        
+
         public BundleDataManager()
         {
             AssetBundleInfoData = new Dictionary<string, AssetBundleInfo>();
         }
-     
+
         /// <summary>
         /// 获取资源
         /// </summary>
@@ -46,6 +50,7 @@ namespace AssetBundles.parse
 
         T GetAssetBundle<T>(string path) where T : Object
         {
+            path = path.ToLower();
             if (null == assetBundleDepend || !assetBundleDepend.ContainsKey(path)) return default(T);
 
             T data = default(T);
@@ -64,12 +69,12 @@ namespace AssetBundles.parse
         /// <param name="value"></param>
         internal void ParseDepend(string value)
         {
-            DependInfo = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, DependInfo>>(value);
+            assetVersion = Newtonsoft.Json.JsonConvert.DeserializeObject<VersionInfo>(value);
 
             if (null == assetBundleDepend) assetBundleDepend = new Dictionary<string, string>();
             assetBundleDepend.Clear();
 
-            foreach (var item in DependInfo)
+            foreach (var item in assetVersion.dDependInfo)
             {
                 var depend = item.Value;
                 foreach (var assetName in depend.binding)
@@ -85,7 +90,7 @@ namespace AssetBundles.parse
         /// <param name="value"></param>
         internal void ParseManifest(AssetBundleManifest value)
         {
-            Manifest = value;
+            Maifest = value;
         }
 
         /// <summary>

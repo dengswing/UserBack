@@ -20,7 +20,12 @@ public class TestDemo : MonoBehaviour
             Instantiate(cube);
 
             var sss = assetBundleManager.GetAsset<Material>("aa/Materials/pic_1.mat");
-            Cube.GetComponent<MeshRenderer>().materials[0].mainTexture = sss.mainTexture;
+
+            var dd = assetBundleManager.GetAsset<Texture>("aa/cube.png");
+
+            Cube.GetComponent<MeshRenderer>().materials[0].mainTexture = dd;
+
+            Debug.Log("get "+ cube+"|"+sss+"|"+dd);
 
         }, true);
     }

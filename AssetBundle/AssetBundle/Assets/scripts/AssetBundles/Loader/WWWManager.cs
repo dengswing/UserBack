@@ -178,20 +178,12 @@ namespace AssetBundles.Loader
 
             var deposit = path.Substring(0, path.LastIndexOf("/"));
 
-#if DEBUG_CONSOLE
-            UnityEngine.Debug.Log("ReplaceLocalRes:: deposit=" + deposit);
-#endif
-
             if (!Directory.Exists(deposit))
             {
                 Directory.CreateDirectory(deposit);
             }
 
-#if DEBUG_CONSOLE
-            UnityEngine.Debug.Log("ReplaceLocalRes:: path=" + path);
-#endif
-
-            using (FileStream stream = new FileStream(path, FileMode.OpenOrCreate))
+            using (FileStream stream = new FileStream(path, FileMode.Create))
             {
 #if DEBUG_CONSOLE
                 UnityEngine.Debug.Log("ReplaceLocalRes:: url=" + path);

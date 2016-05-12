@@ -37,6 +37,14 @@ namespace AssetBundles.data
             T data = default(T);
             if (bundle == null) return data;
 
+            // var non = bundle.mainAsset;
+
+            string[] asset = bundle.GetAllAssetNames();
+            string[] unity = bundle.GetAllScenePaths();
+
+            path = path.ToLower();
+            path = string.Format("assets/resources/{0}", path);
+
             if (bundlesCacheRes.ContainsKey(path))
             {
                 data = (T)bundlesCacheRes[path];
@@ -50,9 +58,12 @@ namespace AssetBundles.data
                 }
                 catch (System.Exception)
                 {
-
+#if DEBUG_CONSOLE
+                    UnityEngine.Debug.Log("GetAsset:: Error! path=" + path);
+#endif
                 }
             }
+
             return data;
         }
 

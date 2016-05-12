@@ -92,12 +92,41 @@ namespace AssetBundles
         /// <param name="path"></param>
         static void WriteFile(Dictionary<string, DependInfo> dInfo, string path)
         {
-            using (FileStream stream = new FileStream(path, FileMode.OpenOrCreate))
+            VersionInfo info = GetVersionInfo(path);
+            info.dDependInfo = dInfo;
+            using (FileStream stream = new FileStream(path, FileMode.Create))
             {
-                var sVersion = JsonConvert.SerializeObject(dInfo);
+                var sVersion = JsonConvert.SerializeObject(info);
                 byte[] data = Encoding.UTF8.GetBytes(sVersion);
                 stream.Write(data, 0, data.Length);
             }
+        }
+
+        static VersionInfo GetVersionInfo(string path)
+        {
+            string allContent = string.Empty;
+
+            if (File.Exists(path))
+            {
+                var stream = new StreamReader(path, System.Text.Encoding.UTF8);
+                allContent = stream.ReadToEnd();
+                stream.Dispose();
+                stream.Close();
+                stream = null;
+            }
+
+            VersionInfo info;
+            if (string.IsNullOrEmpty(allContent))
+            {
+                info = new VersionInfo();
+                info.maifestVersion = 1;
+            }
+            else
+            {
+                info = JsonConvert.DeserializeObject<VersionInfo>(allContent);
+                info.maifestVersion += 1;
+            }
+            return info;
         }
 
         /// <summary>
@@ -150,7 +179,7 @@ namespace AssetBundles
                 info.bundleName = bundleName;
             }
             var assetName = resource.Substring(resource.IndexOf("/") + 1);
-            info.binding.Add(assetName);
+            info.binding.Add(assetName.ToLower());
         }
 
         static string ReplacePath(string s)

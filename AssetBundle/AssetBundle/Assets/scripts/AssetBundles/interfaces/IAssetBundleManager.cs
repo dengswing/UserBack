@@ -1,9 +1,13 @@
 ﻿using System;
-
 namespace AssetBundles
 {
     interface IAssetBundleManager
     {
+        /// <summary>
+        /// 服务器地址
+        /// </summary>
+        string ServerUrl { get; set; }
+
         /// <summary>
         /// 加载资源
         /// </summary>
@@ -12,8 +16,18 @@ namespace AssetBundles
         void LoadAssetBundle(Action finishBack, bool isHaveUpdate = false);
 
         /// <summary>
-        /// 服务器地址
+        /// 获取资源
         /// </summary>
-        string ServerUrl { get; set; }
+        /// <param name="name">名称</param>
+        /// <returns></returns>
+        UnityEngine.Object GetAsset(string name);
+
+        /// <summary>
+        /// 获取资源
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="name">名称</param>
+        /// <returns></returns>
+        T GetAsset<T>(string name) where T : UnityEngine.Object;
     }
 }

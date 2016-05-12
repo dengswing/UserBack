@@ -28,8 +28,7 @@ namespace AssetBundles
         Action initFinishBack;
 
         #endregion
-
-
+        
         public AssetBundleManager()
         {
             dataManager = new BundleDataManager();
@@ -57,7 +56,6 @@ namespace AssetBundles
             {
                 return;
             }
-
             initFinishBack = finishBack;
             LoaderDependJson(ParseDepend, isHaveUpdate);
         }
@@ -90,7 +88,7 @@ namespace AssetBundles
         /// <returns></returns>
         internal Hash128 GetBundleHash(string name)
         {
-            return dataManager.Manifest.GetAssetBundleHash(name);
+            return dataManager.Maifest.GetAssetBundleHash(name);
         }
 
         internal void LoaderManager(Action<AssetBundle> callBack, string path, Hash128 version)
@@ -98,20 +96,26 @@ namespace AssetBundles
             wwwManager.LoadAssetBundle(callBack, path, version);
         }
 
-        void ParseDepend(string value, int version)
+        #region loader maifest
+        void ParseDepend(string value)
         {
             dataManager.ParseDepend(value);
+
+            var version = dataManager.MaifestVersion;
 
             var platform = PathGlobal.GetPlatformFile();
             var path = PathGlobal.GetStreamingAssetsSourceFile(platform); //bundle main url
             path = PathGlobal.GetJoinPath(path, platform);
+
             LoaderBundleManifest((AssetBundleManifest maifest) =>
             {
                 dataManager.ParseManifest(maifest);
                 LoaderAllBundle();
             }, path, version);
         }
+        #endregion
 
+        #region loader all bundle
         void LoaderAllBundle()
         {
             queueLoader.Load(dataManager.DependInfo, CompleteHandler);
@@ -135,6 +139,7 @@ namespace AssetBundles
                 initFinishBack = null;
             }
         }
+        #endregion
 
         #region loader resource
         /// <summary>
@@ -142,12 +147,12 @@ namespace AssetBundles
         /// </summary>
         /// <param name="callBack"></param>
         /// <returns></returns>
-        void LoaderDependJson(Action<string, int> callBack, bool isHaveUpdate)
+        void LoaderDependJson(Action<string> callBack, bool isHaveUpdate)
         {
             var name = PathGlobal.DEPEND_FILE;
             wwwManager.LoadFile((string data) =>
             {
-                callBack(data, 1); //to du 1 version
+                callBack(data); 
             }, name, !isHaveUpdate);
         }
 
@@ -165,7 +170,6 @@ namespace AssetBundles
 
             }, path, version);
         }
-
         #endregion
     }
 }
