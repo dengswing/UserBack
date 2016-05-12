@@ -1,4 +1,5 @@
 ﻿using AssetBundles.data;
+using AssetBundles.Loader;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,10 @@ namespace AssetBundles.parse
         Dictionary<string, string> assetBundleDepend;
 
         VersionInfo assetVersion;
+
+        AssetBundleManager bundleManager;
+
+        QueueLoaderAsset queueLoaderAsset;
 
         #region get set
         /// <summary>
@@ -32,9 +37,11 @@ namespace AssetBundles.parse
         public Dictionary<string, AssetBundleInfo> AssetBundleInfoData { get; private set; }
         #endregion
 
-        public BundleDataManager()
+        public BundleDataManager(AssetBundleManager bundleManager)
         {
+            this.bundleManager = bundleManager;
             AssetBundleInfoData = new Dictionary<string, AssetBundleInfo>();
+            queueLoaderAsset = new QueueLoaderAsset(bundleManager);
         }
 
         /// <summary>
@@ -43,12 +50,25 @@ namespace AssetBundles.parse
         /// <typeparam name="T">类型</typeparam>
         /// <param name="name">名称</param>
         /// <returns></returns>
-        public T GetAsset<T>(string name) where T : Object
+        public T LoadAsset<T>(string name) where T : Object
         {
-            return GetAssetBundle<T>(name);
+            return LoadAssetBundle<T>(name);
         }
 
-        T GetAssetBundle<T>(string path) where T : Object
+        /// <summary>
+        /// 加载资源
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name"></param>
+        /// <param name="finishBack"></param>
+        /// <returns></returns>
+        public T LoadAssetBundleAsync<T>(string name, CallBackAssetComplete<T> finishBack) where T : Object
+        {
+            return LoadAssetBundle<T>(name, finishBack, true);
+        }
+
+        #region load asset
+        T LoadAssetBundle<T>(string path, CallBackAssetComplete<T> finishBack = null, bool isAsync = false) where T : Object
         {
             path = path.ToLower();
             if (null == assetBundleDepend || !assetBundleDepend.ContainsKey(path)) return default(T);
@@ -57,11 +77,22 @@ namespace AssetBundles.parse
             var bundleName = assetBundleDepend[path];
             if (AssetBundleInfoData.ContainsKey(bundleName))
             {
-                data = AssetBundleInfoData[bundleName].LoadAsset<T>(path);
+                if (isAsync)
+                    LoadAssetBundleAsync<T>(AssetBundleInfoData[bundleName], path, finishBack);
+                else
+                    data = AssetBundleInfoData[bundleName].LoadAsset<T>(path);
             }
-
             return data;
         }
+
+        void LoadAssetBundleAsync<T>(AssetBundleInfo info, string path, CallBackAssetComplete<T> finishBack) where T : Object
+        {
+            queueLoaderAsset.LoadAssetBundleAsync(info, path, (Object asset) =>
+            {
+                if (null != finishBack) finishBack((T)asset);
+            });
+        }
+        #endregion
 
         /// <summary>
         /// 解析json数据

@@ -6,6 +6,8 @@ using System.Collections;
 using UnityEngine;
 using Utilities;
 
+using Object = UnityEngine.Object;
+
 namespace AssetBundles
 {
     /// <summary>
@@ -16,7 +18,7 @@ namespace AssetBundles
         #region property       
 
         //队列加载
-        QueueLoaderBundle queueLoader;
+        QueueLoaderBundleFile queueLoader;
 
         //解析器
         BundleDataManager dataManager;
@@ -28,11 +30,11 @@ namespace AssetBundles
         Action initFinishBack;
 
         #endregion
-        
+
         public AssetBundleManager()
         {
-            dataManager = new BundleDataManager();
-            queueLoader = new QueueLoaderBundle(this);
+            dataManager = new BundleDataManager(this);
+            queueLoader = new QueueLoaderBundleFile(this);
             wwwManager = new WWWManager(this);
         }
 
@@ -65,9 +67,9 @@ namespace AssetBundles
         /// </summary>
         /// <param name="name">名称</param>
         /// <returns></returns>
-        public UnityEngine.Object GetAsset(string name)
+        public Object LoadAsset(string name)
         {
-            return GetAsset<UnityEngine.Object>(name);
+            return LoadAsset<Object>(name);
         }
 
         /// <summary>
@@ -76,9 +78,20 @@ namespace AssetBundles
         /// <typeparam name="T">类型</typeparam>
         /// <param name="name">名称</param>
         /// <returns></returns>
-        public T GetAsset<T>(string name) where T : UnityEngine.Object
+        public T LoadAsset<T>(string name) where T : Object
         {
-            return dataManager.GetAsset<T>(name);
+            return dataManager.LoadAsset<T>(name);
+        }
+
+        /// <summary>
+        /// 加载资源
+        /// </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="name">名称</param>
+        /// <returns></returns>
+        public T LoadAssetBundleAsync<T>(string name, CallBackAssetComplete<T> finishBack = null) where T : Object
+        {
+            return dataManager.LoadAssetBundleAsync<T>(name, finishBack);
         }
 
         /// <summary>
@@ -152,7 +165,7 @@ namespace AssetBundles
             var name = PathGlobal.DEPEND_FILE;
             wwwManager.LoadFile((string data) =>
             {
-                callBack(data); 
+                callBack(data);
             }, name, !isHaveUpdate);
         }
 

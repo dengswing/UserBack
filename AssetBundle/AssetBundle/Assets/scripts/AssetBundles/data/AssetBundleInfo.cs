@@ -29,27 +29,68 @@ namespace AssetBundles.data
         /// <returns></returns>
         public T LoadAsset<T>(string path) where T : Object
         {
-            return GetAsset<T>(path);
+            return LoadAssetBundle<T>(path);
         }
 
-        protected virtual T GetAsset<T>(string path) where T : Object
+        /// <summary>
+        /// 替换路径
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        internal string ReplacePath(string path)
+        {
+            path = path.ToLower();
+            return string.Format("assets/resources/{0}", path);
+        }
+
+        /// <summary>
+        /// 获取缓存内的
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        internal T GetCacheAsset<T>(string path) where T : Object
+        {
+            if (bundlesCacheRes.ContainsKey(path))
+            {
+                return (T)bundlesCacheRes[path];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 保存资源
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="asset"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        internal T SetAssetBundle<T>(Object asset, string path) where T : Object
+        {
+            T data = GetCacheAsset<T>(path);
+            if (data == null)
+            {
+                data = (T)asset;
+                bundlesCacheRes.Add(path, data);
+            }
+
+            return data;
+        }
+
+        /// <summary>
+        /// 加载资源
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        protected virtual T LoadAssetBundle<T>(string path) where T : Object
         {
             T data = default(T);
             if (bundle == null) return data;
+            path = ReplacePath(path);
 
-            // var non = bundle.mainAsset;
-
-            string[] asset = bundle.GetAllAssetNames();
-            string[] unity = bundle.GetAllScenePaths();
-
-            path = path.ToLower();
-            path = string.Format("assets/resources/{0}", path);
-
-            if (bundlesCacheRes.ContainsKey(path))
-            {
-                data = (T)bundlesCacheRes[path];
-            }
-            else if (bundle.Contains(path))
+            data = GetCacheAsset<T>(path);
+            if (data == null && bundle.Contains(path))
             {
                 try
                 {
@@ -66,6 +107,5 @@ namespace AssetBundles.data
 
             return data;
         }
-
     }
 }

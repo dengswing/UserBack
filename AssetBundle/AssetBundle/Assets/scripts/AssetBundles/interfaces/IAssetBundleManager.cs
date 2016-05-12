@@ -20,7 +20,7 @@ namespace AssetBundles
         /// </summary>
         /// <param name="name">名称</param>
         /// <returns></returns>
-        UnityEngine.Object GetAsset(string name);
+        UnityEngine.Object LoadAsset(string name);
 
         /// <summary>
         /// 获取资源
@@ -28,6 +28,6 @@ namespace AssetBundles
         /// <typeparam name="T">类型</typeparam>
         /// <param name="name">名称</param>
         /// <returns></returns>
-        T GetAsset<T>(string name) where T : UnityEngine.Object;
+        T LoadAsset<T>(string name) where T : UnityEngine.Object;
     }
 }

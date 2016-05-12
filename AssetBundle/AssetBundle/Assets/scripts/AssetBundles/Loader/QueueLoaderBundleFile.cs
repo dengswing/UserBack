@@ -7,7 +7,7 @@ namespace AssetBundles.Loader
     /// <summary>
     /// 队列加载
     /// </summary>
-    public class QueueLoaderBundle
+    public class QueueLoaderBundleFile
     {
         #region property
 
@@ -32,7 +32,7 @@ namespace AssetBundles.Loader
         Dictionary<string, CallBackLoaderComplete> dComplete;
         #endregion
 
-        public QueueLoaderBundle(AssetBundleManager bundleManager)
+        public QueueLoaderBundleFile(AssetBundleManager bundleManager)
         {
             this.bundleManager = bundleManager;
             requestQueue = new Queue<AssetBundleLoaderAbs>();

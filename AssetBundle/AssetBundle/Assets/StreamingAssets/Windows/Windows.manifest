@@ -4,3 +4,7 @@ AssetBundleManifest:
     Info_0:
       Name: prefab.unity3d
       Dependencies: {}
+    Info_1:
+      Name: materials.unity3d
+      Dependencies:
+        Dependency_0: prefab.unity3d
