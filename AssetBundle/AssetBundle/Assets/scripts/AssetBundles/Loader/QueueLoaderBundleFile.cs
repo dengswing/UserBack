@@ -64,6 +64,12 @@ namespace AssetBundles.Loader
         /// <param name="handler"></param>
         public void Load(Dictionary<string, DependInfo> infoAll, CallBackLoaderComplete handler)
         {
+            if (null == infoAll)
+            {
+                if (null != handler) handler(null);
+                return;
+            }
+
             foreach (var item in infoAll)
             {
                 Load(item.Value, handler);
@@ -103,7 +109,7 @@ namespace AssetBundles.Loader
 
             AssetBundleLoaderAbs loader;
 #if UNITY_EDITOR
-            // loader = new AssetBundleLoaderEditor();
+            //loader = new AssetBundleLoaderEditor();
             loader = new AssetBundleLoaderMobile();
 #else
             loader = new AssetBundleLoaderMobile(); 

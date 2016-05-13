@@ -178,7 +178,8 @@ namespace AssetBundles
         {
             wwwManager.LoadAssetBundle((AssetBundle asset) =>
             {
-                var manifest = asset.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+
+                var manifest = (asset ? asset.LoadAsset<AssetBundleManifest>("AssetBundleManifest") : null);
                 callBack(manifest);
 
             }, path, version);

@@ -18,7 +18,7 @@ namespace AssetBundles.Loader
         Dictionary<string, LoaderAssetData> loadAsset;
 
         //同时最大的加载数
-        const int MAX_REQUEST = 5;
+        const int MAX_REQUEST = 1;
 
         //可再次申请的加载数
         int requestRemain = MAX_REQUEST;
@@ -57,7 +57,7 @@ namespace AssetBundles.Loader
         void RequestLoadBundle(LoaderAssetData loader, bool isNext = false)
         {
             var id = loader.id;
-            if (loadAsset.ContainsKey(id))
+            if (loadAsset.ContainsKey(id) && loadAsset[id].IsLoading)
             {
                 if (loadAsset[id].finishBack == null)
                     loadAsset[id].finishBack = loader.finishBack;
@@ -66,7 +66,7 @@ namespace AssetBundles.Loader
                 return;
             }
 
-           if(!isNext) loadAsset.Add(id, loader);
+            if (!isNext) loadAsset.Add(id, loader);
 
             if (requestRemain < 0) requestRemain = 0;
 
@@ -85,7 +85,7 @@ namespace AssetBundles.Loader
             requestRemain--;
             bundleManager.StartCoroutine(LoadAssetBundle(loader, LoadComplete));
         }
-        
+
         IEnumerator LoadAssetBundle(LoaderAssetData loader, Action<LoaderAssetData, Object> finishBack)
         {
             AssetBundleInfo info = loader.info;
@@ -98,12 +98,21 @@ namespace AssetBundles.Loader
                 yield break;
             }
 
+            loader.state = LoadState.State_Loading;
             var bundle = info.bundle;
-            var request = bundle.LoadAssetAsync(path);
-            yield return request;
-            data = info.SetAssetBundle<Object>(request.asset, path);
 
-           // yield return new WaitForSeconds(3f);
+            if (bundle.Contains(path))
+            {
+                var request = bundle.LoadAssetAsync(path);
+                yield return request;
+                data = info.SetAssetBundle<Object>(request.asset, path);
+            }
+            else
+            {
+                loader.state = LoadState.State_Error;
+            }
+            
+            yield return new WaitForSeconds(3f);
             finishBack(loader, data);
         }
         #endregion
@@ -115,6 +124,8 @@ namespace AssetBundles.Loader
             UnityEngine.Debug.Log("LoadAssetBundleAsync:: finish=" + loader.path);
 #endif
             requestRemain++;
+
+            loader.state = LoadState.State_Complete;
 
             if (requestQueue.Count > 0)
             {
@@ -130,6 +141,7 @@ namespace AssetBundles.Loader
 
     class LoaderAssetData
     {
+        public LoadState state;
         public AssetBundleInfo info;
         public string path;
         public Action<Object> finishBack;
@@ -142,6 +154,14 @@ namespace AssetBundles.Loader
         /// <summary>
         /// 唯一id
         /// </summary>
-        public string id{ get { return info.BundleName + "_" + path; } }
+        public string id { get { return info.BundleName + "_" + path; } }
+
+        /// <summary>
+        /// 是否加载中
+        /// </summary>
+        public virtual bool IsLoading
+        {
+            get { return state == LoadState.State_Loading; }
+        }
     }
 }

@@ -18,6 +18,8 @@ namespace AssetBundles.parse
 
         QueueLoaderAsset queueLoaderAsset;
 
+        EditorInfo assetInfo;
+
         #region get set
         /// <summary>
         /// asset依赖信息
@@ -71,16 +73,27 @@ namespace AssetBundles.parse
         T LoadAssetBundle<T>(string path, CallBackAssetComplete<T> finishBack = null, bool isAsync = false) where T : Object
         {
             path = path.ToLower();
-            if (null == assetBundleDepend || !assetBundleDepend.ContainsKey(path)) return default(T);
-
             T data = default(T);
+
+            if (null == assetBundleDepend || !assetBundleDepend.ContainsKey(path))
+            {
+                data = GetLocalAsset<T>(path);
+                if (isAsync && finishBack != null) finishBack(data);
+                return data;
+            }
+            
             var bundleName = assetBundleDepend[path];
             if (AssetBundleInfoData.ContainsKey(bundleName))
             {
+//#if UNITY_EDITOR
+//                data = AssetBundleInfoData[bundleName].LoadAsset<T>(path);
+//                if (isAsync && finishBack != null) finishBack(data);
+//#else
                 if (isAsync)
                     LoadAssetBundleAsync<T>(AssetBundleInfoData[bundleName], path, finishBack);
                 else
                     data = AssetBundleInfoData[bundleName].LoadAsset<T>(path);
+//#endif
             }
             return data;
         }
@@ -92,6 +105,13 @@ namespace AssetBundles.parse
                 if (null != finishBack) finishBack((T)asset);
             });
         }
+
+        T GetLocalAsset<T>(string path) where T : Object
+        {
+            if (null == assetInfo) assetInfo = new EditorInfo();
+            return assetInfo.LoadAsset<T>(path);
+        }
+
         #endregion
 
         /// <summary>
@@ -101,6 +121,8 @@ namespace AssetBundles.parse
         internal void ParseDepend(string value)
         {
             assetVersion = Newtonsoft.Json.JsonConvert.DeserializeObject<VersionInfo>(value);
+
+            if (null == assetVersion) return;
 
             if (null == assetBundleDepend) assetBundleDepend = new Dictionary<string, string>();
             assetBundleDepend.Clear();

@@ -64,7 +64,10 @@ namespace AssetBundles.Loader
 #if DEBUG_CONSOLE
                 UnityEngine.Debug.LogFormat("LoaderManager::Error");
 #endif
-                yield return null;
+                backComplete(null);
+                www.Dispose();
+                www = null;
+                yield break;
             }
 
             backComplete(www.assetBundle);
@@ -84,7 +87,7 @@ namespace AssetBundles.Loader
             if (www.error != null)
             {
 #if DEBUG_CONSOLE
-                UnityEngine.Debug.LogFormat("LoaderManager::Error！path={0}",www.url);
+                UnityEngine.Debug.LogFormat("LoaderManager::Error！path={0}", www.url);
 #endif
                 yield return null;
             }
@@ -144,7 +147,7 @@ namespace AssetBundles.Loader
         /// <param name="path"></param>
         /// <param name="callBack"></param>
         /// <returns></returns>
-        IEnumerator ServerLoaderFile(string path, Action<string> callBack,string name)
+        IEnumerator ServerLoaderFile(string path, Action<string> callBack, string name)
         {
             WWW www = new WWW(path);
 
@@ -158,7 +161,11 @@ namespace AssetBundles.Loader
 #if DEBUG_CONSOLE
                 UnityEngine.Debug.Log("ServerLoader:: Error! url=" + www.url);
 #endif
-                yield return null;
+                www.Dispose();
+                www = null;
+
+                callBack(string.Empty);
+                yield break;
             }
 
             var allContent = www.text;
@@ -169,7 +176,7 @@ namespace AssetBundles.Loader
             callBack(allContent);
         }
 
-        void ReplaceLocalRes(WWW www,string name)
+        void ReplaceLocalRes(WWW www, string name)
         {
             if (www == null || www.bytes == null) return;
 
