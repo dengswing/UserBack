@@ -1,9 +1,11 @@
 ﻿<log4net>
   <appender name="UdpAppender" type="log4net.Appender.UdpAppender">
     
-	<localPort value="9090" />
+	<file value="c:\TestLog4net.TXT"/>  
+
+	<localPort value="8081" />
     
-	<remoteAddress value="192.168.199.80" />
+	<remoteAddress value="172.17.1.238" />
     
 	<remotePort value="8081" />
     
