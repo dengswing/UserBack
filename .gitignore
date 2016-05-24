@@ -32,3 +32,5 @@ AssetBundle/AssetBundle/Assets/StreamingAssets/
 Testing/bake/
 Log/Log4net/Library/
 Log/Log4net/Temp/
+Log/Reporter/Library/
+Log/Reporter/Temp/
