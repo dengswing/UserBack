@@ -30,5 +30,5 @@ AssetBundle/AssetBundle/Temp/
 Testing/debug/Reporter/Library/
 AssetBundle/AssetBundle/Assets/StreamingAssets/
 Testing/bake/
-Log/Library/
-Log/Temp/
+Log/Log4net/Library/
+Log/Log4net/Temp/
