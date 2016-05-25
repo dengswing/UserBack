@@ -1,24 +1,28 @@
+
 using UnityEngine;
 
 namespace SimpleFramework
 {
     public class Log4U : MonoBehaviour
     {
-        private log4net.ILog log = Log.GetLog<Log4U>();
+        private log4net.ILog log;
         private static Log4U mInstance = null;
 
         void Awake()
         {
+
+            log = Log.GetLog<Log4U>();
             mInstance = this;
 
 #if !UNITY_EDITOR
             //在这里做一个Log的监听
             Application.logMessageReceived += HandleLog;
 #endif
-
             // First Log. TODO Add some info...
             log.Debug("DoraTD TODO Info...");
 
+
+            UnityEngine.Debug.Log("awake");
             log.Debug("测试信息");
             log.Info("提示信息");
             log.Warn("警告信息");
@@ -26,9 +30,9 @@ namespace SimpleFramework
             //log.Fatal("致命错误信息");
         }
 
-        void OnGUI()
+        void Update()
         {
-            // TODO output to screen
+            log.Debug("udp udp udp！！！！！！欢迎");
         }
 
 #if !UNITY_EDITOR

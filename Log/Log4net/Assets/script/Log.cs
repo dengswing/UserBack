@@ -5,19 +5,19 @@ using System.IO;
 using UnityEngine;
 using ILogger = log4net.Core.ILogger;
 
-#pragma warning disable 0414
-
 namespace SimpleFramework
 {
 
     public static class Log
     {
-        private static string mCfgName = "log4net";
+        static string _fileName = "log4net";
 
         static Log()
         {
-            byte[] xml = (Resources.Load(mCfgName, typeof(TextAsset)) as TextAsset).bytes;
+            byte[] xml = (Resources.Load(_fileName, typeof(TextAsset)) as TextAsset).bytes;
             XmlConfigurator.Configure(new MemoryStream(xml));
+
+            Debug.Log("Log");
         }
 
         public static ILog GetLog<T>()
@@ -27,6 +27,7 @@ namespace SimpleFramework
             log.Enabled = true;
             return log;
 #else
+            Debug.Log("T"+ typeof(T));
             return LogManager.GetLogger(typeof(T));
 #endif
         }
