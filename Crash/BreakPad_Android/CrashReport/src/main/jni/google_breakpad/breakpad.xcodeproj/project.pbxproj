@@ -1,0 +1,194 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		C95D17B21CFD8FA500DAF15D /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		C95D17B31CFD8FA500DAF15D /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		C95D17B41CFD8FA500DAF15D /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
+		C95D17B51CFD8FA500DAF15D /* aclocal.m4 */ = {isa = PBXFileReference; lastKnownFileType = text; path = aclocal.m4; sourceTree = "<group>"; };
+		C95D17B61CFD8FA500DAF15D /* android */ = {isa = PBXFileReference; lastKnownFileType = folder; path = android; sourceTree = "<group>"; };
+		C95D17B71CFD8FA500DAF15D /* AUTHORS */ = {isa = PBXFileReference; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
+		C95D17B81CFD8FA500DAF15D /* autotools */ = {isa = PBXFileReference; lastKnownFileType = folder; path = autotools; sourceTree = "<group>"; };
+		C95D17B91CFD8FA500DAF15D /* breakpad-client.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = "breakpad-client.pc"; sourceTree = "<group>"; };
+		C95D17BA1CFD8FA500DAF15D /* breakpad-client.pc.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = "breakpad-client.pc.in"; sourceTree = "<group>"; };
+		C95D17BB1CFD8FA500DAF15D /* breakpad.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = breakpad.pc; sourceTree = "<group>"; };
+		C95D17BC1CFD8FA500DAF15D /* breakpad.pc.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = breakpad.pc.in; sourceTree = "<group>"; };
+		C95D17BD1CFD8FA500DAF15D /* ChangeLog */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChangeLog; sourceTree = "<group>"; };
+		C95D17BE1CFD8FA500DAF15D /* codereview.settings */ = {isa = PBXFileReference; lastKnownFileType = text; path = codereview.settings; sourceTree = "<group>"; };
+		C95D17BF1CFD8FA500DAF15D /* config.log */ = {isa = PBXFileReference; lastKnownFileType = text; path = config.log; sourceTree = "<group>"; };
+		C95D17C01CFD8FA500DAF15D /* config.status */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = config.status; sourceTree = "<group>"; };
+		C95D17C11CFD8FA500DAF15D /* configure */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = configure; sourceTree = "<group>"; };
+		C95D17C21CFD8FA500DAF15D /* configure.ac */ = {isa = PBXFileReference; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
+		C95D17C31CFD8FA500DAF15D /* DEPS */ = {isa = PBXFileReference; lastKnownFileType = text; path = DEPS; sourceTree = "<group>"; };
+		C95D17C41CFD8FA500DAF15D /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = docs; sourceTree = "<group>"; };
+		C95D17C51CFD8FA500DAF15D /* INSTALL */ = {isa = PBXFileReference; lastKnownFileType = text; path = INSTALL; sourceTree = "<group>"; };
+		C95D17C61CFD8FA500DAF15D /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		C95D17C71CFD8FA500DAF15D /* m4 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = m4; sourceTree = "<group>"; };
+		C95D17C81CFD8FA500DAF15D /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		C95D17C91CFD8FA500DAF15D /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		C95D17CA1CFD8FA500DAF15D /* Makefile.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
+		C95D17CB1CFD8FA500DAF15D /* NEWS */ = {isa = PBXFileReference; lastKnownFileType = text; path = NEWS; sourceTree = "<group>"; };
+		C95D17CC1CFD8FA500DAF15D /* README.ANDROID */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.ANDROID; sourceTree = "<group>"; };
+		C95D17CD1CFD8FA500DAF15D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C95D17CE1CFD8FA500DAF15D /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
+		C95D17CF1CFD8FA500DAF15D /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		C95D17AC1CFD8FA500DAF15D = {
+			isa = PBXGroup;
+			children = (
+				C95D17B21CFD8FA500DAF15D /* .DS_Store */,
+				C95D17B31CFD8FA500DAF15D /* .gitignore */,
+				C95D17B41CFD8FA500DAF15D /* .travis.yml */,
+				C95D17B51CFD8FA500DAF15D /* aclocal.m4 */,
+				C95D17B61CFD8FA500DAF15D /* android */,
+				C95D17B71CFD8FA500DAF15D /* AUTHORS */,
+				C95D17B81CFD8FA500DAF15D /* autotools */,
+				C95D17B91CFD8FA500DAF15D /* breakpad-client.pc */,
+				C95D17BA1CFD8FA500DAF15D /* breakpad-client.pc.in */,
+				C95D17BB1CFD8FA500DAF15D /* breakpad.pc */,
+				C95D17BC1CFD8FA500DAF15D /* breakpad.pc.in */,
+				C95D17BD1CFD8FA500DAF15D /* ChangeLog */,
+				C95D17BE1CFD8FA500DAF15D /* codereview.settings */,
+				C95D17BF1CFD8FA500DAF15D /* config.log */,
+				C95D17C01CFD8FA500DAF15D /* config.status */,
+				C95D17C11CFD8FA500DAF15D /* configure */,
+				C95D17C21CFD8FA500DAF15D /* configure.ac */,
+				C95D17C31CFD8FA500DAF15D /* DEPS */,
+				C95D17C41CFD8FA500DAF15D /* docs */,
+				C95D17C51CFD8FA500DAF15D /* INSTALL */,
+				C95D17C61CFD8FA500DAF15D /* LICENSE */,
+				C95D17C71CFD8FA500DAF15D /* m4 */,
+				C95D17C81CFD8FA500DAF15D /* Makefile */,
+				C95D17C91CFD8FA500DAF15D /* Makefile.am */,
+				C95D17CA1CFD8FA500DAF15D /* Makefile.in */,
+				C95D17CB1CFD8FA500DAF15D /* NEWS */,
+				C95D17CC1CFD8FA500DAF15D /* README.ANDROID */,
+				C95D17CD1CFD8FA500DAF15D /* README.md */,
+				C95D17CE1CFD8FA500DAF15D /* scripts */,
+				C95D17CF1CFD8FA500DAF15D /* src */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		C95D17B11CFD8FA500DAF15D /* breakpad */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = C95D17D01CFD8FA500DAF15D /* Build configuration list for PBXLegacyTarget "breakpad" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = /Users/shinezone/Documents/bptest/BpTest/breakpad;
+			dependencies = (
+			);
+			name = breakpad;
+			passBuildSettingsInEnvironment = 1;
+			productName = breakpad;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		C95D17AD1CFD8FA500DAF15D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = C95D17B01CFD8FA500DAF15D /* Build configuration list for PBXProject "breakpad" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C95D17AC1CFD8FA500DAF15D;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C95D17B11CFD8FA500DAF15D /* breakpad */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		C95D17AE1CFD8FA500DAF15D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		C95D17AF1CFD8FA500DAF15D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		C95D17D11CFD8FA500DAF15D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = breakpad;
+			};
+			name = Debug;
+		};
+		C95D17D21CFD8FA500DAF15D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = breakpad;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C95D17B01CFD8FA500DAF15D /* Build configuration list for PBXProject "breakpad" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C95D17AE1CFD8FA500DAF15D /* Debug */,
+				C95D17AF1CFD8FA500DAF15D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C95D17D01CFD8FA500DAF15D /* Build configuration list for PBXLegacyTarget "breakpad" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C95D17D11CFD8FA500DAF15D /* Debug */,
+				C95D17D21CFD8FA500DAF15D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C95D17AD1CFD8FA500DAF15D /* Project object */;
+}

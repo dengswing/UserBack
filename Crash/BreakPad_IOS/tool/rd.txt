@@ -1,0 +1,5 @@
+./dump_syms CarshDemo.dSYM >CarshDemo.sym
+
+mkdir -p symbols/CarshDemo/$code/
+mv CarshDemo.sym symbols/CarshDemo/$code/
+./minidump_stackwalk $dump.dmp symbols > crashed.log

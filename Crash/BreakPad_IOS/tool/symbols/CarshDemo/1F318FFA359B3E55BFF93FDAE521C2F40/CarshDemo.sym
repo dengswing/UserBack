@@ -1,0 +1,75 @@
+MODULE mac armv7 1F318FFA359B3E55BFF93FDAE521C2F40 CarshDemo
+FILE 0 /Users/shinezone/Documents/UnityRoot/BreakPadIos/CarshDemo/AppDelegate.h
+FILE 1 /Users/shinezone/Documents/UnityRoot/BreakPadIos/CarshDemo/AppDelegate.m
+FILE 2 /Users/shinezone/Documents/UnityRoot/BreakPadIos/CarshDemo/ViewController.m
+FILE 3 /Users/shinezone/Documents/UnityRoot/BreakPadIos/CarshDemo/main.m
+FUNC 6ad4 bc 0 -[ViewController viewDidLoad]
+6ad4 6 20 2
+6ada 22 21 2
+6afc 1c 30 2
+6b18 14 30 2
+6b2c c 31 2
+6b38 2 31 2
+6b3a 10 31 2
+6b4a 26 32 2
+6b70 2 32 2
+6b72 1a 32 2
+6b8c 4 33 2
+FUNC 6b90 2c 0 -[ViewController didReceiveMemoryWarning]
+6b90 6 35 2
+6b96 22 36 2
+6bb8 4 38 2
+FUNC 6bbc c 0 -[ViewController clickCrash:]
+6bbc a 40 2
+6bc6 2 42 2
+FUNC 6bc8 4 0 -[AppDelegate application:didFinishLaunchingWithOptions:]
+6bc8 4 24 1
+FUNC 6bcc 2 0 -[AppDelegate applicationWillResignActive:]
+6bcc 2 29 1
+FUNC 6bce 2 0 -[AppDelegate applicationDidEnterBackground:]
+6bce 2 34 1
+FUNC 6bd0 2 0 -[AppDelegate applicationWillEnterForeground:]
+6bd0 2 38 1
+FUNC 6bd2 2 0 -[AppDelegate applicationDidBecomeActive:]
+6bd2 2 42 1
+FUNC 6bd4 2 0 -[AppDelegate applicationWillTerminate:]
+6bd4 2 46 1
+FUNC 6bd6 10 0 -[AppDelegate window]
+6bd6 10 13 0
+FUNC 6be6 26 0 -[AppDelegate setWindow:]
+6be6 6 13 0
+6bec 20 0 0
+FUNC 6c0c 14 0 -[AppDelegate .cxx_destruct]
+6c0c 14 17 1
+FUNC 6c20 5c 0 main
+6c20 c 12 3
+6c2c 6 13 3
+6c32 1c 14 3
+6c4e c 14 3
+6c5a e 14 3
+6c68 6 14 3
+6c6e 6 15 3
+6c74 8 16 3
+PUBLIC 0 0 _mh_execute_header
+PUBLIC 6c7c 0 objc_release$shim
+PUBLIC 6c88 0 objc_storeStrong$shim
+PUBLIC 6c94 0  stub helpers
+PUBLIC 86e0 0 OBJC_IVAR_$_AppDelegate._window
+PUBLIC 86e4 0 OBJC_CLASS_$_ViewController
+PUBLIC 86f8 0 OBJC_METACLASS_$_ViewController
+PUBLIC 870c 0 OBJC_METACLASS_$_AppDelegate
+PUBLIC 8720 0 OBJC_CLASS_$_AppDelegate
+PUBLIC 8794 0 crash
+STACK CFI INIT 6ad4 bc .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6b90 2c .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6bbc c .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6bc8 4 .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6bcc 2 .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6bce 2 .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6bd0 2 .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6bd2 2 .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6bd4 2 .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6bd6 10 .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6be6 26 .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6c0c 14 .cfa: sp 0 + .ra: lr
+STACK CFI INIT 6c20 5c .cfa: sp 0 + .ra: lr
