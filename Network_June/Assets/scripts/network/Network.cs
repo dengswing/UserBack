@@ -5,9 +5,27 @@ namespace com.shinezone.network
     /// <summary>
     /// 网络请求父类
     /// </summary>
-    public class Network
+    public class Network<T> where T :Network<T>, new ()
     {
-        public static readonly Network Instance = new Network();
+        #region 获取实例
+        private static T sInstance;
+        private static object sLock = new object();
+        public static T Instance
+        {
+            get
+            {
+                lock (sLock)
+                {
+                    if (sInstance == null)
+                    {
+                        sInstance = new T();
+                    }
+
+                    return sInstance;
+                }
+            }
+        }
+        #endregion
 
         private Thread sendThread;
         private Thread recvThread;
@@ -36,19 +54,28 @@ namespace com.shinezone.network
             recvThread.Abort();
         }
 
+        /// <summary>
+        /// 发起请求
+        /// </summary>
+        public void Post()
+        {
+
+        }
+
+
         #region 子类必须重载
         /// <summary>
-        /// 发送消息，子类必须重载
+        /// 发送消息
         /// </summary>
-        public virtual void Send()
+        protected virtual void Send()
         {
 
         }
 
         /// <summary>
-        /// 接收信息，子类必须重载
+        /// 接收信息
         /// </summary>
-        public virtual void Recv()
+        protected virtual void Recv()
         {
 
         }
