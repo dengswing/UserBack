@@ -5,7 +5,7 @@ namespace com.shinezone.network
     /// <summary>
     /// 网络请求父类
     /// </summary>
-    public class Network<T> where T :Network<T>,new ()
+    public class Network<T> where T : Network<T>, new()
     {
         #region 实例化
         private static T sInstance;
@@ -31,6 +31,7 @@ namespace com.shinezone.network
         private Thread recvThread;
         static readonly object sendLockObj = new object();
         static readonly object recvLockObj = new object();
+        protected bool isStart;
 
         public Network()
         {
@@ -52,6 +53,8 @@ namespace com.shinezone.network
         {
             sendThread.Abort();
             recvThread.Abort();
+
+            isStart = false;
         }
 
         /// <summary>
@@ -61,7 +64,6 @@ namespace com.shinezone.network
         {
 
         }
-
 
         #region 子类必须重载
         /// <summary>
@@ -83,8 +85,10 @@ namespace com.shinezone.network
 
         private void Start()
         {
+            if (isStart) return;
             sendThread.Start();
             recvThread.Start();
+            isStart = true;
         }
 
         protected virtual void Init()
@@ -99,17 +103,15 @@ namespace com.shinezone.network
         {
             while (true)
             {
-                lock (sendLockObj)
+                try
                 {
-                    try
-                    {
-                        Send();
-                    }
-                    catch (System.Exception ex)
-                    {
-                        UnityEngine.Debug.LogError("SendHandler:" + ex.Message);
-                    }
+                    Send();
                 }
+                catch (System.Exception ex)
+                {
+                    UnityEngine.Debug.LogError("SendHandler:" + ex.Message);
+                }
+
                 Thread.Sleep(1);
             }
         }
@@ -118,17 +120,15 @@ namespace com.shinezone.network
         {
             while (true)
             {
-                lock (recvLockObj)
+                try
                 {
-                    try
-                    {
-                        Recv();
-                    }
-                    catch (System.Exception ex)
-                    {
-                        UnityEngine.Debug.LogError("RecvHandler:" + ex.Message);
-                    }
+                    Recv();
                 }
+                catch (System.Exception ex)
+                {
+                    UnityEngine.Debug.LogError("RecvHandler:" + ex.Message);
+                }
+
                 Thread.Sleep(1);
             }
         }

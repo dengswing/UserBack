@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 
 namespace com.shinezone.network
 {
     /// <summary>
-    /// tcp 发送
+    /// udp 发送
     /// </summary>
-    public class TcpNetwork : Network<TcpNetwork>
+    public class UdpNetwork : Network<UdpNetwork>
     {
         private Queue<ByteBuffer> buffer;
-        private SocketClient socketClient;
+        private UdpClient socketClient;
+        private IPEndPoint iPEndPoint;
+        private Action<int, ByteBuffer> resultBack;
+
 
         protected override void Init()
         {
             base.Init();
-            socketClient = new SocketClient();
+            socketClient = new UdpClient();
             buffer = new Queue<ByteBuffer>();
         }
 
@@ -36,13 +41,8 @@ namespace com.shinezone.network
         /// <param name="resultBack"></param>
         public void ConnectServer(string host, int port, Action<int, ByteBuffer> resultBack)
         {
-            ConnectClient(host, port, resultBack);
-        }
-
-        private void ConnectClient(string host, int port, Action<int, ByteBuffer> resultBack)
-        {
-            socketClient.SendConnect(host, port);
-            socketClient.OnRegister(resultBack);
+            this.resultBack = resultBack;
+            iPEndPoint = new IPEndPoint(IPAddress.Parse(host), port);
 
             if (!isStart) Initialise();
         }
@@ -53,13 +53,17 @@ namespace com.shinezone.network
 
             var byteBuff = buffer.Dequeue();
             if (byteBuff == null) return;
-            socketClient.SendMessage(byteBuff);
-            byteBuff = null;
+            var tByte = byteBuff.ToBytes();
+            socketClient.Send(tByte, tByte.Length, iPEndPoint);
         }
 
         protected override void Recv()
         {
             base.Recv();
+
+            IPEndPoint anyIP = null;
+            var tByte = socketClient.Receive(ref anyIP);
+            if (resultBack != null) resultBack(1, new ByteBuffer(tByte));
         }
     }
 }

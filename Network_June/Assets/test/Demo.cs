@@ -8,11 +8,11 @@ public class Demo : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        TcpNetwork.Instance.ConnectServer("172.0.0.1", 8080, ResultBack);
+        UdpNetwork.Instance.ConnectServer("172.0.0.1", 8080, ResultBack);
 
         var data = new ByteBuffer();
         data.WriteString("hello");
-        TcpNetwork.Instance.SendMessage(data);
+        UdpNetwork.Instance.SendMessage(data);
     }
 
     void ResultBack(int code, ByteBuffer data)
@@ -24,5 +24,10 @@ public class Demo : MonoBehaviour
     void Update()
     {
 
+    }
+
+    void OnDestroy()
+    {
+        UdpNetwork.Instance.Shutdown();
     }
 }
