@@ -114,7 +114,8 @@ namespace com.shinezone.network
         {
             outStream = client.GetStream();
             client.GetStream().BeginRead(byteBuffer, 0, MAX_READ, new AsyncCallback(OnRead), null);
-            if (resultBack != null) resultBack(Protocal.Connect, new ByteBuffer());
+
+            if (resultBack != null) resultBack.Invoke(Protocal.Connect, new ByteBuffer());
         }
 
         /// <summary>

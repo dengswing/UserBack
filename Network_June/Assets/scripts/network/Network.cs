@@ -5,8 +5,28 @@ namespace com.shinezone.network
     /// <summary>
     /// 网络请求父类
     /// </summary>
-    public class Network : SingleInstance<Network>
+    public class Network<T> where T :Network<T>,new ()
     {
+        #region 实例化
+        private static T sInstance;
+        private static object sLock = new object();
+        public static T Instance
+        {
+            get
+            {
+                lock (sLock)
+                {
+                    if (sInstance == null)
+                    {
+                        sInstance = new T();
+                    }
+
+                    return sInstance;
+                }
+            }
+        }
+        #endregion
+
         private Thread sendThread;
         private Thread recvThread;
         static readonly object sendLockObj = new object();
