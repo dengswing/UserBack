@@ -1,0 +1,8 @@
+1、mac下使用ios版本，目录在breakpad/src/client/ios，直接把Breakpad.xcodeproj拖拽到自己的应用中
+2、特别注意的是debug模式下，dump文件是不会生成的，修改为release版本，运行右边点击有个Edit Scheme 打开看到buildConfiguration 改成release版本。
+记得debug excutable不要勾选
+3、解析dump工具在breakpad/src/tools/mac/dump_syms 目录下，打开dump_syms.xcodeproj 运行会编译出dump_syms可以执行文件，使用这个解析项目发布生成的.dSYM文件
+4、breakpad/src/processor目录下面的minidump_stackwalk是用来解析dump的 
+5、使用的话，把products中的.framework加入到要接入的app
+6、把framework copy到app的一个目录下，然后选中项目add Files to 加入进来。项目记得绑定依赖 general->linked Frameworks and Libraries加入刚刚的framework
+7、使用引入包的时候记得import <CrashReport/CrashReport.h> ,是尖括号。

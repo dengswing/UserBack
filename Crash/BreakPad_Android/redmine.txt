@@ -1,0 +1,7 @@
+1、build.gradle 里面有使用ndk-build  so文件
+2、jni目录放的是breakpad代码和c++ crashreport的代码
+3、生成的dump文件，只能的linux系统下解析，解析工具在 \CrashReport\src\tool目录下
+4、gbreakpad-master 的需要使用 .configure && make来生成dump解析工具
+5、breakpad/src/processor目录下面的minidump_stackwalk是用来解析dump的 
+6、breakpad\src\tools\linux\dump_syms 目录下的dump_syms用于解析app的so文件 
+7、使用的话，直接copy代码过去。然后build.gradle里面 dependenies 里面加入 compile project(':CrashReport')
