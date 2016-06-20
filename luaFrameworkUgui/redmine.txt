@@ -1,0 +1,7 @@
+1、打包工具类 菜单栏；LuaFramework ， 具体类Packager.cs
+2、GameManager.cs -> OnInitialize()  启动lua关联
+3、LuaFramework/Lua目录下是所有的lua文件
+4、LuaFramework/ToLua目录是toLua的框架文件
+5、CustomSettings.cs 设置需要导出和lua通信的类 
+6、当你修改了导出的lua类时，你需要重新使用Lua->Generate All 导出，lua才能正常使用
+7、
