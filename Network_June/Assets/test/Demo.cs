@@ -8,11 +8,14 @@ public class Demo : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        UdpNetwork.Instance.ConnectServer("172.0.0.1", 8080, ResultBack);
+        UdpNetwork.Instance.ConnectServer("127.0.0.1", 8080, ResultBack);
 
         var data = new ByteBuffer();
         data.WriteString("hello");
         UdpNetwork.Instance.SendMessage(data);
+
+
+       // BaseThread.GetInstance();
     }
 
     void ResultBack(int code, ByteBuffer data)

@@ -51,6 +51,7 @@ namespace com.shinezone.network
         {
             base.Send();
 
+            if (buffer.Count <= 0) return;
             var byteBuff = buffer.Dequeue();
             if (byteBuff == null) return;
             socketClient.SendMessage(byteBuff);

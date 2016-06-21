@@ -55,6 +55,8 @@ namespace com.shinezone.network
             recvThread.Abort();
 
             isStart = false;
+
+            UnityEngine.Debug.Log("Shutdown !!!!!!!!!!!!!!!!!");
         }
 
         /// <summary>
@@ -103,16 +105,20 @@ namespace com.shinezone.network
         {
             while (true)
             {
-                try
+                lock (sendLockObj)
                 {
-                    Send();
-                }
-                catch (System.Exception ex)
-                {
-                    UnityEngine.Debug.LogError("SendHandler:" + ex.Message);
-                }
+                    try
+                    {
+                        Send();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        UnityEngine.Debug.Log("SendHandler:Error" + ex.Message);
+                    }
 
-                Thread.Sleep(1);
+                    UnityEngine.Debug.Log("Send!");
+                    Thread.Sleep(500);
+                }
             }
         }
 
@@ -120,16 +126,21 @@ namespace com.shinezone.network
         {
             while (true)
             {
-                try
+                lock (recvLockObj)
                 {
-                    Recv();
-                }
-                catch (System.Exception ex)
-                {
-                    UnityEngine.Debug.LogError("RecvHandler:" + ex.Message);
+                    try
+                    {
+                        Recv();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        UnityEngine.Debug.Log("RecvHandler:Error" + ex.Message);
+                    }
+
+                    UnityEngine.Debug.Log("Recv!");
+                    Thread.Sleep(500);
                 }
 
-                Thread.Sleep(1);
             }
         }
 

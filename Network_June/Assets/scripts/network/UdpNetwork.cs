@@ -11,15 +11,15 @@ namespace com.shinezone.network
     public class UdpNetwork : Network<UdpNetwork>
     {
         private Queue<ByteBuffer> buffer;
-        private UdpClient socketClient;
+        private Socket socketClient;
         private IPEndPoint iPEndPoint;
         private Action<int, ByteBuffer> resultBack;
-
+        private EndPoint serverEnd; //服务端
 
         protected override void Init()
         {
             base.Init();
-            socketClient = new UdpClient();
+            socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             buffer = new Queue<ByteBuffer>();
         }
 
@@ -43,7 +43,8 @@ namespace com.shinezone.network
         {
             this.resultBack = resultBack;
             iPEndPoint = new IPEndPoint(IPAddress.Parse(host), port);
-
+            IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+            serverEnd = (EndPoint)sender;
             if (!isStart) Initialise();
         }
 
@@ -51,19 +52,43 @@ namespace com.shinezone.network
         {
             base.Send();
 
+            if (buffer.Count <= 0) return;
             var byteBuff = buffer.Dequeue();
+
             if (byteBuff == null) return;
             var tByte = byteBuff.ToBytes();
-            socketClient.Send(tByte, tByte.Length, iPEndPoint);
-        }
 
+            try
+            {
+                socketClient.SendTo(tByte, tByte.Length, SocketFlags.None, iPEndPoint);
+                UnityEngine.Debug.Log("send:" + iPEndPoint);
+            }
+            catch (Exception)
+            {
+                UnityEngine.Debug.Log("send error!");
+            }
+        }
+        
         protected override void Recv()
         {
-            base.Recv();
+            base.Recv();          
 
-            IPEndPoint anyIP = null;
-            var tByte = socketClient.Receive(ref anyIP);
-            if (resultBack != null) resultBack(1, new ByteBuffer(tByte));
+            var tBuffer = new ByteBuffer();
+            byte[] tByte = new byte[1024];
+            try
+            {
+                socketClient.ReceiveFrom(tByte, ref serverEnd);
+                UnityEngine.Debug.Log("recv:" + tByte);
+            }
+            catch (Exception)
+            {
+                UnityEngine.Debug.Log("recv error!");
+            }
+
+            if (tByte != null)
+                tBuffer = new ByteBuffer(tByte);
+
+            if (resultBack != null) resultBack(1, tBuffer);
         }
     }
 }
