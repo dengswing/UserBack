@@ -97,6 +97,9 @@ namespace com.shinezone.network
         {
             sendThread = new Thread(SendHandler);
             recvThread = new Thread(RecvHandler);
+
+            sendThread.IsBackground = true;
+            recvThread.IsBackground = true;
         }
 
         #region 线程处理

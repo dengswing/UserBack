@@ -83,6 +83,7 @@ namespace com.shinezone.network
                 socketClient.Close();
                 return;
             }
+
             try
             {
                 IAsyncResult asyncSend = socketClient.BeginSend(msg, 0, msg.Length, SocketFlags.None, new AsyncCallback(SendCallback), socketClient);
@@ -124,7 +125,9 @@ namespace com.shinezone.network
                 //与服务器断开连接跳出循环  
                 Debug.Log("Failed to clientSocket server.");
                 socketClient.Close();
+                return;
             }
+
             try
             {
                 //接受数据保存至bytes当中  
