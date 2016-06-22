@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace com.shinezone.network
+namespace jun
 {
     class HttpSendData
     {

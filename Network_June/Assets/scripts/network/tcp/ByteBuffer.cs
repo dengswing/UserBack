@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace com.shinezone.network
+namespace jun
 {
     public class ByteBuffer
     {

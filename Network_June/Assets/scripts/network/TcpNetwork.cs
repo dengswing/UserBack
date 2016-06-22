@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using Debug = UnityEngine.Debug;
 
-namespace com.shinezone.network
+namespace jun
 {
     /// <summary>
     /// tcp 发送

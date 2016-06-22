@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace com.shinezone.network
+namespace jun
 {
     /// <summary>
     /// 网络请求父类

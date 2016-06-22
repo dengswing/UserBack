@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Sockets;
 using UnityEngine;
 
-namespace com.shinezone.network
+namespace jun
 {
     public class Protocal
     {

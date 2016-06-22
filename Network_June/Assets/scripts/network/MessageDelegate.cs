@@ -1,4 +1,4 @@
-﻿namespace com.shinezone.network
+﻿namespace jun
 {
     /// <summary>
     /// http请求结果委托
