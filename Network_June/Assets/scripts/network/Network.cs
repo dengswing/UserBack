@@ -71,18 +71,19 @@ namespace com.shinezone.network
         /// <summary>
         /// 发送消息
         /// </summary>
-        protected virtual void Send()
+        protected virtual bool Send()
         {
-
+            return false;
         }
 
         /// <summary>
         /// 接收信息
         /// </summary>
-        protected virtual void Recv()
+        protected virtual bool Recv()
         {
-
+            return false;
         }
+
         #endregion
 
         private void Start()
@@ -97,7 +98,6 @@ namespace com.shinezone.network
         {
             sendThread = new Thread(SendHandler);
             recvThread = new Thread(RecvHandler);
-
             sendThread.IsBackground = true;
             recvThread.IsBackground = true;
         }
@@ -112,11 +112,11 @@ namespace com.shinezone.network
                 {
                     try
                     {
-                        Send();
+                        if (!Send()) break;
                     }
                     catch (System.Exception ex)
                     {
-                        UnityEngine.Debug.Log("SendHandler:Error" + ex.Message);
+                        UnityEngine.Debug.Log("SendHandler:Error>" + ex.Message);
                     }
 
                     UnityEngine.Debug.Log("Send!");
@@ -133,11 +133,14 @@ namespace com.shinezone.network
                 {
                     try
                     {
-                        Recv();
+                        if (!Recv())
+                        {
+                            UnityEngine.Debug.Log("RecvHandler:Break");
+                        }
                     }
                     catch (System.Exception ex)
                     {
-                        UnityEngine.Debug.Log("RecvHandler:Error" + ex.Message);
+                        UnityEngine.Debug.Log("RecvHandler:Error>" + ex.Message);
                     }
 
                     UnityEngine.Debug.Log("Recv!");

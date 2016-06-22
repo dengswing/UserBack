@@ -21,21 +21,17 @@ public class Demo : MonoBehaviour
         // var url = "http://dev-mi-facebook.shinezone.com/index.php?*=[[\"game.login\",[\"1\",0,0,1,\"3\",\"4\"]]]&halt=711&sign=6YjG2QUodzBRd9RDQweiig2s3MQ%3D";
         //  HttpNetwork.Instance.SendMessage(url, HttpResultBack);
 
-        TcpNetwork.Instance.ConnectServer("127.0.0.1", 6688, ResultBack);
-
-        var data = new ByteBuffer();
-        data.WriteString("hello");
-        TcpNetwork.Instance.SendMessage(data);
+        TcpNetwork.Instance.ConnectServer("127.0.0.1", 8885, ResultBack);  
 
         //HTTPClass http = new HTTPClass();
 
-       //// http://dev-soul.shinezoneapp.com/?dev=jinfeifei&*=[["test.data",["9",0,0]],["test.try",["9",0,0,"4"]]]&halt=161&sign=sOxoC37X9eWdNvIyW6igRqOcHoU%3D
-       // var url = "http://dev-soul.shinezoneapp.com";
-       // var path = "http://dev-soul.shinezoneapp.com/?dev=jinfeifei&*=[[\"test.data\",[\"9\",0,0]],[\"test.try\",[\"9\",0,0,\"4\"]]]&halt=161&sign=sOxoC37X9eWdNvIyW6igRqOcHoU%3D";
-       // var data = "123=>";
-       //var response =  http.HTTP(url, "POST", path,null, Encoding.UTF8);
+        //// http://dev-soul.shinezoneapp.com/?dev=jinfeifei&*=[["test.data",["9",0,0]],["test.try",["9",0,0,"4"]]]&halt=161&sign=sOxoC37X9eWdNvIyW6igRqOcHoU%3D
+        // var url = "http://dev-soul.shinezoneapp.com";
+        // var path = "http://dev-soul.shinezoneapp.com/?dev=jinfeifei&*=[[\"test.data\",[\"9\",0,0]],[\"test.try\",[\"9\",0,0,\"4\"]]]&halt=161&sign=sOxoC37X9eWdNvIyW6igRqOcHoU%3D";
+        // var data = "123=>";
+        //var response =  http.HTTP(url, "POST", path,null, Encoding.UTF8);
 
-       // Debug.Log("data====>>" + response.HTTPResponseText);
+        // Debug.Log("data====>>" + response.HTTPResponseText);
     }
 
     void ResultBack(int code, ByteBuffer data)
@@ -48,6 +44,16 @@ public class Demo : MonoBehaviour
         Debug.LogFormat("http code =>{0} data=>{1}", code, data);
     }
 
+    public void OnClickBtn()
+    {
+        var data = new ByteBuffer();
+        data.WriteString("hello");
+        TcpNetwork.Instance.SendMessage(data);
+
+       // data = new ByteBuffer();
+      //  data.WriteString("123");
+        //TcpNetwork.Instance.SendMessage(data);
+    }
 
 
     void OnDestroy()

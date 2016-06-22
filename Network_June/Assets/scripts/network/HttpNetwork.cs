@@ -48,14 +48,14 @@ namespace com.shinezone.network
             HttpGet(url);
         }
 
-        protected override void Send()
+        protected override bool Send()
         {
-            base.Send();
+            return base.Send();
         }
 
-        protected override void Recv()
+        protected override bool Recv()
         {
-            base.Recv(); 
+           return base.Recv(); 
         }
 
         private string HttpPost(string Url, string postDataStr)

@@ -43,47 +43,43 @@ namespace com.shinezone.network
             ConnectClient(host, port, resultBack);
         }
 
-        protected override void Send()
+        protected override bool Send()
         {
             base.Send();
 
-            if (buffer.Count <= 0) return;
+            if (buffer.Count <= 0) return true;
             var byteBuff = buffer.Dequeue();
-            if (byteBuff == null) return;
+            if (byteBuff == null) return true;
             SendMessageBegin(byteBuff);
             byteBuff = null;
+            return true;
         }
 
-        protected override void Recv()
+        protected override bool Recv()
         {
             base.Recv();
 
-            if (!socketClient.Connected)
+            if (!CheckConnected())
             {
-                //与服务器断开连接跳出循环  
-                Debug.Log("Failed to clientSocket server.");
-                socketClient.Close();
-                return;
+                return false;
             }
 
+            //接受数据保存至bytes当中  
+            byte[] bytes = new byte[1024 * 1024 * 2];
             try
             {
-                //接受数据保存至bytes当中  
-                byte[] bytes = new byte[4096];
-                //Receive方法中会一直等待服务端回发消息  
-                //如果没有回发会一直在这里等着。  
-                int i = socketClient.Receive(bytes);
-                if (i <= 0)
-                {
-                    socketClient.Close();
-                }
-                Debug.Log(System.Text.Encoding.Default.GetString(bytes));
+                int receiveNumber = socketClient.Receive(bytes);
+                string strMsg = System.Text.Encoding.UTF8.GetString(bytes);// 将接受到的字节数据转化成字符串；  
+                Debug.Log("收到服务器的消息=====>>>" + strMsg);
             }
             catch (Exception e)
             {
                 Debug.Log("Failed to clientSocket error." + e);
                 socketClient.Close();
+                return false;
             }
+
+            return true;
         }
 
         private void ConnectClient(string host, int port, Action<int, ByteBuffer> resultBack)
@@ -110,6 +106,18 @@ namespace com.shinezone.network
             if (!isStart) Initialise();
         }
 
+        private bool CheckConnected()
+        {
+            if (!socketClient.Connected)
+            {
+                Debug.Log("Failed to clientSocket server.");
+                socketClient.Close();
+                return false;
+            }
+
+            return true;
+        }
+
         private void ConnectCallback(IAsyncResult asyncConnect)
         {
             Debug.Log("connect success");
@@ -121,12 +129,11 @@ namespace com.shinezone.network
         {
             byte[] msg = data.ToBytes();
 
-            if (!socketClient.Connected)
+            if (!CheckConnected())
             {
-                socketClient.Close();
                 return;
             }
-
+            
             try
             {
                 IAsyncResult asyncSend = socketClient.BeginSend(msg, 0, msg.Length, SocketFlags.None, new AsyncCallback(SendCallback), socketClient);

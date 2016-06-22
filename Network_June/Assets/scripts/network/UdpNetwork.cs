@@ -48,14 +48,14 @@ namespace com.shinezone.network
             if (!isStart) Initialise();
         }
 
-        protected override void Send()
+        protected override bool Send()
         {
             base.Send();
 
-            if (buffer.Count <= 0) return;
+            if (buffer.Count <= 0) return true;
             var byteBuff = buffer.Dequeue();
 
-            if (byteBuff == null) return;
+            if (byteBuff == null) return true;
             var tByte = byteBuff.ToBytes();
 
             try
@@ -67,9 +67,11 @@ namespace com.shinezone.network
             {
                 UnityEngine.Debug.Log("send error!");
             }
+
+            return true;
         }
         
-        protected override void Recv()
+        protected override bool Recv()
         {
             base.Recv();          
 
@@ -89,6 +91,8 @@ namespace com.shinezone.network
                 tBuffer = new ByteBuffer(tByte);
 
             if (resultBack != null) resultBack(1, tBuffer);
+
+            return true;
         }
     }
 }
