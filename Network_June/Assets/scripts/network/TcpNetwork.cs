@@ -11,7 +11,7 @@ namespace com.shinezone.network
     /// </summary>
     public class TcpNetwork : Network<TcpNetwork>
     {
-        private Queue<ByteBuffer> buffer;
+        private Queue<ByteBuffer> queueInfo;
         private Socket socketClient;
         private Action<int, ByteBuffer> resultBack;
 
@@ -19,7 +19,7 @@ namespace com.shinezone.network
         {
             base.Init();
             socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            buffer = new Queue<ByteBuffer>();
+            queueInfo = new Queue<ByteBuffer>();
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace com.shinezone.network
         public void SendMessage(ByteBuffer data)
         {
             if (data == null) return;
-            buffer.Enqueue(data);
+            queueInfo.Enqueue(data);
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace com.shinezone.network
         {
             base.Send();
 
-            if (buffer.Count <= 0) return true;
-            var byteBuff = buffer.Dequeue();
+            if (queueInfo.Count <= 0) return true;
+            var byteBuff = queueInfo.Dequeue();
             if (byteBuff == null) return true;
             SendMessageBegin(byteBuff);
             byteBuff = null;

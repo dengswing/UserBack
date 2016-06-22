@@ -112,7 +112,11 @@ namespace com.shinezone.network
                 {
                     try
                     {
-                        if (!Send()) break;
+                        if (!Send())
+                        {
+                            UnityEngine.Debug.Log("SendHandler:Break");
+                            break;
+                        } 
                     }
                     catch (System.Exception ex)
                     {
