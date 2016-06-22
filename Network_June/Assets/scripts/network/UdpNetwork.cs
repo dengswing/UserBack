@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using Debug = UnityEngine.Debug;
 
 namespace com.shinezone.network
 {
@@ -61,11 +62,10 @@ namespace com.shinezone.network
             try
             {
                 socketClient.SendTo(tByte, tByte.Length, SocketFlags.None, iPEndPoint);
-                UnityEngine.Debug.Log("send:" + iPEndPoint);
             }
             catch (Exception)
             {
-                UnityEngine.Debug.Log("send error!");
+                Debug.Log("send error!");
             }
 
             return true;
@@ -73,22 +73,24 @@ namespace com.shinezone.network
         
         protected override bool Recv()
         {
-            base.Recv();          
+            base.Recv();
 
             var tBuffer = new ByteBuffer();
             byte[] tByte = new byte[1024];
             try
             {
                 socketClient.ReceiveFrom(tByte, ref serverEnd);
-                UnityEngine.Debug.Log("recv:" + tByte);
             }
             catch (Exception)
             {
-                UnityEngine.Debug.Log("recv error!");
+                Debug.Log("recv error!");
+                return true;
             }
 
             if (tByte != null)
                 tBuffer = new ByteBuffer(tByte);
+
+            Debug.Log("服务器返回：" + tBuffer.ReadString());
 
             if (resultBack != null) resultBack(1, tBuffer);
 

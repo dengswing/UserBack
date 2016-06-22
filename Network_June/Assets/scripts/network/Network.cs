@@ -119,7 +119,6 @@ namespace com.shinezone.network
                         UnityEngine.Debug.Log("SendHandler:Error>" + ex.Message);
                     }
 
-                    UnityEngine.Debug.Log("Send!");
                     Thread.Sleep(500);
                 }
             }
@@ -136,6 +135,7 @@ namespace com.shinezone.network
                         if (!Recv())
                         {
                             UnityEngine.Debug.Log("RecvHandler:Break");
+                            break;
                         }
                     }
                     catch (System.Exception ex)
@@ -143,7 +143,6 @@ namespace com.shinezone.network
                         UnityEngine.Debug.Log("RecvHandler:Error>" + ex.Message);
                     }
 
-                    UnityEngine.Debug.Log("Recv!");
                     Thread.Sleep(500);
                 }
 

@@ -79,6 +79,7 @@ namespace com.shinezone.network
                 return false;
             }
 
+            if (resultBack != null) resultBack(1,new ByteBuffer(bytes));
             return true;
         }
 
