@@ -1,0 +1,5 @@
+F:\work\0_Project\Server\SocketServer -udp\obj\Debug\SocketServer.exe
+F:\work\0_Project\Server\SocketServer -udp\obj\Debug\SocketServer.pdb
+F:\work\0_Project\Server\SocketServer -udp\bin\Debug\SocketServer.exe
+F:\work\0_Project\Server\SocketServer -udp\bin\Debug\SocketServer.pdb
+F:\work\0_Project\Server\SocketServer -udp\obj\Debug\SocketServer.csprojResolveAssemblyReference.cache
