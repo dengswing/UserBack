@@ -43,6 +43,49 @@ namespace com.shinezone.network
             ConnectClient(host, port, resultBack);
         }
 
+        protected override void Send()
+        {
+            base.Send();
+
+            if (buffer.Count <= 0) return;
+            var byteBuff = buffer.Dequeue();
+            if (byteBuff == null) return;
+            SendMessageBegin(byteBuff);
+            byteBuff = null;
+        }
+
+        protected override void Recv()
+        {
+            base.Recv();
+
+            if (!socketClient.Connected)
+            {
+                //与服务器断开连接跳出循环  
+                Debug.Log("Failed to clientSocket server.");
+                socketClient.Close();
+                return;
+            }
+
+            try
+            {
+                //接受数据保存至bytes当中  
+                byte[] bytes = new byte[4096];
+                //Receive方法中会一直等待服务端回发消息  
+                //如果没有回发会一直在这里等着。  
+                int i = socketClient.Receive(bytes);
+                if (i <= 0)
+                {
+                    socketClient.Close();
+                }
+                Debug.Log(System.Text.Encoding.Default.GetString(bytes));
+            }
+            catch (Exception e)
+            {
+                Debug.Log("Failed to clientSocket error." + e);
+                socketClient.Close();
+            }
+        }
+
         private void ConnectClient(string host, int port, Action<int, ByteBuffer> resultBack)
         {
             this.resultBack = resultBack;
@@ -105,51 +148,8 @@ namespace com.shinezone.network
             Debug.Log("send success");
         }
 
-        protected override void Send()
-        {
-            base.Send();
-
-            if (buffer.Count <= 0) return;
-            var byteBuff = buffer.Dequeue();
-            if (byteBuff == null) return;
-            SendMessageBegin(byteBuff);
-            byteBuff = null;
-        }
-
-        protected override void Recv()
-        {
-            base.Recv();
-
-            if (!socketClient.Connected)
-            {
-                //与服务器断开连接跳出循环  
-                Debug.Log("Failed to clientSocket server.");
-                socketClient.Close();
-                return;
-            }
-
-            try
-            {
-                //接受数据保存至bytes当中  
-                byte[] bytes = new byte[4096];
-                //Receive方法中会一直等待服务端回发消息  
-                //如果没有回发会一直在这里等着。  
-                int i = socketClient.Receive(bytes);
-                if (i <= 0)
-                {
-                    socketClient.Close();
-                }
-                Debug.Log(System.Text.Encoding.Default.GetString(bytes));
-            }
-            catch (Exception e)
-            {
-                Debug.Log("Failed to clientSocket error." + e);
-                socketClient.Close();                
-            }
-        }
-
         //关闭Socket  
-        public void Closed()
+        private void Closed()
         {
             if (socketClient != null && socketClient.Connected)
             {

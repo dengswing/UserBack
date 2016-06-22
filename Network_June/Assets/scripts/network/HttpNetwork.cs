@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Text;
 using UnityEngine;
 
 namespace com.shinezone.network
@@ -42,8 +45,7 @@ namespace com.shinezone.network
             var url = buffer.Dequeue();
             if (url == null) return;
 
-            httpPost = new WWW(url);
-            isRecvData = false;
+            HttpGet(url);
         }
 
         protected override void Send()
@@ -51,47 +53,51 @@ namespace com.shinezone.network
             base.Send();
         }
 
-        int updateStep = 1;
-        float tm = 0f;
         protected override void Recv()
         {
-            base.Recv();
-            if (httpPost == null) return;
-
-            if (0 < updateStep)
-            {
-                tm += Time.deltaTime;
-                if (tm >= 2)
-                {
-                    tm = 0f;
-                    // Call custom update
-                    DataDispose();
-                }
-            }
-            else {
-                // Call custom update
-                DataDispose();
-            }
+            base.Recv(); 
         }
 
-        private void DataDispose()
+        private string HttpPost(string Url, string postDataStr)
         {
-            if (httpPost.error != null)
-            {
-                httpPost.Dispose();
-                isRecvData = true;
-                if (resultBack != null) resultBack(0, null);
-            }
-            else if (httpPost.isDone)
-            {
-                var data = httpPost.text;
-                httpPost.Dispose();
-                isRecvData = true;
-                if (resultBack != null) resultBack(1, data);
-            }
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = Encoding.UTF8.GetByteCount(postDataStr);
+          //  request.CookieContainer = cookie;
+            Stream myRequestStream = request.GetRequestStream();
+            StreamWriter myStreamWriter = new StreamWriter(myRequestStream, Encoding.GetEncoding("gb2312"));
+            myStreamWriter.Write(postDataStr);
+            myStreamWriter.Close();
 
-            httpPost = null;
-            SendHttp();
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+          //  response.Cookies = cookie.GetCookies(response.ResponseUri);
+            Stream myResponseStream = response.GetResponseStream();
+            StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
+            string retString = myStreamReader.ReadToEnd();
+            myStreamReader.Close();
+            myResponseStream.Close();
+
+            return retString;
         }
+
+        public string HttpGet(string Url)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+            request.Method = "GET";
+            request.ContentType = "text/html;charset=UTF-8";
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream myResponseStream = response.GetResponseStream();
+            StreamReader myStreamReader = new StreamReader(myResponseStream, Encoding.GetEncoding("utf-8"));
+            string retString = myStreamReader.ReadToEnd();
+            myStreamReader.Close();
+            myResponseStream.Close();
+
+            Debug.Log("retString==>" + retString);
+            return retString;
+        }
+
     }
 }
