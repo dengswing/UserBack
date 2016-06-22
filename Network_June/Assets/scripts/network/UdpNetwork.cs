@@ -11,24 +11,24 @@ namespace jun
     /// </summary>
     public class UdpNetwork : Network<UdpNetwork>
     {
-        private Queue<ByteBuffer> queueInfo;
+        private Queue<JunByteBuffer> queueInfo;
         private Socket socketClient;
         private IPEndPoint iPEndPoint;
-        private Action<int, ByteBuffer> resultBack;
+        private Action<int, JunByteBuffer> resultBack;
         private EndPoint serverEnd; //服务端
 
         protected override void Init()
         {
             base.Init();
             socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            queueInfo = new Queue<ByteBuffer>();
+            queueInfo = new Queue<JunByteBuffer>();
         }
 
         /// <summary>
         /// 发送消息
         /// </summary>
         /// <param name="data"></param>
-        public void SendMessage(ByteBuffer data)
+        public void SendMessage(JunByteBuffer data)
         {
             if (data == null) return;
             queueInfo.Enqueue(data);
@@ -40,7 +40,7 @@ namespace jun
         /// <param name="host"></param>
         /// <param name="port"></param>
         /// <param name="resultBack"></param>
-        public void ConnectServer(string host, int port, Action<int, ByteBuffer> resultBack)
+        public void ConnectServer(string host, int port, Action<int, JunByteBuffer> resultBack)
         {
             this.resultBack = resultBack;
             iPEndPoint = new IPEndPoint(IPAddress.Parse(host), port);
@@ -75,7 +75,7 @@ namespace jun
         {
             base.Recv();
 
-            var tBuffer = new ByteBuffer();
+            var tBuffer = new JunByteBuffer();
             byte[] tByte = new byte[1024];
             try
             {
@@ -88,7 +88,7 @@ namespace jun
             }
 
             if (tByte != null)
-                tBuffer = new ByteBuffer(tByte);
+                tBuffer = new JunByteBuffer(tByte);
 
             Debug.Log("服务器返回：" + tBuffer.ReadString());
 

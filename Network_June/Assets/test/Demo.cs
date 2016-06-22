@@ -30,7 +30,7 @@ public class Demo : MonoBehaviour
 
     void OnClickTcpSend()
     {
-        var data = new ByteBuffer();
+        var data = new JunByteBuffer();
         data.WriteString("hello tcp");
         TcpNetwork.Instance.SendMessage(data);
     }
@@ -42,7 +42,7 @@ public class Demo : MonoBehaviour
 
     void OnClickUdpSend()
     {
-        var data = new ByteBuffer();
+        var data = new JunByteBuffer();
         data.WriteString("hello udp");
         UdpNetwork.Instance.SendMessage(data);
     }
@@ -51,7 +51,7 @@ public class Demo : MonoBehaviour
         UdpNetwork.Instance.ConnectServer("127.0.0.1", 8001, ResultBack);
     }
 
-    void ResultBack(int code, ByteBuffer data)
+    void ResultBack(int code, JunByteBuffer data)
     {
         Debug.LogFormat("code =>{0} data=>{1}", code, data);
     }

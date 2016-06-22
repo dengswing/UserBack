@@ -11,22 +11,22 @@ namespace jun
     /// </summary>
     public class TcpNetwork : Network<TcpNetwork>
     {
-        private Queue<ByteBuffer> queueInfo;
+        private Queue<JunByteBuffer> queueInfo;
         private Socket socketClient;
-        private Action<int, ByteBuffer> resultBack;
+        private Action<int, JunByteBuffer> resultBack;
 
         protected override void Init()
         {
             base.Init();
             socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            queueInfo = new Queue<ByteBuffer>();
+            queueInfo = new Queue<JunByteBuffer>();
         }
 
         /// <summary>
         /// 发送消息
         /// </summary>
         /// <param name="data"></param>
-        public void SendMessage(ByteBuffer data)
+        public void SendMessage(JunByteBuffer data)
         {
             if (data == null) return;
             queueInfo.Enqueue(data);
@@ -38,7 +38,7 @@ namespace jun
         /// <param name="host"></param>
         /// <param name="port"></param>
         /// <param name="resultBack"></param>
-        public void ConnectServer(string host, int port, Action<int, ByteBuffer> resultBack)
+        public void ConnectServer(string host, int port, Action<int, JunByteBuffer> resultBack)
         {
             ConnectClient(host, port, resultBack);
         }
@@ -79,11 +79,11 @@ namespace jun
                 return false;
             }
 
-            if (resultBack != null) resultBack(1,new ByteBuffer(bytes));
+            if (resultBack != null) resultBack(1,new JunByteBuffer(bytes));
             return true;
         }
 
-        private void ConnectClient(string host, int port, Action<int, ByteBuffer> resultBack)
+        private void ConnectClient(string host, int port, Action<int, JunByteBuffer> resultBack)
         {
             this.resultBack = resultBack;
 
@@ -126,7 +126,7 @@ namespace jun
 
         //向服务端发送一条字符串  
         //一般不会发送字符串 应该是发送数据包  
-        private void SendMessageBegin(ByteBuffer data)
+        private void SendMessageBegin(JunByteBuffer data)
         {
             byte[] msg = data.ToBytes();
 

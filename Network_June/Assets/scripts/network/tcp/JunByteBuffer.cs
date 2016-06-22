@@ -4,19 +4,19 @@ using System.Text;
 
 namespace jun
 {
-    public class ByteBuffer
+    public class JunByteBuffer
     {
         MemoryStream stream = null;
         BinaryWriter writer = null;
         BinaryReader reader = null;
 
-        public ByteBuffer()
+        public JunByteBuffer()
         {
             stream = new MemoryStream();
             writer = new BinaryWriter(stream);
         }
 
-        public ByteBuffer(byte[] data)
+        public JunByteBuffer(byte[] data)
         {
             if (data != null)
             {

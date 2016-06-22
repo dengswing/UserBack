@@ -28,7 +28,7 @@ namespace jun
         private const int MAX_READ = 8192;
         private byte[] byteBuffer = new byte[MAX_READ];
 
-        private Action<int, ByteBuffer> resultBack;
+        private Action<int, JunByteBuffer> resultBack;
 
         // Use this for initialization
         public SocketClient()
@@ -39,7 +39,7 @@ namespace jun
         /// <summary>
         /// 注册代理
         /// </summary>
-        public void OnRegister(Action<int, ByteBuffer> resultBack)
+        public void OnRegister(Action<int, JunByteBuffer> resultBack)
         {
             this.resultBack = resultBack;
             memStream = new MemoryStream();
@@ -81,7 +81,7 @@ namespace jun
         /// <summary>
         /// 发送消息
         /// </summary>
-        public void SendMessage(ByteBuffer buffer)
+        public void SendMessage(JunByteBuffer buffer)
         {
             SessionSend(buffer.ToBytes());
             buffer.Close();
@@ -115,7 +115,7 @@ namespace jun
             outStream = client.GetStream();
             client.GetStream().BeginRead(byteBuffer, 0, MAX_READ, new AsyncCallback(OnRead), null);
 
-            if (resultBack != null) resultBack.Invoke(Protocal.Connect, new ByteBuffer());
+            if (resultBack != null) resultBack.Invoke(Protocal.Connect, new JunByteBuffer());
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace jun
             int protocal = dis == DisType.Exception ?
             Protocal.Exception : Protocal.Disconnect;
 
-            ByteBuffer buffer = new ByteBuffer();
+            JunByteBuffer buffer = new JunByteBuffer();
             buffer.WriteShort((ushort)protocal);
 
             if (resultBack != null) resultBack(protocal, buffer);
@@ -271,7 +271,7 @@ namespace jun
             byte[] message = r.ReadBytes((int)(ms.Length - ms.Position));
             //int msglen = message.Length;
 
-            ByteBuffer buffer = new ByteBuffer(message);
+            JunByteBuffer buffer = new JunByteBuffer(message);
             int mainId = buffer.ReadShort();
 
             if (resultBack != null) resultBack(mainId, buffer);
