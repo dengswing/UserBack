@@ -64,7 +64,7 @@ class Testing : MonoBehaviour
         //  httpNetwork.PostOneToOne("game.login");
         //  httpNetwork.PostOneToOne("game.login", PostOneToOneHandler);
         // httpNetwork.PostOneToOne("game.login", "Http://test.com/&*={0}");
-        // httpNetwork.PostOneToOne("game.login", "Http://test.com/&*={0}", PostOneToOneHandler);      
+        // httpNetwork.PostOneToOne("game.login", "Http://test.com/&*={0}", PostOneToOneHandler);
 
         TableDataManager.Instance.AddListenerDataTable("ModuleProfile", UpdateHandler); //注册侦听更改  new
         TableDataManager.Instance.AddListenerDataTable("ModuleMission", UpdateHandler); //注册侦听更改  new
@@ -83,7 +83,7 @@ class Testing : MonoBehaviour
         listDict.Add("55", list);
         TableDataManager.Instance.AddTableData("List", listDict);
     }
-    
+
     void TableChange(string tableName, object data)
     {
         Debug.Log("tableChange:" + tableName);
@@ -115,7 +115,7 @@ class Testing : MonoBehaviour
 
 
         List<CityOrder> cityInfo2 = TableDataManager.Instance.GetTableDataList<CityOrder>("CityOrder", x => x.cityOrderDefId == 50000006);
-        
+
         TableDataManager.Instance.RemoveTableData<CityOrder>("CityOrder", x => x.cityOrderDefId == 50000005);   //移除表格数据
 
         List<CityOrder> cityInfo3 = TableDataManager.Instance.GetTableDataList<CityOrder>("CityOrder");
